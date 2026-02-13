@@ -1,7 +1,6 @@
 ﻿using Microsoft.AspNetCore.Html;
-using System.Net;
-using System.Xml;
-
+using Server.Heimdall;
+using Server.Utilities;
 namespace Server.Rendering.Shared
 {
     public enum ToastType
@@ -11,7 +10,7 @@ namespace Server.Rendering.Shared
         Warning,
         Info
     }
-    public class Toast
+    public class ToastItem
     {
         public string Header { get; set; } = string.Empty;
         public string Content { get; set; } = string.Empty;
@@ -24,62 +23,68 @@ namespace Server.Rendering.Shared
 
         public static IHtmlContent Render(HttpContext ctx, bool useSSE = true)
         {
-            var env = ctx.RequestServices.GetRequiredService<IWebHostEnvironment>();
+            IHtmlContent toastManager = Html.Div(
+                    Html.Class(Bootstrap.Toast.Container, Bootstrap.Position.Fixed, Bootstrap.Position.Top0, Bootstrap.Position.End0, Bootstrap.Spacing.P(3)),
+                    Html.Style("z-index:1000"),
+                    Html.Id("toast-manager"),
+                    Html.Aria("live", "polite"),
+                    Html.Aria("atomic", "true"),
 
-            var filePath = Path.Combine(
-                env.WebRootPath,
-                "components",
-                "toast-manager.html"
-            );
-
-            var html = File.ReadAllText(filePath);
-
-            if (!useSSE)
-            {
-                html = html
-                    .Replace(" heimdall-sse=\"toasts\"", "")
-                    .Replace(" heimdall-sse-target=\"#toast-manager\"", "")
-                    .Replace(" heimdall-sse-swap=\"afterbegin\"", "");
-            }
-
-            return new HtmlString(html);
-        }
-
-
-        public static IHtmlContent Create(Toast toast)
-        {
-            string toastClass = toast.GetToastClass();
-
-            return new HtmlString(
-                @$"<div class=""toast fade {toastClass}""
-                      role=""alert""
-                      aria-live=""assertive""
-                      aria-atomic=""true""
-                      data-bs-autohide=""true""
-                      data-bs-delay=""{toast.DurationMs}"">
-                      <div class=""toast-header {toastClass} border-0"">
-                        <strong class=""me-auto"">{toast.Header}</strong>
-                        <button type=""button""
-                                class=""btn-close ms-2 mb-1""
-                                data-bs-dismiss=""toast""
-                                aria-label=""Close""></button>
-                      </div>
-                      <div class=""toast-body"">
-                        {toast.Content}
-                      </div>
-                 </div>"
+                    Html.When(useSSE,
+                        HeimdallHtml.SseTopic("toasts"),
+                        HeimdallHtml.SseTarget("#toast-manager"),
+                        HeimdallHtml.SseSwapMode(HeimdallHtml.Swap.BeforeEnd)
+                    ),
+                    Html.Script(Html.Src("components/js/toast-manager.js"))
                 );
+
+            return toastManager;
         }
 
-        static string GetToastClass(this Toast toast)
+
+        public static IHtmlContent Create(ToastItem toast)
+        {
+            var toastClass = toast.GetToastClass();
+
+            return Html.Div(
+                Html.Class(Bootstrap.Toast.ToastBase, Bootstrap.Helpers.Fade, toastClass),
+                Html.Role("alert"),
+                Html.Aria("live", "assertive"),
+                Html.Aria("atomic", "true"),
+                Html.Data("bs-autohide", "true"),
+                Html.Data("bs-delay", toast.DurationMs.ToString()),
+
+                Html.Div(
+                    Html.Class(Bootstrap.Toast.Header, toastClass, Bootstrap.Border.None),
+
+                    Html.Tag("strong",
+                        Html.Class(Bootstrap.Spacing.MeAuto()),
+                        Html.Text(toast.Header)
+                    ),
+
+                    Html.Button(
+                        Html.Class(Bootstrap.Btn.Close, Bootstrap.Spacing.Mb(1),Bootstrap.Spacing.Ms(2)),
+                        Html.Data("bs-dismiss", "toast"),
+                        Html.Aria("label", "Close")
+                    )
+                ),
+
+                Html.Div(
+                    Html.Class(Bootstrap.Toast.Body),
+                    Html.Text(toast.Content)
+                )
+            );
+        }
+
+        static string GetToastClass(this ToastItem toast)
         {
             return toast.Type switch
             {
-                ToastType.Success => "text-bg-success",
-                ToastType.Error => "text-bg-danger",
-                ToastType.Warning => "text-bg-warning",
-                ToastType.Info => "text-bg-info",
-                _ => "text-bg-secondary"
+                ToastType.Success => Bootstrap.Bg.TextBg(Bootstrap.Color.Success),
+                ToastType.Error => Bootstrap.Bg.TextBg(Bootstrap.Color.Danger),
+                ToastType.Warning => Bootstrap.Bg.TextBg(Bootstrap.Color.Warning),
+                ToastType.Info => Bootstrap.Bg.TextBg(Bootstrap.Color.Info),
+                _ => Bootstrap.Bg.TextBg(Bootstrap.Color.Secondary),
             };
         }
     }
