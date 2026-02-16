@@ -1,87 +1,117 @@
 ﻿using Microsoft.AspNetCore.Html;
+using Microsoft.AspNetCore.Http;
 using Server.Utilities;
 
 namespace Server.Rendering.Shared
 {
-    public static class MenuComponent
-    {
-        public static IHtmlContent Render(HttpContext ctx)
-        {
-            return Html.Fragment(
-                Html.Div(
-                    Html.Class(Bootstrap.Spacing.P(2),
-                               Bootstrap.Flex.AlignItemsCenter, Bootstrap.Display.Flex, Bootstrap.Flex.AlignContentBetween,
-                               Bootstrap.Bg.BgColor(Bootstrap.Color.Primary)),
+	public static class MenuComponent
+	{
+		public static IHtmlContent Render(HttpContext ctx)
+			=> FluentHtml.Fragment(f =>
+			{
+				// Top bar
+				f.Div(bar =>
+				{
+					bar.Class(
+						Bootstrap.Spacing.P(2),
+						Bootstrap.Flex.AlignItemsCenter,
+						Bootstrap.Display.Flex,
+						Bootstrap.Flex.AlignContentBetween,
+						Bootstrap.Bg.BgColor(Bootstrap.Color.Primary)
+					);
 
-                    Html.Div(
-                        Html.Button(
-                            Html.Class(Bootstrap.Btn.Base, Bootstrap.Btn.Primary, Bootstrap.Text.Uppercase),
-                            Html.Attr("data-bs-toggle", "offcanvas"),
-                            Html.Attr("data-bs-target", "#leftMenu"),
-                            Html.Aria("controls", "leftMenu"),
-                            Html.Tag("i", Html.Class("bi", "bi-grid"),Html.Class(Bootstrap.Spacing.M(1,Bootstrap.Side.End))),
-                            Html.Text("Menu")
-                        )
-                    )
-                ),
+					bar.Div(inner =>
+					{
+						inner.Button(btn =>
+						{
+							btn.Class(Bootstrap.Btn.Base, Bootstrap.Btn.Primary, Bootstrap.Text.Uppercase);
+							btn.Attr("data-bs-toggle", "offcanvas");
+							btn.Attr("data-bs-target", "#leftMenu");
+							btn.Aria("controls", "leftMenu");
 
-                Html.Div(
-                    Html.Class(Bootstrap.Offcanvas.Base, Bootstrap.Offcanvas.Start),
-                    Html.Attr("tabindex", "-1"),
-                    Html.Id("leftMenu"),
-                    Html.Aria("labelledby", "leftMenuLabel"),
+							btn.Tag("i", i =>
+							{
+								i.Class("bi", "bi-grid");
+								i.Class(Bootstrap.Spacing.M(1, Bootstrap.Side.End));
+							});
 
-                    Html.Div(
-                        Html.Class(Bootstrap.Offcanvas.Header),
+							btn.Text("Menu");
+						});
+					});
+				});
 
-                        Html.H5(
-                            Html.Class(Bootstrap.Offcanvas.Title),
-                            Html.Id("leftMenuLabel"),
-                            Html.Tag("i", Html.Class("bi", "bi-grid")),
-                            Html.Text(" Navigation")
-                        ),
+				// Offcanvas
+				f.Div(off =>
+				{
+					off.Class(Bootstrap.Offcanvas.Base, Bootstrap.Offcanvas.Start);
+					off.Attr("tabindex", "-1");
+					off.Id("leftMenu");
+					off.Aria("labelledby", "leftMenuLabel");
 
-                        Html.Button(
-                            Html.Type("button"),
-                            Html.Class("btn-close"),
-                            Html.Attr("data-bs-dismiss", "offcanvas"),
-                            Html.Aria("label", "Close")
-                        )
-                    ),
+					// Header
+					off.Div(header =>
+					{
+						header.Class(Bootstrap.Offcanvas.Header);
 
-                    Html.Div(
-                        Html.Class(Bootstrap.Offcanvas.Body),
+						header.H5(h5 =>
+						{
+							h5.Class(Bootstrap.Offcanvas.Title);
+							h5.Id("leftMenuLabel");
 
-                        Html.Div(
-                            Html.Class(Bootstrap.ListGroup.Base),
-                            Html.Id("navList"),
+							h5.Tag("i", i => i.Class("bi", "bi-grid"));
+							h5.Text(" Navigation");
+						});
 
-                            Html.A(
-                                Html.Class(Bootstrap.ListGroup.Item, Bootstrap.ListGroup.ItemAction),
-                                Html.Href("/"),
-                                Html.Tag("i", Html.Class("bi", "bi-house", Bootstrap.Spacing.Me(2))),
-                                Html.Text(" Home")
-                            ),
+						header.Button(close =>
+						{
+							close.Type("button");
+							close.Class("btn-close");
+							close.Attr("data-bs-dismiss", "offcanvas");
+							close.Aria("label", "Close");
+						});
+					});
 
-                            Html.A(
-                                Html.Class(Bootstrap.ListGroup.Item, Bootstrap.ListGroup.ItemAction),
-                                Html.Href("/out-of-band"),
-                                Html.Tag("i", Html.Class("bi", "bi-chat-dots", Bootstrap.Spacing.Me(2))),
-                                Html.Text(" Out Of Band")
-                            ),
+					// Body
+					off.Div(body =>
+					{
+						body.Class(Bootstrap.Offcanvas.Body);
 
-                            Html.A(
-                                Html.Class(Bootstrap.ListGroup.Item, Bootstrap.ListGroup.ItemAction),
-                                Html.Href("/settings"),
-                                Html.Tag("i", Html.Class("bi", "bi-gear", Bootstrap.Spacing.Me(2))),
-                                Html.Text(" Settings")
-                            )
-                        )
-                    )
-                ),
-                Html.Script(Html.Src("components/js/menu-component.js"))
-            );
-        }
+						body.Div(list =>
+						{
+							list.Class(Bootstrap.ListGroup.Base);
+							list.Id("navList");
 
-    }
+							list.A(a =>
+							{
+								a.Class(Bootstrap.ListGroup.Item, Bootstrap.ListGroup.ItemAction);
+								a.Href("/");
+
+								a.Tag("i", i => i.Class("bi", "bi-house", Bootstrap.Spacing.Me(2)));
+								a.Text(" Home");
+							});
+
+							list.A(a =>
+							{
+								a.Class(Bootstrap.ListGroup.Item, Bootstrap.ListGroup.ItemAction);
+								a.Href("/out-of-band");
+
+								a.Tag("i", i => i.Class("bi", "bi-chat-dots", Bootstrap.Spacing.Me(2)));
+								a.Text(" Out Of Band");
+							});
+
+							list.A(a =>
+							{
+								a.Class(Bootstrap.ListGroup.Item, Bootstrap.ListGroup.ItemAction);
+								a.Href("/settings");
+
+								a.Tag("i", i => i.Class("bi", "bi-gear", Bootstrap.Spacing.Me(2)));
+								a.Text(" Settings");
+							});
+						});
+					});
+				});
+
+				f.Script(s => s.Src("components/js/menu-component.js"));
+			});
+	}
 }

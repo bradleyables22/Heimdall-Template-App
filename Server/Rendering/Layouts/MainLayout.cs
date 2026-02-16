@@ -4,72 +4,78 @@ using Server.Utilities;
 
 namespace Server.Rendering.Layouts
 {
-    public static class MainLayout
-    {
-        public static IHtmlContent Render(HttpContext ctx, IHtmlContent page, string title,bool enableSSE = true)
-        {
-            return Html.Fragment(
-                Html.Raw("<!DOCTYPE html>"),
+	public static class MainLayout
+	{
+		public static IHtmlContent Render(HttpContext ctx, IHtmlContent page, string title, bool enableSSE = true)
+			=> FluentHtml.Fragment(f =>
+			{
+				f.Raw("<!DOCTYPE html>");
 
-                Html.HtmlTag(
-                    Html.Attr("lang", "en"),
+				f.HtmlTag(html =>
+				{
+					html.Attr("lang", "en");
 
-                    Html.Head(
-                        Html.Meta(
-                            Html.Attr("charset", "utf-8")
-                        ),
+					html.Head(head =>
+					{
+						head.Meta(m => m.Attr("charset", "utf-8"));
 
-                        Html.Meta(
-                            Html.Name("viewport"),
-                            Html.Content("width=device-width, initial-scale=1")
-                        ),
+						head.Meta(m =>
+						{
+							m.Name("viewport");
+							m.ContentAttr("width=device-width, initial-scale=1");
+						});
 
-                        Html.Title(title),
-                        SeoFragment.Twitter,
-                        SeoFragment.OpenGraph,
-                        SeoFragment.Default,
+						head.Title(t => t.Text(title));
 
-                        Html.Link(
-                            Html.Attr("rel", "icon"),
-                            Html.Type("image/png"),
-                            Html.Href("images/favicon.png")
-                        ),
+						head.Add(
+							SeoFragment.Twitter,
+							SeoFragment.OpenGraph,
+							SeoFragment.Default
+						);
 
-                        Html.Link(
-                            Html.Attr("rel", "stylesheet"),
-                            Html.Href("css/app.css")
-                        ),
+						head.Link(l =>
+						{
+							l.Attr("rel", "icon");
+							l.Type("image/png");
+							l.Href("images/favicon.png");
+						});
 
-                        Html.Link(
-                            Html.Attr("rel", "stylesheet"),
-                            Html.Href("css/bootstrap.css")
-                        ),
+						head.Link(l =>
+						{
+							l.Attr("rel", "stylesheet");
+							l.Href("css/app.css");
+						});
 
-                        Html.Link(
-                            Html.Attr("rel", "stylesheet"),
-                            Html.Href("css/bootstrap-icons.css")
-                        ),
+						head.Link(l =>
+						{
+							l.Attr("rel", "stylesheet");
+							l.Href("css/bootstrap.css");
+						});
 
-                        Html.Script(
-                            Html.Src("/_content/HeimdallFramework.Web/heimdall.js")
-                        ),
+						head.Link(l =>
+						{
+							l.Attr("rel", "stylesheet");
+							l.Href("css/bootstrap-icons.css");
+						});
 
-                        Html.Script(
-                            Html.Src("js/bootstrap-bundle.js")
-                        )
-                    ),
+						head.Script(s => s.Src("/_content/HeimdallFramework.Web/heimdall.js"));
+						head.Script(s => s.Src("js/bootstrap-bundle.js"));
+					});
 
-                    Html.Body(
-                        ToastManager.Render(ctx, enableSSE),
-                        MenuComponent.Render(ctx),
+					html.Body(body =>
+					{
+						body.Add(
+							ToastManager.Render(ctx, enableSSE),
+							MenuComponent.Render(ctx)
+						);
 
-                        Html.Div(
-                            Html.Class("container-fluid", "p-2"),
-                            page
-                        )
-                    )
-                )
-            );
-        }
-    }
+						body.Div(d =>
+						{
+							d.Class(Bootstrap.Layout.ContainerFluid, Bootstrap.Spacing.Py(2));
+							d.Add(page);
+						});
+					});
+				});
+			});
+	}
 }
