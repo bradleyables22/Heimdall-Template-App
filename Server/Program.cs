@@ -1,4 +1,5 @@
 using Heimdall.Server;
+using Server.Pages;
 using Server.Rendering.Layouts;
 using Server.Rendering.Pages;
 
@@ -30,6 +31,9 @@ app.MapHeimdallPage("/out-of-band", (_, ctx) =>
 {
     return MainLayout.Render(ctx, OobPage.Render(), "Out Of Band", true);
 });
-
+app.MapHeimdallPage("/state", (_, ctx) =>
+{
+    return MainLayout.Render(ctx, CounterPage.Render(), "State", true);
+});
 app.Run();
 

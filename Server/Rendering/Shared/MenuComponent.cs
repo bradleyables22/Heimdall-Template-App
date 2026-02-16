@@ -102,10 +102,10 @@ namespace Server.Rendering.Shared
 							list.A(a =>
 							{
 								a.Class(Bootstrap.ListGroup.Item, Bootstrap.ListGroup.ItemAction);
-								a.Href("/settings");
+								a.Href("/state");
 
-								a.Tag("i", i => i.Class("bi", "bi-gear", Bootstrap.Spacing.Me(2)));
-								a.Text(" Settings");
+								a.Tag("i", i => i.Class("bi", "bi-bezier2", Bootstrap.Spacing.Me(2)));
+								a.Text(" State");
 							});
 						});
 					});
