@@ -35,5 +35,9 @@ app.MapHeimdallPage("/state", (_, ctx) =>
 {
     return MainLayout.Render(ctx, CounterPage.Render(), "State", true);
 });
+app.MapHeimdallPage("/forms", (_, ctx) =>
+{
+    return MainLayout.Render(ctx, FormPage.Render(), "Forms", true);
+});
 app.Run();
 
