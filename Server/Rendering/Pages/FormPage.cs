@@ -366,9 +366,6 @@ namespace Server.Rendering.Pages
             });
         }
 
-        // ------------------------------------------------------------
-        // Normalization + Validation
-        // ------------------------------------------------------------
         private static CreateNoteRequest Normalize(CreateNoteRequest req)
         {
             req.Title = (req.Title ?? string.Empty).Trim();
@@ -396,7 +393,6 @@ namespace Server.Rendering.Pages
                 if (r is null || r.MemberNames is null)
                     continue;
 
-                // avoid LINQ allocations; MemberNames is IEnumerable<string>
                 foreach (var m in r.MemberNames)
                 {
                     if (string.Equals(m, memberName, StringComparison.OrdinalIgnoreCase))
