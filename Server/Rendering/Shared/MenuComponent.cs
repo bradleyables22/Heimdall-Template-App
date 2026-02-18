@@ -107,13 +107,22 @@ namespace Server.Rendering.Shared
 								a.Tag("i", i => i.Class("bi", "bi-bezier2", Bootstrap.Spacing.Me(2)));
 								a.Text(" State");
 							});
+							list.A(a =>
+							{
+								a.Class(Bootstrap.ListGroup.Item, Bootstrap.ListGroup.ItemAction);
+								a.Href("/forms");
+
+								a.Tag("i", i => i.Class("bi", "bi-arrow-repeat", Bootstrap.Spacing.Me(2)));
+								a.Text(" Forms");
+							});
+
                             list.A(a =>
                             {
                                 a.Class(Bootstrap.ListGroup.Item, Bootstrap.ListGroup.ItemAction);
-                                a.Href("/forms");
+                                a.Href("/lazy");
 
-                                a.Tag("i", i => i.Class("bi", "bi-journal", Bootstrap.Spacing.Me(2)));
-                                a.Text(" Forms");
+                                a.Tag("i", i => i.Class("bi", "bi-alarm", Bootstrap.Spacing.Me(2)));
+                                a.Text(" Lazy Loading");
                             });
                         });
 					});

@@ -39,5 +39,10 @@ app.MapHeimdallPage("/forms", (_, ctx) =>
 {
     return MainLayout.Render(ctx, FormPage.Render(), "Forms", true);
 });
+app.MapHeimdallPage("/lazy", (_, ctx) =>
+{
+    return MainLayout.Render(ctx, LazyLoadPage.Render(), "Lazy Loading", true);
+});
+
 app.Run();
 
