@@ -90,6 +90,7 @@ Heimdall is a strong fit when you want:
 var builder = WebApplication.CreateBuilder(args);
 
 builder.Services.AddAntiforgery();
+builder.Services.AddCors();
 builder.Services.AddHeimdall(); // scans entry/calling assemblies by default
 
 var app = builder.Build();
@@ -99,6 +100,11 @@ app.MapStaticAssets();
 app.UseStaticFiles();
 
 app.UseHeimdall(); // maps Heimdall endpoints
+
+app.MapHeimdallPage("/",(_, ctx) => 
+{
+    return MainLayout.Render(ctx, MainPage.Render(), "Home", true);
+});
 
 app.Run();
 ```
