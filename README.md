@@ -2,9 +2,12 @@
 
 ⚠️ **Alpha Status**
 
-Heimdall is currently in **ALPHA**.
+Heimdall is currently in alpha. APIs, naming, and patterns may change as the project evolves.
 
-APIs, naming, and patterns may change as the project evolves.
+It includes a strongly-typed fluent HTML API and is currently experimental. Heimdall can be used with standard HTML files, Blazor, MVC, and other ASP.NET rendering approaches. At its core, Heimdall acts as a hypermedia protocol for ASP.NET.
+
+The template application components included in this repository are optional and can be removed if they do not fit your needs.
+
 Real-world usage and feedback are extremely valuable at this stage.
 
 If you try Heimdall and have thoughts — good or bad — please open an issue or discussion:
@@ -14,8 +17,6 @@ https://github.com/bradleyables22/Heimdall
 ## How to Install
 
 dotnet new install HeimdallFramework.Templates.WebApp 
-
-
 
 ## Why Heimdall Exists
 
@@ -57,7 +58,6 @@ It exists for teams and applications that prefer:
 - Server-driven UI
 - Predictable interaction flows
 - Minimal client runtime
-- Strong typing across the rendering pipeline
 - A mental model closer to “web as documents” than “web as app shell”
 
 In short:
