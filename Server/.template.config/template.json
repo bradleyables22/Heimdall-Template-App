@@ -1,0 +1,22 @@
+{
+  "$schema": "http://json.schemastore.org/template",
+  "author": "Bradley Ables",
+  "classifications": [
+    "Web",
+    "ASP.NET",
+    "Heimdall",
+    "SSR",
+    "MPA"
+  ],
+  "identity": "Heimdall.WebApp.Template",
+  "name": "Heimdall Web App",
+  "shortName": "heimdall-webapp",
+  "sourceName": "Server",
+  "description": "Full ASP.NET Core web application starter using Heimdall for server-driven UI, strongly-typed HTML rendering, and real-time updates without SPA complexity.",
+  "tags": {
+    "language": "C#",
+    "type": "project"
+  },
+
+  "preferNameDirectory": true
+}
