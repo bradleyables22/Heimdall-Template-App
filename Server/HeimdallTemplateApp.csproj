@@ -7,10 +7,6 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <Content Include=".template.config\template.json" />
-  </ItemGroup>
-
-  <ItemGroup>
     <PackageReference Include="HeimdallFramework.Server" Version="0.1.2-alpha.1" />
     <PackageReference Include="HeimdallFramework.Web" Version="0.1.2-alpha.1" />
   </ItemGroup>
