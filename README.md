@@ -9,8 +9,12 @@ Real-world usage and feedback are extremely valuable at this stage.
 
 If you try Heimdall and have thoughts — good or bad — please open an issue or discussion:
 https://github.com/bradleyables22/Heimdall
-
 ---
+## How to Install
+
+dotnet new install HeimdallFramework.Templates.WebApp 
+
+
 
 ## Why Heimdall Exists
 
