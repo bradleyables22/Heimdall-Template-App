@@ -2,7 +2,7 @@
 using System;
 using System.Buffers;
 
-namespace Server.Utilities
+namespace HeimdallTemplateApp.Utilities
 {
     /// <summary>
     /// Fluent / block-style HTML builder that mirrors the ergonomics of <see cref="Html"/> while enabling

@@ -1,12 +1,12 @@
 ﻿using Heimdall.Server;
 using Microsoft.AspNetCore.Html;
-using Server.Heimdall;          // FluentHeimdall extensions (.Heimdall())
-using Server.Rendering.Shared;
-using Server.Utilities;
+using HeimdallTemplateApp.Heimdall;         
+using HeimdallTemplateApp.Rendering.Shared;
+using HeimdallTemplateApp.Utilities;
 using System.ComponentModel.DataAnnotations;
-using static Server.Utilities.Html;
+using static HeimdallTemplateApp.Utilities.Html;
 
-namespace Server.Rendering.Pages
+namespace HeimdallTemplateApp.Rendering.Pages
 {
     public static class FormPage
     {

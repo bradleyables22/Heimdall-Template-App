@@ -4,7 +4,7 @@ using System.Collections;
 using System.Text;
 using System.Text.Encodings.Web;
 
-namespace Server.Utilities
+namespace HeimdallTemplateApp.Utilities
 {
     /// <summary>
     /// Lightweight HTML rendering core.

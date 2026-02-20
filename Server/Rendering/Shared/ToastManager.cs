@@ -1,9 +1,9 @@
 ﻿using Microsoft.AspNetCore.Html;
 using Microsoft.AspNetCore.Http;
-using Server.Heimdall;
-using Server.Utilities;
+using HeimdallTemplateApp.Heimdall;
+using HeimdallTemplateApp.Utilities;
 
-namespace Server.Rendering.Shared
+namespace HeimdallTemplateApp.Rendering.Shared
 {
 	public enum ToastType
 	{

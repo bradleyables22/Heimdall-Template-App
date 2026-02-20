@@ -1,9 +1,9 @@
 ﻿using Heimdall.Server;
 using Microsoft.AspNetCore.Html;
-using Server.Heimdall;
-using Server.Utilities;
+using HeimdallTemplateApp.Heimdall;
+using HeimdallTemplateApp.Utilities;
 
-namespace Server.Pages
+namespace HeimdallTemplateApp.Pages
 {
     public static class CounterPage
     {

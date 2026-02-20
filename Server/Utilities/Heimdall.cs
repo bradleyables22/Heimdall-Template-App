@@ -3,9 +3,9 @@ using System.Collections.Generic;
 using System.Globalization;
 using System.Text.Json;
 using Microsoft.AspNetCore.Html;
-using Server.Utilities;
+using HeimdallTemplateApp.Utilities;
 
-namespace Server.Heimdall
+namespace HeimdallTemplateApp.Heimdall
 {
     /// <summary>
     /// Heimdall-specific HTML helpers for wiring server-rendered markup to Heimdall.js behaviors.

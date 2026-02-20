@@ -1,8 +1,8 @@
 ﻿using Microsoft.AspNetCore.Html;
-using Server.Rendering.Shared;
-using Server.Utilities;
+using HeimdallTemplateApp.Rendering.Shared;
+using HeimdallTemplateApp.Utilities;
 
-namespace Server.Rendering.Layouts
+namespace HeimdallTemplateApp.Rendering.Layouts
 {
 	public static class MainLayout
 	{

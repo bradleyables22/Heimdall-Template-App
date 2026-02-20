@@ -1,8 +1,8 @@
 ﻿using Microsoft.AspNetCore.Html;
 using Microsoft.AspNetCore.Http;
-using Server.Utilities;
+using HeimdallTemplateApp.Utilities;
 
-namespace Server.Rendering.Shared
+namespace HeimdallTemplateApp.Rendering.Shared
 {
 	public static class MenuComponent
 	{

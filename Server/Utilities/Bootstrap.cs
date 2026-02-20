@@ -1,6 +1,6 @@
 ﻿using Microsoft.AspNetCore.Html;
 
-namespace Server.Utilities
+namespace HeimdallTemplateApp.Utilities
 {
     public static class Bootstrap
     {

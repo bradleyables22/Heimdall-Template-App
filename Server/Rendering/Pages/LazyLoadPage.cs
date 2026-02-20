@@ -1,9 +1,9 @@
 ﻿using Heimdall.Server;
 using Microsoft.AspNetCore.Html;
-using Server.Heimdall;
-using Server.Utilities;
+using HeimdallTemplateApp.Heimdall;
+using HeimdallTemplateApp.Utilities;
 
-namespace Server.Rendering.Pages
+namespace HeimdallTemplateApp.Rendering.Pages
 {
     public static class LazyLoadPage
     {

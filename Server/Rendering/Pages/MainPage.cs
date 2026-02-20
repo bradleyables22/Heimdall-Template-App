@@ -1,10 +1,10 @@
 ﻿using Heimdall.Server;
 using Microsoft.AspNetCore.Html;
-using Server.Heimdall;
-using Server.Rendering.Shared;
-using Server.Utilities;
+using HeimdallTemplateApp.Heimdall;
+using HeimdallTemplateApp.Rendering.Shared;
+using HeimdallTemplateApp.Utilities;
 
-namespace Server.Rendering.Pages
+namespace HeimdallTemplateApp.Rendering.Pages
 {
     public static class MainPage
     {
