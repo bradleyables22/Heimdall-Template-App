@@ -2,7 +2,7 @@
 
 A full ASP.NET Core web application starter built with **Heimdall**, an HTML-first, server-driven UI framework for strongly-typed rendering, server actions, and real-time updates without SPA complexity.
 
-This template provides a production-ready starting point demonstrating the recommended Heimdall architecture.
+This template provides a starting point for the alpha release, demonstrating the recommended Heimdall architecture.
 
 ---
 
