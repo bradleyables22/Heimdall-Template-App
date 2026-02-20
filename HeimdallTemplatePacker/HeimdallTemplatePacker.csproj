@@ -1,0 +1,43 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+	<PropertyGroup>
+	<TargetFramework>net10.0</TargetFramework>
+	<IsPackable>true</IsPackable>
+	<GeneratePackageOnBuild>false</GeneratePackageOnBuild>
+
+	<PackageType>Template</PackageType>
+	<IncludeContentInPack>true</IncludeContentInPack>
+	<IncludeBuildOutput>false</IncludeBuildOutput>
+
+	<PackageId>HeimdallFramework.Templates.WebApp</PackageId>
+	<Version>0.1.2-alpha.1</Version>
+	<Authors>Bradley Ables</Authors>
+	<Description>Heimdall full ASP.NET Core web app starter template (HTML-first server actions, strongly-typed rendering, optional SSE).</Description>
+	<PackageTags>heimdall;templates;aspnetcore;server-driven-ui;html;ssr;hypermedia</PackageTags>
+	<RepositoryUrl>https://github.com/bradleyables22/Heimdall</RepositoryUrl>
+	<RepositoryType>git</RepositoryType>
+	<PackageLicenseExpression>MIT</PackageLicenseExpression>
+
+	<PackageReadmeFile>README.md</PackageReadmeFile>
+	<PackageIcon>heimdall-128.png</PackageIcon>
+
+	<Deterministic>true</Deterministic>
+	<ContinuousIntegrationBuild>true</ContinuousIntegrationBuild>
+	</PropertyGroup>
+
+	<ItemGroup>
+		<Content Include="..\HeimdallTemplateApp\**\*"
+				 Exclude="..\HeimdallTemplateApp\**\bin\**;
+                    ..\HeimdallTemplateApp\**\obj\**;
+                    ..\HeimdallTemplateApp\**\.vs\**;
+                    ..\HeimdallTemplateApp\**\.git\**"
+				 Pack="true"
+				 PackagePath="content/" />
+	</ItemGroup>
+
+	<ItemGroup>
+		<None Include="heimdall-128.png" Pack="true" PackagePath="\" />
+		<None Include="LICENSE" Pack="true" PackagePath="\" />
+		<None Include="README.md" Pack="true" PackagePath="\" />
+	</ItemGroup>
+
+</Project>
