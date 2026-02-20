@@ -1,5 +1,4 @@
 ﻿using Microsoft.AspNetCore.Html;
-using Microsoft.AspNetCore.Http;
 using HeimdallTemplateApp.Heimdall;
 using HeimdallTemplateApp.Utilities;
 

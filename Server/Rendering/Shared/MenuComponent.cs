@@ -1,5 +1,4 @@
 ﻿using Microsoft.AspNetCore.Html;
-using Microsoft.AspNetCore.Http;
 using HeimdallTemplateApp.Utilities;
 
 namespace HeimdallTemplateApp.Rendering.Shared
@@ -112,7 +111,7 @@ namespace HeimdallTemplateApp.Rendering.Shared
 								a.Class(Bootstrap.ListGroup.Item, Bootstrap.ListGroup.ItemAction);
 								a.Href("/forms");
 
-								a.Tag("i", i => i.Class("bi", "bi-arrow-repeat", Bootstrap.Spacing.Me(2)));
+								a.Tag("i", i => i.Class("bi", "bi-journal", Bootstrap.Spacing.Me(2)));
 								a.Text(" Forms");
 							});
 
@@ -121,7 +120,7 @@ namespace HeimdallTemplateApp.Rendering.Shared
                                 a.Class(Bootstrap.ListGroup.Item, Bootstrap.ListGroup.ItemAction);
                                 a.Href("/lazy");
 
-                                a.Tag("i", i => i.Class("bi", "bi-alarm", Bootstrap.Spacing.Me(2)));
+                                a.Tag("i", i => i.Class("bi", "bi-arrow-repeat", Bootstrap.Spacing.Me(2)));
                                 a.Text(" Lazy Loading");
                             });
                         });

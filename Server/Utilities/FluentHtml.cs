@@ -1,5 +1,4 @@
 ﻿using Microsoft.AspNetCore.Html;
-using System;
 using System.Buffers;
 
 namespace HeimdallTemplateApp.Utilities

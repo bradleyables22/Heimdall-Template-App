@@ -1,5 +1,4 @@
-﻿using Microsoft.AspNetCore.Html;
-
+﻿
 namespace HeimdallTemplateApp.Utilities
 {
     public static class Bootstrap
