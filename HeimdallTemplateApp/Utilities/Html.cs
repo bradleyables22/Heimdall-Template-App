@@ -41,6 +41,7 @@ namespace HeimdallTemplateApp.Utilities
             range,
             reset,
             search,
+            submit,
             tel,
             text,
             time,
@@ -123,135 +124,141 @@ namespace HeimdallTemplateApp.Utilities
         private static string ToInputTypeString(InputType type)
             => type.ToString().Replace("_", "-");
 
-        /// <summary>Creates id="...".</summary>
+        // ---- common attributes ----
+
         public static HtmlAttr Id(string id) => Attr("id", id);
-
-        /// <summary>Creates href="...".</summary>
         public static HtmlAttr Href(string href) => Attr("href", href);
-
-        /// <summary>Creates src="...".</summary>
         public static HtmlAttr Src(string src) => Attr("src", src);
-
-        /// <summary>Creates alt="...".</summary>
         public static HtmlAttr Alt(string alt) => Attr("alt", alt);
-
-        /// <summary>Creates type="...".</summary>
         public static HtmlAttr Type(string type) => Attr("type", type);
-
-        /// <summary>Creates type="..." from an <see cref="InputType"/> enum.</summary>
         public static HtmlAttr Type(InputType type) => Attr("type", ToInputTypeString(type));
-
-        /// <summary>Creates name="...".</summary>
         public static HtmlAttr Name(string name) => Attr("name", name);
-
-        /// <summary>Creates value="...".</summary>
         public static HtmlAttr Value(string value) => Attr("value", value);
-
-        /// <summary>Creates role="...".</summary>
         public static HtmlAttr Role(string role) => Attr("role", role);
-
-        /// <summary>Creates style="...".</summary>
         public static HtmlAttr Style(string css) => Attr("style", css);
-
-        /// <summary>Creates content="..." (commonly used in meta tags).</summary>
         public static HtmlAttr Content(string value) => Attr("content", value);
-
-        /// <summary>
-        /// Creates for="..." (used on &lt;label&gt; to target an element id).
-        /// In HTML, "for" should match the target element's id.
-        /// </summary>
         public static HtmlAttr For(string value) => Attr("for", value);
 
-        /// <summary>Creates data-{key}="value".</summary>
-        public static HtmlAttr Data(string key, string value)
-            => Attr($"data-{key}", value);
+        /// <summary>Creates title="..." (tooltip/accessibility label on many tags).</summary>
+        public static HtmlAttr TitleAttr(string value) => Attr("title", value);
 
-        /// <summary>Creates aria-{key}="value".</summary>
-        public static HtmlAttr Aria(string key, string value)
-            => Attr($"aria-{key}", value);
+        public static HtmlAttr Data(string key, string value) => Attr($"data-{key}", value);
+        public static HtmlAttr Aria(string key, string value) => Attr($"aria-{key}", value);
 
-        /// <summary>Creates the boolean attribute disabled.</summary>
+        // ---- form/text helpers (high-value ergonomics) ----
+
+        public static HtmlAttr Placeholder(string value) => Attr("placeholder", value);
+        public static HtmlAttr AutoComplete(string value) => Attr("autocomplete", value);
+        public static HtmlAttr Min(string value) => Attr("min", value);
+        public static HtmlAttr Max(string value) => Attr("max", value);
+        public static HtmlAttr Step(string value) => Attr("step", value);
+        public static HtmlAttr Pattern(string value) => Attr("pattern", value);
+        public static HtmlAttr MaxLength(int value) => Attr("maxlength", value.ToString());
+        public static HtmlAttr MinLength(int value) => Attr("minlength", value.ToString());
+        public static HtmlAttr Rows(int value) => Attr("rows", value.ToString());
+        public static HtmlAttr Cols(int value) => Attr("cols", value.ToString());
+
+        public static HtmlAttr Action(string value) => Attr("action", value);
+        public static HtmlAttr Method(string value) => Attr("method", value);
+        public static HtmlAttr EncType(string value) => Attr("enctype", value);
+
+        public static HtmlAttr Rel(string value) => Attr("rel", value);
+        public static HtmlAttr Target(string value) => Attr("target", value);
+
+        // ---- boolean attributes ----
+
         public static HtmlAttr Disabled(bool on = true) => Bool("disabled", on);
-
-        /// <summary>Creates the boolean attribute checked.</summary>
         public static HtmlAttr Checked(bool on = true) => Bool("checked", on);
-
-        /// <summary>Creates the boolean attribute selected.</summary>
         public static HtmlAttr Selected(bool on = true) => Bool("selected", on);
-
-        /// <summary>Creates the boolean attribute readonly.</summary>
         public static HtmlAttr ReadOnly(bool on = true) => Bool("readonly", on);
-
-        /// <summary>Creates the boolean attribute required.</summary>
         public static HtmlAttr Required(bool on = true) => Bool("required", on);
+        public static HtmlAttr Multiple(bool on = true) => Bool("multiple", on);
+        public static HtmlAttr AutoFocus(bool on = true) => Bool("autofocus", on);
 
         // ============================================================
         // Common tags (ergonomic wrappers)
         // ============================================================
 
-        /// <summary>Creates &lt;title&gt;...&lt;/title&gt;.</summary>
-        public static IHtmlContent Title(params object?[] c) => Tag("title", c);
-
-        /// <summary>Creates &lt;div&gt;...&lt;/div&gt;.</summary>
-        public static IHtmlContent Div(params object?[] c) => Tag("div", c);
-
-        /// <summary>Creates &lt;span&gt;...&lt;/span&gt;.</summary>
-        public static IHtmlContent Span(params object?[] c) => Tag("span", c);
-
-        /// <summary>Creates &lt;strong&gt;...&lt;/strong&gt;.</summary>
-        public static IHtmlContent Strong(params object?[] c) => Tag("strong", c);
-
-        /// <summary>Creates &lt;p&gt;...&lt;/p&gt;.</summary>
-        public static IHtmlContent P(params object?[] c) => Tag("p", c);
-
-        /// <summary>Creates &lt;h1&gt;...&lt;/h1&gt;.</summary>
-        public static IHtmlContent H1(params object?[] c) => Tag("h1", c);
-
-        /// <summary>Creates &lt;h2&gt;...&lt;/h2&gt;.</summary>
-        public static IHtmlContent H2(params object?[] c) => Tag("h2", c);
-
-        /// <summary>Creates &lt;h3&gt;...&lt;/h3&gt;.</summary>
-        public static IHtmlContent H3(params object?[] c) => Tag("h3", c);
-
-        /// <summary>Creates &lt;h4&gt;...&lt;/h4&gt;.</summary>
-        public static IHtmlContent H4(params object?[] c) => Tag("h4", c);
-
-        /// <summary>Creates &lt;h5&gt;...&lt;/h5&gt;.</summary>
-        public static IHtmlContent H5(params object?[] c) => Tag("h5", c);
-
-        /// <summary>Creates &lt;h6&gt;...&lt;/h6&gt;.</summary>
-        public static IHtmlContent H6(params object?[] c) => Tag("h6", c);
-        // <summary>Creates &lt;textarea&gt;...&lt;/textarea&gt;.</summary>
-        public static IHtmlContent TextArea(params object?[] c) => Tag("textarea", c);
-        /// <summary>Creates &lt;ul&gt;...&lt;/ul&gt;.</summary>
-        public static IHtmlContent Ul(params object?[] c) => Tag("ul", c);
-
-        /// <summary>Creates &lt;li&gt;...&lt;/li&gt;.</summary>
-        public static IHtmlContent Li(params object?[] c) => Tag("li", c);
-
-        /// <summary>Creates &lt;a&gt;...&lt;/a&gt;.</summary>
-        public static IHtmlContent A(params object?[] c) => Tag("a", c);
-
-        /// <summary>Creates &lt;button&gt;...&lt;/button&gt;.</summary>
-        public static IHtmlContent Button(params object?[] c) => Tag("button", c);
-
-        /// <summary>Creates &lt;nav&gt;...&lt;/nav&gt;.</summary>
+        // Document structure
+        public static IHtmlContent HtmlTag(params object?[] c) => Tag("html", c);
+        public static IHtmlContent Head(params object?[] c) => Tag("head", c);
+        public static IHtmlContent Body(params object?[] c) => Tag("body", c);
+        public static IHtmlContent Header(params object?[] c) => Tag("header", c);
+        public static IHtmlContent Main(params object?[] c) => Tag("main", c);
+        public static IHtmlContent Section(params object?[] c) => Tag("section", c);
+        public static IHtmlContent Article(params object?[] c) => Tag("article", c);
+        public static IHtmlContent Aside(params object?[] c) => Tag("aside", c);
+        public static IHtmlContent Footer(params object?[] c) => Tag("footer", c);
         public static IHtmlContent Nav(params object?[] c) => Tag("nav", c);
 
-        /// <summary>Creates &lt;form&gt;...&lt;/form&gt;.</summary>
-        public static IHtmlContent Form(params object?[] c) => Tag("form", c);
+        // Head tags
+        public static IHtmlContent Title(params object?[] c) => Tag("title", c);
+        public static IHtmlContent Meta(params object?[] c) => VoidTag("meta", c);
+        public static IHtmlContent Link(params object?[] c) => VoidTag("link", c);
+        public static IHtmlContent Script(params object?[] c) => Tag("script", c);
+        public static IHtmlContent NoScript(params object?[] c) => Tag("noscript", c);
 
-        /// <summary>Creates &lt;label&gt;...&lt;/label&gt;.</summary>
-        public static IHtmlContent Label(params object?[] c) => Tag("label", c);
-
-        /// <summary>Creates &lt;i&gt;...&lt;/i&gt;.</summary>
-        public static IHtmlContent I(params object?[] c) => Tag("i", c);
-
-        /// <summary>Creates &lt;code&gt;...&lt;/code&gt;.</summary>
+        // Text/content
+        public static IHtmlContent Div(params object?[] c) => Tag("div", c);
+        public static IHtmlContent Span(params object?[] c) => Tag("span", c);
+        public static IHtmlContent Strong(params object?[] c) => Tag("strong", c);
+        public static IHtmlContent P(params object?[] c) => Tag("p", c);
+        public static IHtmlContent H1(params object?[] c) => Tag("h1", c);
+        public static IHtmlContent H2(params object?[] c) => Tag("h2", c);
+        public static IHtmlContent H3(params object?[] c) => Tag("h3", c);
+        public static IHtmlContent H4(params object?[] c) => Tag("h4", c);
+        public static IHtmlContent H5(params object?[] c) => Tag("h5", c);
+        public static IHtmlContent H6(params object?[] c) => Tag("h6", c);
+        public static IHtmlContent A(params object?[] c) => Tag("a", c);
+        public static IHtmlContent Button(params object?[] c) => Tag("button", c);
         public static IHtmlContent Code(params object?[] c) => Tag("code", c);
-
-        /// <summary>Creates &lt;pre&gt;...&lt;/pre&gt;.</summary>
         public static IHtmlContent Pre(params object?[] c) => Tag("pre", c);
+        public static IHtmlContent Template(params object?[] c) => Tag("template", c);
+
+        // Lists
+        public static IHtmlContent Ul(params object?[] c) => Tag("ul", c);
+        public static IHtmlContent Li(params object?[] c) => Tag("li", c);
+
+        // Figure
+        public static IHtmlContent Figure(params object?[] c) => Tag("figure", c);
+        public static IHtmlContent FigCaption(params object?[] c) => Tag("figcaption", c);
+
+        // Forms
+        public static IHtmlContent Form(params object?[] c) => Tag("form", c);
+        public static IHtmlContent Label(params object?[] c) => Tag("label", c);
+        public static IHtmlContent TextArea(params object?[] c) => Tag("textarea", c);
+        public static IHtmlContent Fieldset(params object?[] c) => Tag("fieldset", c);
+        public static IHtmlContent Legend(params object?[] c) => Tag("legend", c);
+
+        // Selects
+        public static IHtmlContent Select(params object?[] c) => Tag("select", c);
+        public static IHtmlContent Option(params object?[] c) => Tag("option", c);
+        public static IHtmlContent OptGroup(params object?[] c) => Tag("optgroup", c);
+        public static IHtmlContent DataList(params object?[] c) => Tag("datalist", c);
+
+        // Native disclosure / dialogs
+        public static IHtmlContent Details(params object?[] c) => Tag("details", c);
+        public static IHtmlContent Summary(params object?[] c) => Tag("summary", c);
+        public static IHtmlContent Dialog(params object?[] c) => Tag("dialog", c);
+
+        // Tables
+        public static IHtmlContent TableHead(params object?[] c) => Tag("thead", c);
+        public static IHtmlContent TableBody(params object?[] c) => Tag("tbody", c);
+        public static IHtmlContent TableFoot(params object?[] c) => Tag("tfoot", c);
+        public static IHtmlContent TableRow(params object?[] c) => Tag("tr", c);
+        public static IHtmlContent TableHeaderCell(params object?[] c) => Tag("th", c);
+        public static IHtmlContent TableDataCell(params object?[] c) => Tag("td", c);
+        public static IHtmlContent Caption(params object?[] c) => Tag("caption", c);
+
+        // Void tags
+        public static IHtmlContent Br(params object?[] c) => VoidTag("br", c);
+        public static IHtmlContent Hr(params object?[] c) => VoidTag("hr", c);
+        public static IHtmlContent Img(params object?[] c) => VoidTag("img", c);
+
+        public static IHtmlContent Input(params object?[] c) => VoidTag("input", c);
+
+        public static IHtmlContent Input(InputType type, params object?[] c)
+            => VoidTag("input", Type(type), c);
 
         /// <summary>
         /// Creates a code block: &lt;pre&gt;&lt;code class="language-{language}"&gt;...&lt;/code&gt;&lt;/pre&gt;.
@@ -264,80 +271,10 @@ namespace HeimdallTemplateApp.Utilities
                 )
             );
 
-        /// <summary>Creates &lt;thead&gt;...&lt;/thead&gt;.</summary>
-        public static IHtmlContent TableHead(params object?[] c) => Tag("thead", c);
-
-        /// <summary>Creates &lt;tbody&gt;...&lt;/tbody&gt;.</summary>
-        public static IHtmlContent TableBody(params object?[] c) => Tag("tbody", c);
-
-        /// <summary>Creates &lt;tfoot&gt;...&lt;/tfoot&gt;.</summary>
-        public static IHtmlContent TableFoot(params object?[] c) => Tag("tfoot", c);
-
-        /// <summary>Creates &lt;tr&gt;...&lt;/tr&gt;.</summary>
-        public static IHtmlContent TableRow(params object?[] c) => Tag("tr", c);
-
-        /// <summary>Creates &lt;th&gt;...&lt;/th&gt;.</summary>
-        public static IHtmlContent TableHeaderCell(params object?[] c) => Tag("th", c);
-
-        /// <summary>Creates &lt;td&gt;...&lt;/td&gt;.</summary>
-        public static IHtmlContent TableDataCell(params object?[] c) => Tag("td", c);
-
-        /// <summary>Creates &lt;caption&gt;...&lt;/caption&gt;.</summary>
-        public static IHtmlContent Caption(params object?[] c) => Tag("caption", c);
-
-        /// <summary>Creates &lt;script&gt;...&lt;/script&gt;.</summary>
-        public static IHtmlContent Script(params object?[] c) => Tag("script", c);
-
-        /// <summary>Creates &lt;noscript&gt;...&lt;/noscript&gt;.</summary>
-        public static IHtmlContent NoScript(params object?[] c) => Tag("noscript", c);
-
-        /// <summary>Creates &lt;template&gt;...&lt;/template&gt;.</summary>
-        public static IHtmlContent Template(params object?[] c) => Tag("template", c);
-
-        /// <summary>Creates &lt;br /&gt;.</summary>
-        public static IHtmlContent Br(params object?[] c) => VoidTag("br", c);
-
-        /// <summary>Creates &lt;hr /&gt;.</summary>
-        public static IHtmlContent Hr(params object?[] c) => VoidTag("hr", c);
-
-        /// <summary>Creates &lt;img /&gt;.</summary>
-        public static IHtmlContent Img(params object?[] c) => VoidTag("img", c);
-
-        /// <summary>Creates &lt;input /&gt;. Add attributes like <see cref="Type(string)"/> / <see cref="Type(InputType)"/>.</summary>
-        public static IHtmlContent Input(params object?[] c) => VoidTag("input", c);
-
-        /// <summary>
-        /// Creates &lt;input type="{type}" /&gt;.
-        /// This overload is the correct way to use the <see cref="InputType"/> enum.
-        /// </summary>
-        public static IHtmlContent Input(InputType type, params object?[] c)
-            => VoidTag("input", Type(type), c);
-
-        /// <summary>Creates &lt;meta /&gt;.</summary>
-        public static IHtmlContent Meta(params object?[] c) => VoidTag("meta", c);
-
-        /// <summary>Creates &lt;link /&gt;.</summary>
-        public static IHtmlContent Link(params object?[] c) => VoidTag("link", c);
-
-        /// <summary>Creates &lt;html&gt;...&lt;/html&gt;.</summary>
-        public static IHtmlContent HtmlTag(params object?[] c) => Tag("html", c);
-
-        /// <summary>Creates &lt;head&gt;...&lt;/head&gt;.</summary>
-        public static IHtmlContent Head(params object?[] c) => Tag("head", c);
-
-        /// <summary>Creates &lt;body&gt;...&lt;/body&gt;.</summary>
-        public static IHtmlContent Body(params object?[] c) => Tag("body", c);
-
-        /// <summary>Creates &lt;footer&gt;...&lt;/footer&gt;.</summary>
-        public static IHtmlContent Footer(params object?[] c) => Tag("footer", c);
-
         // ============================================================
         // Internals
         // ============================================================
 
-        /// <summary>
-        /// Joins CSS class strings with a single space, trimming each segment and skipping empty values.
-        /// </summary>
         private static string CssJoin(IEnumerable<string?> classes)
         {
             var sb = new StringBuilder();
@@ -354,27 +291,14 @@ namespace HeimdallTemplateApp.Utilities
             return sb.ToString();
         }
 
-        /// <summary>
-        /// Classifies attribute behavior for writing/merging.
-        /// </summary>
         public enum AttrKind { None, Normal, Boolean, Class }
 
-        /// <summary>
-        /// Represents a single HTML attribute.
-        /// - Normal/Class: name="value" (value is encoded)
-        /// - Boolean: name (presence-only; no ="" emitted)
-        /// </summary>
         public readonly record struct HtmlAttr(string Name, string Value, AttrKind Kind)
         {
-            /// <summary>An empty/no-op attribute.</summary>
             public static readonly HtmlAttr Empty = new("", "", AttrKind.None);
 
-            /// <summary>True when this attribute represents no output.</summary>
             public bool IsEmpty => Kind == AttrKind.None || string.IsNullOrWhiteSpace(Name);
 
-            /// <summary>
-            /// Writes this attribute to the provided writer, encoding values as needed.
-            /// </summary>
             internal void WriteTo(TextWriter writer, HtmlEncoder encoder)
             {
                 if (IsEmpty)
@@ -383,8 +307,6 @@ namespace HeimdallTemplateApp.Utilities
                 writer.Write(' ');
                 writer.Write(Name);
 
-                // Boolean attributes are represented by presence:
-                //   <input disabled>
                 if (Kind == AttrKind.Boolean)
                     return;
 
@@ -394,12 +316,6 @@ namespace HeimdallTemplateApp.Utilities
             }
         }
 
-        /// <summary>
-        /// Flattens nested arrays/enumerables produced by helpers returning collections of parts.
-        /// IMPORTANT:
-        /// - Treat <see cref="IHtmlContent"/> as atomic (do NOT enumerate it).
-        /// - Treat string as atomic (string is IEnumerable&lt;char&gt;).
-        /// </summary>
         private static IEnumerable<object?> Flatten(IEnumerable parts)
         {
             foreach (var p in parts)
@@ -407,7 +323,6 @@ namespace HeimdallTemplateApp.Utilities
                 if (p is null)
                     continue;
 
-                // Do NOT flatten/iterate these.
                 if (p is IHtmlContent || p is string)
                 {
                     yield return p;
@@ -425,37 +340,22 @@ namespace HeimdallTemplateApp.Utilities
             }
         }
 
-        /// <summary>
-        /// Small ArrayPool-backed buffer builder: Rent -> Add -> ToArray -> Return.
-        /// This reduces per-element allocations when building larger node trees.
-        /// </summary>
         private struct PooledBuffer<T>
         {
             private T[]? _arr;
             private int _count;
 
-            /// <summary>The number of items currently stored.</summary>
             public int Count => _count;
 
-            /// <summary>
-            /// The underlying buffer (only valid after <see cref="Init(int)"/>).
-            /// Used internally for in-place overwrite/merge operations.
-            /// </summary>
             internal T[] Buffer
                 => _arr ?? throw new InvalidOperationException("Buffer not initialized.");
 
-            /// <summary>
-            /// Initializes the buffer by renting from the shared ArrayPool.
-            /// </summary>
             public void Init(int initialCapacity = 8)
             {
                 _arr = ArrayPool<T>.Shared.Rent(initialCapacity);
                 _count = 0;
             }
 
-            /// <summary>
-            /// Adds an item, growing the rented buffer if needed.
-            /// </summary>
             public void Add(T item)
             {
                 if (_arr is null)
@@ -472,9 +372,6 @@ namespace HeimdallTemplateApp.Utilities
                 _arr![_count++] = item;
             }
 
-            /// <summary>
-            /// Copies the used portion of the rented buffer into a new exact-length array.
-            /// </summary>
             public T[] ToArray()
             {
                 if (_arr is null || _count == 0)
@@ -485,9 +382,6 @@ namespace HeimdallTemplateApp.Utilities
                 return result;
             }
 
-            /// <summary>
-            /// Returns the rented buffer to the ArrayPool.
-            /// </summary>
             public void Dispose()
             {
                 if (_arr is not null)
@@ -499,23 +393,14 @@ namespace HeimdallTemplateApp.Utilities
             }
         }
 
-        /// <summary>
-        /// A fragment node that renders a sequence of parts without a wrapping element.
-        /// </summary>
         private sealed class FragmentNode : IHtmlContent
         {
             private readonly object?[] _parts;
             private FragmentNode(object?[] parts) => _parts = parts;
 
-            /// <summary>
-            /// Creates a fragment node. Null is treated as an empty fragment.
-            /// </summary>
             public static IHtmlContent Create(object?[] parts)
                 => new FragmentNode(parts ?? Array.Empty<object?>());
 
-            /// <summary>
-            /// Writes all parts in order.
-            /// </summary>
             public void WriteTo(TextWriter writer, HtmlEncoder encoder)
             {
                 foreach (var p in _parts)
@@ -523,24 +408,15 @@ namespace HeimdallTemplateApp.Utilities
             }
         }
 
-        /// <summary>
-        /// A node representing plain text that will be encoded on output.
-        /// </summary>
         private sealed class TextNode : IHtmlContent
         {
             private readonly string _text;
-
-            /// <summary>Creates a text node.</summary>
             public TextNode(string text) => _text = text;
 
-            /// <summary>Writes the encoded text.</summary>
             public void WriteTo(TextWriter writer, HtmlEncoder encoder)
                 => encoder.Encode(writer, _text);
         }
 
-        /// <summary>
-        /// A node representing a single HTML element with attributes and children.
-        /// </summary>
         private sealed class ElementNode : IHtmlContent
         {
             private readonly string _name;
@@ -556,24 +432,13 @@ namespace HeimdallTemplateApp.Utilities
                 _children = children;
             }
 
-            /// <summary>
-            /// Splits parts into attributes and children, applying merge rules.
-            ///
-            /// Rules:
-            /// - Stable ordering: first-seen attribute position is preserved.
-            /// - Overwrite-by-name (case-insensitive) for normal/boolean attrs.
-            /// - Class attributes are merged into the first-seen class attribute.
-            /// - Boolean attributes render as presence-only (e.g. disabled).
-            /// - Nested enumerables are flattened (see <see cref="Flatten(IEnumerable)"/>).
-            /// - Uses pooled buffers to reduce allocations.
-            /// </summary>
             public static IHtmlContent Create(string name, bool isVoid, object?[] parts)
             {
                 var attrs = new PooledBuffer<HtmlAttr>();
                 var children = new PooledBuffer<object?>();
 
-                attrs.Init(initialCapacity: 6);
-                children.Init(initialCapacity: 6);
+                attrs.Init(initialCapacity: 8);
+                children.Init(initialCapacity: 8);
 
                 int classIndex = -1;
 
@@ -598,7 +463,6 @@ namespace HeimdallTemplateApp.Utilities
                                 }
                                 else
                                 {
-                                    // Merge onto the first-seen class attribute.
                                     var existing = attrs.Buffer[classIndex];
                                     attrs.Buffer[classIndex] = new HtmlAttr(
                                         "class",
@@ -611,7 +475,6 @@ namespace HeimdallTemplateApp.Utilities
                                 continue;
                             }
 
-                            // Overwrite existing by name (case-insensitive), preserving attribute order.
                             var replaced = false;
                             for (int i = 0; i < attrs.Count; i++)
                             {
@@ -649,16 +512,11 @@ namespace HeimdallTemplateApp.Utilities
                 }
             }
 
-            /// <summary>
-            /// Writes this element as HTML.
-            /// Void elements are written using "/&gt;" style (e.g. &lt;input /&gt;).
-            /// </summary>
             public void WriteTo(TextWriter writer, HtmlEncoder encoder)
             {
                 writer.Write('<');
                 writer.Write(_name);
 
-                // Stable attribute order.
                 foreach (var attr in _attrs)
                     attr.WriteTo(writer, encoder);
 
@@ -679,11 +537,6 @@ namespace HeimdallTemplateApp.Utilities
             }
         }
 
-        /// <summary>
-        /// Renders a single "part" (child) to the writer.
-        /// Strings and arbitrary objects are encoded; <see cref="IHtmlContent"/> is trusted to render itself.
-        /// Enumerables are iterated (except strings and IHtmlContent which are treated as atomic earlier).
-        /// </summary>
         private static void RenderPart(TextWriter writer, HtmlEncoder encoder, object? part)
         {
             if (part is null)
@@ -692,7 +545,6 @@ namespace HeimdallTemplateApp.Utilities
             switch (part)
             {
                 case HtmlAttr:
-                    // Attributes are consumed during ElementNode.Create; if they show up in children, ignore.
                     return;
 
                 case IHtmlContent html:

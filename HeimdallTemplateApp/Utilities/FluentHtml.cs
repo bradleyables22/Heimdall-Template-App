@@ -12,17 +12,6 @@ namespace HeimdallTemplateApp.Utilities
     /// - <see cref="FluentHtml"/> provides a lambda/builder layer that collects "parts" (attrs + children)
     ///   and delegates final rendering to <see cref="Html.Tag(string, object?[])"/> / <see cref="Html.VoidTag(string, object?[])"/>.
     /// - Keep the fluent layer allocation-light (ArrayPool-backed buffers) and easy to read.
-    ///
-    /// Usage example:
-    /// <code>
-    /// var content = FluentHtml.Div(d =>
-    /// {
-    ///     d.Class("card");
-    ///     d.Label(l => l.For("Email").Text("Email"));
-    ///     d.Input(Html.InputType.email, i => i.Id("Email").Class("form-control"));
-    ///     d.TextArea(t => t.Name("Notes").Class("form-control").Text("Hello"));
-    /// });
-    /// </code>
     /// </summary>
     public static class FluentHtml
     {
@@ -30,37 +19,18 @@ namespace HeimdallTemplateApp.Utilities
         // Element factories (mirror Html)
         // ============================================================
 
-        /// <summary>
-        /// Builds a non-void element using a builder block (e.g. &lt;div&gt;...&lt;/div&gt;).
-        /// The builder collects attributes and children and delegates final rendering to <see cref="Html.Tag"/>.
-        /// </summary>
         public static IHtmlContent Tag(string name, Action<ElementBuilder> build)
             => BuildTag(name, isVoid: false, build);
 
-        /// <summary>
-        /// Builds a void element using a builder block (e.g. &lt;input /&gt;).
-        /// The builder collects attributes and (ignored) children and delegates final rendering to <see cref="Html.VoidTag"/>.
-        /// </summary>
         public static IHtmlContent VoidTag(string name, Action<ElementBuilder> build)
             => BuildTag(name, isVoid: true, build);
 
-        /// <summary>
-        /// Mirrors <see cref="Html.Tag(string, object?[])"/> for non-builder call sites, enabling FluentHtml
-        /// to be a drop-in replacement when you don't want lambdas.
-        /// </summary>
         public static IHtmlContent Tag(string name, params object?[] parts)
             => Html.Tag(name, parts);
 
-        /// <summary>
-        /// Mirrors <see cref="Html.VoidTag(string, object?[])"/> for non-builder call sites.
-        /// </summary>
         public static IHtmlContent VoidTag(string name, params object?[] parts)
             => Html.VoidTag(name, parts);
 
-        /// <summary>
-        /// Builds a fragment using a builder block (no wrapper element).
-        /// Useful when you want to emit a sequence of nodes with normal C# flow.
-        /// </summary>
         public static IHtmlContent Fragment(Action<FragmentBuilder> build)
         {
             using var fb = new FragmentBuilder(initialCapacity: 8);
@@ -68,103 +38,82 @@ namespace HeimdallTemplateApp.Utilities
             return Html.Fragment(fb.ToArray());
         }
 
-        /// <summary>
-        /// Mirrors <see cref="Html.Fragment(object?[])"/> for non-builder call sites.
-        /// </summary>
         public static IHtmlContent Fragment(params object?[] parts)
             => Html.Fragment(parts);
 
-        /// <summary>
-        /// Mirrors <see cref="Html.Text(string?)"/> (encoded text).
-        /// </summary>
         public static IHtmlContent Text(string? text) => Html.Text(text);
-
-        /// <summary>
-        /// Mirrors <see cref="Html.Raw(string?)"/> (unencoded HTML).
-        /// </summary>
         public static IHtmlContent Raw(string? html) => Html.Raw(html);
 
         // ============================================================
         // Attribute helpers (mirror Html)
         // ============================================================
 
-        /// <summary>Creates a normal attribute name="value".</summary>
         public static Html.HtmlAttr Attr(string name, string? value) => Html.Attr(name, value);
-
-        /// <summary>
-        /// Creates a label 'for' attribute. In HTML this should match the target element's id.
-        /// </summary>
         public static Html.HtmlAttr For(string value) => Html.For(value);
-
-        /// <summary>Creates a boolean attribute (presence-only when on == true).</summary>
         public static Html.HtmlAttr Bool(string name, bool on) => Html.Bool(name, on);
-
-        /// <summary>Creates a class attribute; multiple class attrs on the same element will be merged.</summary>
         public static Html.HtmlAttr Class(params string?[] classes) => Html.Class(classes);
-
-        /// <summary>Creates id="...".</summary>
         public static Html.HtmlAttr Id(string id) => Html.Id(id);
-
-        /// <summary>Creates href="...".</summary>
         public static Html.HtmlAttr Href(string href) => Html.Href(href);
-
-        /// <summary>Creates src="...".</summary>
         public static Html.HtmlAttr Src(string src) => Html.Src(src);
-
-        /// <summary>Creates alt="...".</summary>
         public static Html.HtmlAttr Alt(string alt) => Html.Alt(alt);
-
-        /// <summary>Creates type="..." (string form).</summary>
         public static Html.HtmlAttr Type(string type) => Html.Type(type);
-
-        /// <summary>Creates type="..." from <see cref="Html.InputType"/> (enum form).</summary>
         public static Html.HtmlAttr Type(Html.InputType type) => Html.Type(type);
-
-        /// <summary>Creates name="...".</summary>
         public static Html.HtmlAttr Name(string name) => Html.Name(name);
-
-        /// <summary>Creates value="...".</summary>
         public static Html.HtmlAttr Value(string value) => Html.Value(value);
-
-        /// <summary>Creates role="...".</summary>
         public static Html.HtmlAttr Role(string role) => Html.Role(role);
-
-        /// <summary>Creates style="...".</summary>
         public static Html.HtmlAttr Style(string css) => Html.Style(css);
-
-        /// <summary>
-        /// Creates content="..." (commonly used on meta tags).
-        /// Named ContentAttr to avoid colliding with builder methods like Content(IHtmlContent).
-        /// </summary>
         public static Html.HtmlAttr ContentAttr(string value) => Html.Content(value);
-
-        /// <summary>Creates data-{key}="value".</summary>
+        public static Html.HtmlAttr TitleAttr(string value) => Html.TitleAttr(value);
         public static Html.HtmlAttr Data(string key, string value) => Html.Data(key, value);
-
-        /// <summary>Creates aria-{key}="value".</summary>
         public static Html.HtmlAttr Aria(string key, string value) => Html.Aria(key, value);
 
-        /// <summary>Creates disabled attribute (presence-only).</summary>
+        public static Html.HtmlAttr Placeholder(string value) => Html.Placeholder(value);
+        public static Html.HtmlAttr AutoComplete(string value) => Html.AutoComplete(value);
+        public static Html.HtmlAttr Min(string value) => Html.Min(value);
+        public static Html.HtmlAttr Max(string value) => Html.Max(value);
+        public static Html.HtmlAttr Step(string value) => Html.Step(value);
+        public static Html.HtmlAttr Pattern(string value) => Html.Pattern(value);
+        public static Html.HtmlAttr MaxLength(int value) => Html.MaxLength(value);
+        public static Html.HtmlAttr MinLength(int value) => Html.MinLength(value);
+        public static Html.HtmlAttr Rows(int value) => Html.Rows(value);
+        public static Html.HtmlAttr Cols(int value) => Html.Cols(value);
+        public static Html.HtmlAttr Action(string value) => Html.Action(value);
+        public static Html.HtmlAttr Method(string value) => Html.Method(value);
+        public static Html.HtmlAttr EncType(string value) => Html.EncType(value);
+        public static Html.HtmlAttr Rel(string value) => Html.Rel(value);
+        public static Html.HtmlAttr Target(string value) => Html.Target(value);
+
         public static Html.HtmlAttr Disabled(bool on = true) => Html.Disabled(on);
-
-        /// <summary>Creates checked attribute (presence-only).</summary>
         public static Html.HtmlAttr Checked(bool on = true) => Html.Checked(on);
-
-        /// <summary>Creates selected attribute (presence-only).</summary>
         public static Html.HtmlAttr Selected(bool on = true) => Html.Selected(on);
-
-        /// <summary>Creates readonly attribute (presence-only).</summary>
         public static Html.HtmlAttr ReadOnly(bool on = true) => Html.ReadOnly(on);
-
-        /// <summary>Creates required attribute (presence-only).</summary>
         public static Html.HtmlAttr Required(bool on = true) => Html.Required(on);
+        public static Html.HtmlAttr Multiple(bool on = true) => Html.Multiple(on);
+        public static Html.HtmlAttr AutoFocus(bool on = true) => Html.AutoFocus(on);
 
         // ============================================================
         // Common tags (ergonomic wrappers) - mirror Html
         // ============================================================
 
-        // Non-void
+        // Structure / head
+        public static IHtmlContent HtmlTag(Action<ElementBuilder> b) => Tag("html", b);
+        public static IHtmlContent Head(Action<ElementBuilder> b) => Tag("head", b);
+        public static IHtmlContent Body(Action<ElementBuilder> b) => Tag("body", b);
+        public static IHtmlContent Header(Action<ElementBuilder> b) => Tag("header", b);
+        public static IHtmlContent Main(Action<ElementBuilder> b) => Tag("main", b);
+        public static IHtmlContent Section(Action<ElementBuilder> b) => Tag("section", b);
+        public static IHtmlContent Article(Action<ElementBuilder> b) => Tag("article", b);
+        public static IHtmlContent Aside(Action<ElementBuilder> b) => Tag("aside", b);
+        public static IHtmlContent Footer(Action<ElementBuilder> b) => Tag("footer", b);
+        public static IHtmlContent Nav(Action<ElementBuilder> b) => Tag("nav", b);
+
         public static IHtmlContent Title(Action<ElementBuilder> b) => Tag("title", b);
+        public static IHtmlContent Script(Action<ElementBuilder> b) => Tag("script", b);
+        public static IHtmlContent NoScript(Action<ElementBuilder> b) => Tag("noscript", b);
+        public static IHtmlContent Meta(Action<ElementBuilder> b) => VoidTag("meta", b);
+        public static IHtmlContent Link(Action<ElementBuilder> b) => VoidTag("link", b);
+
+        // Content
         public static IHtmlContent Div(Action<ElementBuilder> b) => Tag("div", b);
         public static IHtmlContent Span(Action<ElementBuilder> b) => Tag("span", b);
         public static IHtmlContent Strong(Action<ElementBuilder> b) => Tag("strong", b);
@@ -179,20 +128,42 @@ namespace HeimdallTemplateApp.Utilities
         public static IHtmlContent Li(Action<ElementBuilder> b) => Tag("li", b);
         public static IHtmlContent A(Action<ElementBuilder> b) => Tag("a", b);
         public static IHtmlContent Button(Action<ElementBuilder> b) => Tag("button", b);
-        public static IHtmlContent Nav(Action<ElementBuilder> b) => Tag("nav", b);
-        public static IHtmlContent Form(Action<ElementBuilder> b) => Tag("form", b);
-        public static IHtmlContent Label(Action<ElementBuilder> b) => Tag("label", b);
         public static IHtmlContent I(Action<ElementBuilder> b) => Tag("i", b);
         public static IHtmlContent Code(Action<ElementBuilder> b) => Tag("code", b);
         public static IHtmlContent Pre(Action<ElementBuilder> b) => Tag("pre", b);
+        public static IHtmlContent Template(Action<ElementBuilder> b) => Tag("template", b);
 
-        /// <summary>
-        /// FIX: textarea is NOT an input type. It is its own tag.
-        /// </summary>
+        // Figure
+        public static IHtmlContent Figure(Action<ElementBuilder> b) => Tag("figure", b);
+        public static IHtmlContent FigCaption(Action<ElementBuilder> b) => Tag("figcaption", b);
+
+        // Forms
+        public static IHtmlContent Form(Action<ElementBuilder> b) => Tag("form", b);
+        public static IHtmlContent Label(Action<ElementBuilder> b) => Tag("label", b);
         public static IHtmlContent TextArea(Action<ElementBuilder> b) => Tag("textarea", b);
+        public static IHtmlContent Textarea(Action<ElementBuilder> b) => Tag("textarea", b); // alias
+        public static IHtmlContent Fieldset(Action<ElementBuilder> b) => Tag("fieldset", b);
+        public static IHtmlContent Legend(Action<ElementBuilder> b) => Tag("legend", b);
 
-        /// <summary>Optional alias if you prefer the HTML casing.</summary>
-        public static IHtmlContent Textarea(Action<ElementBuilder> b) => Tag("textarea", b);
+        // Selects
+        public static IHtmlContent Select(Action<ElementBuilder> b) => Tag("select", b);
+        public static IHtmlContent Option(Action<ElementBuilder> b) => Tag("option", b);
+        public static IHtmlContent OptGroup(Action<ElementBuilder> b) => Tag("optgroup", b);
+        public static IHtmlContent DataList(Action<ElementBuilder> b) => Tag("datalist", b);
+
+        // Native disclosure / dialogs
+        public static IHtmlContent Details(Action<ElementBuilder> b) => Tag("details", b);
+        public static IHtmlContent Summary(Action<ElementBuilder> b) => Tag("summary", b);
+        public static IHtmlContent Dialog(Action<ElementBuilder> b) => Tag("dialog", b);
+
+        // Tables
+        public static IHtmlContent TableHead(Action<ElementBuilder> b) => Tag("thead", b);
+        public static IHtmlContent TableBody(Action<ElementBuilder> b) => Tag("tbody", b);
+        public static IHtmlContent TableFoot(Action<ElementBuilder> b) => Tag("tfoot", b);
+        public static IHtmlContent TableRow(Action<ElementBuilder> b) => Tag("tr", b);
+        public static IHtmlContent TableHeaderCell(Action<ElementBuilder> b) => Tag("th", b);
+        public static IHtmlContent TableDataCell(Action<ElementBuilder> b) => Tag("td", b);
+        public static IHtmlContent Caption(Action<ElementBuilder> b) => Tag("caption", b);
 
         public static IHtmlContent CodeBlock(string language, Action<ElementBuilder> build)
             => Tag("pre", p =>
@@ -204,31 +175,13 @@ namespace HeimdallTemplateApp.Utilities
                 });
             });
 
-        // Table tags
-        public static IHtmlContent TableHead(Action<ElementBuilder> b) => Tag("thead", b);
-        public static IHtmlContent TableBody(Action<ElementBuilder> b) => Tag("tbody", b);
-        public static IHtmlContent TableFoot(Action<ElementBuilder> b) => Tag("tfoot", b);
-        public static IHtmlContent TableRow(Action<ElementBuilder> b) => Tag("tr", b);
-        public static IHtmlContent TableHeaderCell(Action<ElementBuilder> b) => Tag("th", b);
-        public static IHtmlContent TableDataCell(Action<ElementBuilder> b) => Tag("td", b);
-        public static IHtmlContent Caption(Action<ElementBuilder> b) => Tag("caption", b);
-
-        public static IHtmlContent Script(Action<ElementBuilder> b) => Tag("script", b);
-        public static IHtmlContent NoScript(Action<ElementBuilder> b) => Tag("noscript", b);
-        public static IHtmlContent Template(Action<ElementBuilder> b) => Tag("template", b);
-
         // Void tags
         public static IHtmlContent Br(Action<ElementBuilder> b) => VoidTag("br", b);
         public static IHtmlContent Hr(Action<ElementBuilder> b) => VoidTag("hr", b);
         public static IHtmlContent Img(Action<ElementBuilder> b) => VoidTag("img", b);
 
-        /// <summary>Creates &lt;input /&gt; using a builder for attributes (children ignored).</summary>
         public static IHtmlContent Input(Action<ElementBuilder> b) => VoidTag("input", b);
 
-        /// <summary>
-        /// Creates &lt;input type="{type}" /&gt; using a builder for additional attributes (children ignored).
-        /// IMPORTANT: Html.InputType should NOT contain 'textarea'.
-        /// </summary>
         public static IHtmlContent Input(Html.InputType type, Action<ElementBuilder> build)
             => VoidTag("input", b =>
             {
@@ -236,20 +189,8 @@ namespace HeimdallTemplateApp.Utilities
                 build(b);
             });
 
-        /// <summary>
-        /// Mirrors <see cref="Html.Input(Html.InputType, object?[])"/> for non-builder call sites.
-        /// </summary>
         public static IHtmlContent Input(Html.InputType type, params object?[] parts)
             => Html.Input(type, parts);
-
-        public static IHtmlContent Meta(Action<ElementBuilder> b) => VoidTag("meta", b);
-        public static IHtmlContent Link(Action<ElementBuilder> b) => VoidTag("link", b);
-
-        // Root-ish tags
-        public static IHtmlContent HtmlTag(Action<ElementBuilder> b) => Tag("html", b);
-        public static IHtmlContent Head(Action<ElementBuilder> b) => Tag("head", b);
-        public static IHtmlContent Body(Action<ElementBuilder> b) => Tag("body", b);
-        public static IHtmlContent Footer(Action<ElementBuilder> b) => Tag("footer", b);
 
         // ============================================================
         // Builders
@@ -304,7 +245,7 @@ namespace HeimdallTemplateApp.Utilities
             }
 
             // ----------------------------
-            // Attribute helpers (chainable) - mirror Html
+            // Attribute helpers (chainable)
             // ----------------------------
 
             public ElementBuilder Attr(string name, string? value) { _parts.Add(Html.Attr(name, value)); return this; }
@@ -322,22 +263,60 @@ namespace HeimdallTemplateApp.Utilities
             public ElementBuilder Role(string role) { _parts.Add(Html.Role(role)); return this; }
             public ElementBuilder Style(string css) { _parts.Add(Html.Style(css)); return this; }
             public ElementBuilder ContentAttr(string value) { _parts.Add(Html.Content(value)); return this; }
+            public ElementBuilder TitleAttr(string value) { _parts.Add(Html.TitleAttr(value)); return this; }
             public ElementBuilder Data(string key, string value) { _parts.Add(Html.Data(key, value)); return this; }
             public ElementBuilder Aria(string key, string value) { _parts.Add(Html.Aria(key, value)); return this; }
+
+            public ElementBuilder Placeholder(string value) { _parts.Add(Html.Placeholder(value)); return this; }
+            public ElementBuilder AutoComplete(string value) { _parts.Add(Html.AutoComplete(value)); return this; }
+            public ElementBuilder Min(string value) { _parts.Add(Html.Min(value)); return this; }
+            public ElementBuilder Max(string value) { _parts.Add(Html.Max(value)); return this; }
+            public ElementBuilder Step(string value) { _parts.Add(Html.Step(value)); return this; }
+            public ElementBuilder Pattern(string value) { _parts.Add(Html.Pattern(value)); return this; }
+            public ElementBuilder MaxLength(int value) { _parts.Add(Html.MaxLength(value)); return this; }
+            public ElementBuilder MinLength(int value) { _parts.Add(Html.MinLength(value)); return this; }
+            public ElementBuilder Rows(int value) { _parts.Add(Html.Rows(value)); return this; }
+            public ElementBuilder Cols(int value) { _parts.Add(Html.Cols(value)); return this; }
+            public ElementBuilder Action(string value) { _parts.Add(Html.Action(value)); return this; }
+            public ElementBuilder Method(string value) { _parts.Add(Html.Method(value)); return this; }
+            public ElementBuilder EncType(string value) { _parts.Add(Html.EncType(value)); return this; }
+            public ElementBuilder Rel(string value) { _parts.Add(Html.Rel(value)); return this; }
+            public ElementBuilder Target(string value) { _parts.Add(Html.Target(value)); return this; }
+
             public ElementBuilder Disabled(bool on = true) { _parts.Add(Html.Disabled(on)); return this; }
             public ElementBuilder Checked(bool on = true) { _parts.Add(Html.Checked(on)); return this; }
             public ElementBuilder Selected(bool on = true) { _parts.Add(Html.Selected(on)); return this; }
             public ElementBuilder ReadOnly(bool on = true) { _parts.Add(Html.ReadOnly(on)); return this; }
             public ElementBuilder Required(bool on = true) { _parts.Add(Html.Required(on)); return this; }
+            public ElementBuilder Multiple(bool on = true) { _parts.Add(Html.Multiple(on)); return this; }
+            public ElementBuilder AutoFocus(bool on = true) { _parts.Add(Html.AutoFocus(on)); return this; }
 
             // ----------------------------
-            // Nested tags (adds as children) - mirror FluentHtml
+            // Nested tags (adds as children)
             // ----------------------------
 
             public ElementBuilder Tag(string name, Action<ElementBuilder> build) { _parts.Add(FluentHtml.Tag(name, build)); return this; }
             public ElementBuilder VoidTag(string name, Action<ElementBuilder> build) { _parts.Add(FluentHtml.VoidTag(name, build)); return this; }
 
+            // Structure / head
+            public ElementBuilder HtmlTag(Action<ElementBuilder> b) => Tag("html", b);
+            public ElementBuilder Head(Action<ElementBuilder> b) => Tag("head", b);
+            public ElementBuilder Body(Action<ElementBuilder> b) => Tag("body", b);
+            public ElementBuilder Header(Action<ElementBuilder> b) => Tag("header", b);
+            public ElementBuilder Main(Action<ElementBuilder> b) => Tag("main", b);
+            public ElementBuilder Section(Action<ElementBuilder> b) => Tag("section", b);
+            public ElementBuilder Article(Action<ElementBuilder> b) => Tag("article", b);
+            public ElementBuilder Aside(Action<ElementBuilder> b) => Tag("aside", b);
+            public ElementBuilder Footer(Action<ElementBuilder> b) => Tag("footer", b);
+            public ElementBuilder Nav(Action<ElementBuilder> b) => Tag("nav", b);
+
             public ElementBuilder Title(Action<ElementBuilder> b) => Tag("title", b);
+            public ElementBuilder Script(Action<ElementBuilder> b) => Tag("script", b);
+            public ElementBuilder NoScript(Action<ElementBuilder> b) => Tag("noscript", b);
+            public ElementBuilder Meta(Action<ElementBuilder> b) => VoidTag("meta", b);
+            public ElementBuilder Link(Action<ElementBuilder> b) => VoidTag("link", b);
+
+            // Content
             public ElementBuilder Div(Action<ElementBuilder> b) => Tag("div", b);
             public ElementBuilder Span(Action<ElementBuilder> b) => Tag("span", b);
             public ElementBuilder Strong(Action<ElementBuilder> b) => Tag("strong", b);
@@ -352,27 +331,35 @@ namespace HeimdallTemplateApp.Utilities
             public ElementBuilder Li(Action<ElementBuilder> b) => Tag("li", b);
             public ElementBuilder A(Action<ElementBuilder> b) => Tag("a", b);
             public ElementBuilder Button(Action<ElementBuilder> b) => Tag("button", b);
-            public ElementBuilder Nav(Action<ElementBuilder> b) => Tag("nav", b);
-            public ElementBuilder Form(Action<ElementBuilder> b) => Tag("form", b);
-            public ElementBuilder Label(Action<ElementBuilder> b) => Tag("label", b);
             public ElementBuilder I(Action<ElementBuilder> b) => Tag("i", b);
             public ElementBuilder Code(Action<ElementBuilder> b) => Tag("code", b);
             public ElementBuilder Pre(Action<ElementBuilder> b) => Tag("pre", b);
+            public ElementBuilder Template(Action<ElementBuilder> b) => Tag("template", b);
 
-            /// <summary>
-            /// FIX: textarea is its own element, not &lt;input type="..."&gt;.
-            /// </summary>
+            // Figure
+            public ElementBuilder Figure(Action<ElementBuilder> b) => Tag("figure", b);
+            public ElementBuilder FigCaption(Action<ElementBuilder> b) => Tag("figcaption", b);
+
+            // Forms
+            public ElementBuilder Form(Action<ElementBuilder> b) => Tag("form", b);
+            public ElementBuilder Label(Action<ElementBuilder> b) => Tag("label", b);
             public ElementBuilder TextArea(Action<ElementBuilder> b) => Tag("textarea", b);
-
-            /// <summary>Optional alias.</summary>
             public ElementBuilder Textarea(Action<ElementBuilder> b) => Tag("textarea", b);
+            public ElementBuilder Fieldset(Action<ElementBuilder> b) => Tag("fieldset", b);
+            public ElementBuilder Legend(Action<ElementBuilder> b) => Tag("legend", b);
 
-            public ElementBuilder CodeBlock(string language, Action<ElementBuilder> build)
-            {
-                _parts.Add(FluentHtml.CodeBlock(language, build));
-                return this;
-            }
+            // Selects
+            public ElementBuilder Select(Action<ElementBuilder> b) => Tag("select", b);
+            public ElementBuilder Option(Action<ElementBuilder> b) => Tag("option", b);
+            public ElementBuilder OptGroup(Action<ElementBuilder> b) => Tag("optgroup", b);
+            public ElementBuilder DataList(Action<ElementBuilder> b) => Tag("datalist", b);
 
+            // Native disclosure / dialogs
+            public ElementBuilder Details(Action<ElementBuilder> b) => Tag("details", b);
+            public ElementBuilder Summary(Action<ElementBuilder> b) => Tag("summary", b);
+            public ElementBuilder Dialog(Action<ElementBuilder> b) => Tag("dialog", b);
+
+            // Tables
             public ElementBuilder TableHead(Action<ElementBuilder> b) => Tag("thead", b);
             public ElementBuilder TableBody(Action<ElementBuilder> b) => Tag("tbody", b);
             public ElementBuilder TableFoot(Action<ElementBuilder> b) => Tag("tfoot", b);
@@ -381,10 +368,13 @@ namespace HeimdallTemplateApp.Utilities
             public ElementBuilder TableDataCell(Action<ElementBuilder> b) => Tag("td", b);
             public ElementBuilder Caption(Action<ElementBuilder> b) => Tag("caption", b);
 
-            public ElementBuilder Script(Action<ElementBuilder> b) => Tag("script", b);
-            public ElementBuilder NoScript(Action<ElementBuilder> b) => Tag("noscript", b);
-            public ElementBuilder Template(Action<ElementBuilder> b) => Tag("template", b);
+            public ElementBuilder CodeBlock(string language, Action<ElementBuilder> build)
+            {
+                _parts.Add(FluentHtml.CodeBlock(language, build));
+                return this;
+            }
 
+            // Void wrappers
             public ElementBuilder Br(Action<ElementBuilder> b) => VoidTag("br", b);
             public ElementBuilder Hr(Action<ElementBuilder> b) => VoidTag("hr", b);
             public ElementBuilder Img(Action<ElementBuilder> b) => VoidTag("img", b);
@@ -395,14 +385,6 @@ namespace HeimdallTemplateApp.Utilities
                 _parts.Add(FluentHtml.Input(type, build));
                 return this;
             }
-
-            public ElementBuilder Meta(Action<ElementBuilder> b) => VoidTag("meta", b);
-            public ElementBuilder Link(Action<ElementBuilder> b) => VoidTag("link", b);
-
-            public ElementBuilder HtmlTag(Action<ElementBuilder> b) => Tag("html", b);
-            public ElementBuilder Head(Action<ElementBuilder> b) => Tag("head", b);
-            public ElementBuilder Body(Action<ElementBuilder> b) => Tag("body", b);
-            public ElementBuilder Footer(Action<ElementBuilder> b) => Tag("footer", b);
         }
 
         public sealed class FragmentBuilder : IDisposable
@@ -445,22 +427,57 @@ namespace HeimdallTemplateApp.Utilities
             public FragmentBuilder Selected(bool on = true) { _parts.Add(Html.Selected(on)); return this; }
             public FragmentBuilder ReadOnly(bool on = true) { _parts.Add(Html.ReadOnly(on)); return this; }
             public FragmentBuilder Required(bool on = true) { _parts.Add(Html.Required(on)); return this; }
-            public FragmentBuilder Data(string key, string value) { _parts.Add(Html.Data(key, value)); return this; }
-            public FragmentBuilder Aria(string key, string value) { _parts.Add(Html.Aria(key, value)); return this; }
+            public FragmentBuilder Multiple(bool on = true) { _parts.Add(Html.Multiple(on)); return this; }
+            public FragmentBuilder AutoFocus(bool on = true) { _parts.Add(Html.AutoFocus(on)); return this; }
+            public FragmentBuilder Placeholder(string value) { _parts.Add(Html.Placeholder(value)); return this; }
+            public FragmentBuilder AutoComplete(string value) { _parts.Add(Html.AutoComplete(value)); return this; }
+            public FragmentBuilder Min(string value) { _parts.Add(Html.Min(value)); return this; }
+            public FragmentBuilder Max(string value) { _parts.Add(Html.Max(value)); return this; }
+            public FragmentBuilder Step(string value) { _parts.Add(Html.Step(value)); return this; }
+            public FragmentBuilder Pattern(string value) { _parts.Add(Html.Pattern(value)); return this; }
+            public FragmentBuilder MaxLength(int value) { _parts.Add(Html.MaxLength(value)); return this; }
+            public FragmentBuilder MinLength(int value) { _parts.Add(Html.MinLength(value)); return this; }
+            public FragmentBuilder Rows(int value) { _parts.Add(Html.Rows(value)); return this; }
+            public FragmentBuilder Cols(int value) { _parts.Add(Html.Cols(value)); return this; }
             public FragmentBuilder Style(string css) { _parts.Add(Html.Style(css)); return this; }
             public FragmentBuilder Href(string href) { _parts.Add(Html.Href(href)); return this; }
             public FragmentBuilder Src(string src) { _parts.Add(Html.Src(src)); return this; }
             public FragmentBuilder Alt(string alt) { _parts.Add(Html.Alt(alt)); return this; }
             public FragmentBuilder Role(string role) { _parts.Add(Html.Role(role)); return this; }
             public FragmentBuilder ContentAttr(string value) { _parts.Add(Html.Content(value)); return this; }
+            public FragmentBuilder TitleAttr(string value) { _parts.Add(Html.TitleAttr(value)); return this; }
             public FragmentBuilder Attr(string name, string? value) { _parts.Add(Html.Attr(name, value)); return this; }
+            public FragmentBuilder Data(string key, string value) { _parts.Add(Html.Data(key, value)); return this; }
+            public FragmentBuilder Aria(string key, string value) { _parts.Add(Html.Aria(key, value)); return this; }
+            public FragmentBuilder Action(string value) { _parts.Add(Html.Action(value)); return this; }
+            public FragmentBuilder Method(string value) { _parts.Add(Html.Method(value)); return this; }
+            public FragmentBuilder EncType(string value) { _parts.Add(Html.EncType(value)); return this; }
+            public FragmentBuilder Rel(string value) { _parts.Add(Html.Rel(value)); return this; }
+            public FragmentBuilder Target(string value) { _parts.Add(Html.Target(value)); return this; }
 
             // Generic tag helpers
             public FragmentBuilder Tag(string name, Action<ElementBuilder> build) { _parts.Add(FluentHtml.Tag(name, build)); return this; }
             public FragmentBuilder VoidTag(string name, Action<ElementBuilder> build) { _parts.Add(FluentHtml.VoidTag(name, build)); return this; }
 
-            // Mirror ElementBuilder wrappers (non-void)
+            // Structure
+            public FragmentBuilder HtmlTag(Action<ElementBuilder> b) => Tag("html", b);
+            public FragmentBuilder Head(Action<ElementBuilder> b) => Tag("head", b);
+            public FragmentBuilder Body(Action<ElementBuilder> b) => Tag("body", b);
+            public FragmentBuilder Header(Action<ElementBuilder> b) => Tag("header", b);
+            public FragmentBuilder Main(Action<ElementBuilder> b) => Tag("main", b);
+            public FragmentBuilder Section(Action<ElementBuilder> b) => Tag("section", b);
+            public FragmentBuilder Article(Action<ElementBuilder> b) => Tag("article", b);
+            public FragmentBuilder Aside(Action<ElementBuilder> b) => Tag("aside", b);
+            public FragmentBuilder Footer(Action<ElementBuilder> b) => Tag("footer", b);
+            public FragmentBuilder Nav(Action<ElementBuilder> b) => Tag("nav", b);
+
             public FragmentBuilder Title(Action<ElementBuilder> b) => Tag("title", b);
+            public FragmentBuilder Script(Action<ElementBuilder> b) => Tag("script", b);
+            public FragmentBuilder NoScript(Action<ElementBuilder> b) => Tag("noscript", b);
+            public FragmentBuilder Meta(Action<ElementBuilder> b) => VoidTag("meta", b);
+            public FragmentBuilder Link(Action<ElementBuilder> b) => VoidTag("link", b);
+
+            // Content
             public FragmentBuilder Div(Action<ElementBuilder> b) => Tag("div", b);
             public FragmentBuilder Span(Action<ElementBuilder> b) => Tag("span", b);
             public FragmentBuilder Strong(Action<ElementBuilder> b) => Tag("strong", b);
@@ -475,20 +492,33 @@ namespace HeimdallTemplateApp.Utilities
             public FragmentBuilder Li(Action<ElementBuilder> b) => Tag("li", b);
             public FragmentBuilder A(Action<ElementBuilder> b) => Tag("a", b);
             public FragmentBuilder Button(Action<ElementBuilder> b) => Tag("button", b);
-            public FragmentBuilder Nav(Action<ElementBuilder> b) => Tag("nav", b);
-            public FragmentBuilder Form(Action<ElementBuilder> b) => Tag("form", b);
-            public FragmentBuilder Label(Action<ElementBuilder> b) => Tag("label", b);
             public FragmentBuilder I(Action<ElementBuilder> b) => Tag("i", b);
             public FragmentBuilder Code(Action<ElementBuilder> b) => Tag("code", b);
             public FragmentBuilder Pre(Action<ElementBuilder> b) => Tag("pre", b);
+            public FragmentBuilder Template(Action<ElementBuilder> b) => Tag("template", b);
 
-            /// <summary>
-            /// FIX: textarea is its own element.
-            /// </summary>
+            // Figure
+            public FragmentBuilder Figure(Action<ElementBuilder> b) => Tag("figure", b);
+            public FragmentBuilder FigCaption(Action<ElementBuilder> b) => Tag("figcaption", b);
+
+            // Forms
+            public FragmentBuilder Form(Action<ElementBuilder> b) => Tag("form", b);
+            public FragmentBuilder Label(Action<ElementBuilder> b) => Tag("label", b);
             public FragmentBuilder TextArea(Action<ElementBuilder> b) => Tag("textarea", b);
-
-            /// <summary>Optional alias.</summary>
             public FragmentBuilder Textarea(Action<ElementBuilder> b) => Tag("textarea", b);
+            public FragmentBuilder Fieldset(Action<ElementBuilder> b) => Tag("fieldset", b);
+            public FragmentBuilder Legend(Action<ElementBuilder> b) => Tag("legend", b);
+
+            // Selects
+            public FragmentBuilder Select(Action<ElementBuilder> b) => Tag("select", b);
+            public FragmentBuilder Option(Action<ElementBuilder> b) => Tag("option", b);
+            public FragmentBuilder OptGroup(Action<ElementBuilder> b) => Tag("optgroup", b);
+            public FragmentBuilder DataList(Action<ElementBuilder> b) => Tag("datalist", b);
+
+            // Native disclosure / dialogs
+            public FragmentBuilder Details(Action<ElementBuilder> b) => Tag("details", b);
+            public FragmentBuilder Summary(Action<ElementBuilder> b) => Tag("summary", b);
+            public FragmentBuilder Dialog(Action<ElementBuilder> b) => Tag("dialog", b);
 
             public FragmentBuilder CodeBlock(string language, Action<ElementBuilder> build)
             {
@@ -505,10 +535,6 @@ namespace HeimdallTemplateApp.Utilities
             public FragmentBuilder TableDataCell(Action<ElementBuilder> b) => Tag("td", b);
             public FragmentBuilder Caption(Action<ElementBuilder> b) => Tag("caption", b);
 
-            public FragmentBuilder Script(Action<ElementBuilder> b) => Tag("script", b);
-            public FragmentBuilder NoScript(Action<ElementBuilder> b) => Tag("noscript", b);
-            public FragmentBuilder Template(Action<ElementBuilder> b) => Tag("template", b);
-
             // Void wrappers
             public FragmentBuilder Br(Action<ElementBuilder> b) => VoidTag("br", b);
             public FragmentBuilder Hr(Action<ElementBuilder> b) => VoidTag("hr", b);
@@ -520,15 +546,6 @@ namespace HeimdallTemplateApp.Utilities
                 _parts.Add(FluentHtml.Input(type, build));
                 return this;
             }
-
-            public FragmentBuilder Meta(Action<ElementBuilder> b) => VoidTag("meta", b);
-            public FragmentBuilder Link(Action<ElementBuilder> b) => VoidTag("link", b);
-
-            // Root-ish wrappers
-            public FragmentBuilder HtmlTag(Action<ElementBuilder> b) => Tag("html", b);
-            public FragmentBuilder Head(Action<ElementBuilder> b) => Tag("head", b);
-            public FragmentBuilder Body(Action<ElementBuilder> b) => Tag("body", b);
-            public FragmentBuilder Footer(Action<ElementBuilder> b) => Tag("footer", b);
         }
 
         // ============================================================
@@ -537,7 +554,7 @@ namespace HeimdallTemplateApp.Utilities
 
         private static IHtmlContent BuildTag(string name, bool isVoid, Action<ElementBuilder> build)
         {
-            using var b = new ElementBuilder(initialCapacity: 10);
+            using var b = new ElementBuilder(initialCapacity: 12);
             build(b);
 
             var parts = b.ToArray();
