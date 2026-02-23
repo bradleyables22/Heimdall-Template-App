@@ -1,4 +1,6 @@
 ﻿
+using System.Runtime.ConstrainedExecution;
+
 namespace HeimdallTemplateApp.Utilities
 {
     public static class Bootstrap
@@ -598,7 +600,7 @@ namespace HeimdallTemplateApp.Utilities
             public const string Body = "text-body";
             public const string BodySecondary = "text-body-secondary";
             public const string BodyTertiary = "text-body-tertiary";
-            public const string Emphasis = "text-emphasis";
+            public const string Emphasis = "text-body-emphasis";
             public const string Reset = "text-reset";
             public const string White = "text-white";
             public const string Black = "text-black";
@@ -618,7 +620,7 @@ namespace HeimdallTemplateApp.Utilities
                 Color.Body => Body,
                 Color.BodySecondary => BodySecondary,
                 Color.BodyTertiary => BodyTertiary,
-                Color.Transparent => "text-transparent",
+                Color.Transparent => "text-transparent", // not real
                 _ => throw new ArgumentOutOfRangeException(nameof(c))
             };
 
@@ -627,7 +629,24 @@ namespace HeimdallTemplateApp.Utilities
             public const string Opacity50 = "text-opacity-50";
             public const string Opacity75 = "text-opacity-75";
             public const string Opacity100 = "text-opacity-100";
+            public enum TextOpacity
+            {
+                Opacity25,
+                Opacity50,
+                Opacity75,
+                Opacity100
+            }
 
+            public static string Opacity(TextOpacity o) => o switch
+            {
+                TextOpacity.Opacity25 => "text-opacity-25",
+                TextOpacity.Opacity50 => "text-opacity-50",
+                TextOpacity.Opacity75 => "text-opacity-75",
+                TextOpacity.Opacity100 => "text-opacity-100",
+                _ => throw new ArgumentOutOfRangeException(nameof(o))
+            };
+
+            Consistency thing.
             // Decorations
             public const string DecorationNone = "text-decoration-none";
             public const string DecorationUnderline = "text-decoration-underline";
@@ -662,6 +681,72 @@ namespace HeimdallTemplateApp.Utilities
             };
         }
 
+        //sizing
+        public const string Fs1 = "fs-1";
+        public const string Fs2 = "fs-2";
+        public const string Fs3 = "fs-3";
+        public const string Fs4 = "fs-4";
+        public const string Fs5 = "fs-5";
+        public const string Fs6 = "fs-6";
+
+        public enum FontSizeKind
+        {
+            Fs1,
+            Fs2,
+            Fs3,
+            Fs4,
+            Fs5,
+            Fs6
+        }
+        public static string Size(FontSizeKind size) => size switch
+        {
+            FontSizeKind.Fs1 => "fs-1",
+            FontSizeKind.Fs2 => "fs-2",
+            FontSizeKind.Fs3 => "fs-3",
+            FontSizeKind.Fs4 => "fs-4",
+            FontSizeKind.Fs5 => "fs-5",
+            FontSizeKind.Fs6 => "fs-6",
+            _ => throw new ArgumentOutOfRangeException(nameof(size))
+        };
+
+        public const string Display1 = "display-1";
+        public const string Display2 = "display-2";
+        public const string Display3 = "display-3";
+        public const string Display4 = "display-4";
+        public const string Display5 = "display-5";
+        public const string Display6 = "display-6";
+
+        public enum DisplaySizeKind
+        {
+            Display1,
+            Display2,
+            Display3,
+            Display4,
+            Display5,
+            Display6
+        }
+        public static string DisplaySize(DisplaySizeKind size) => size switch
+        {
+            DisplaySizeKind.Display1 => "display-1",
+            DisplaySizeKind.Display2 => "display-2",
+            DisplaySizeKind.Display3 => "display-3",
+            DisplaySizeKind.Display4 => "display-4",
+            DisplaySizeKind.Display5 => "display-5",
+            DisplaySizeKind.Display6 => "display-6",
+            _ => throw new ArgumentOutOfRangeException(nameof(size))
+        };
+        public static string Emphasis(Color c) => c switch
+        {
+            Color.Primary => "text-primary-emphasis",
+            Color.Secondary => "text-secondary-emphasis",
+            Color.Success => "text-success-emphasis",
+            Color.Danger => "text-danger-emphasis",
+            Color.Warning => "text-warning-emphasis",
+            Color.Info => "text-info-emphasis",
+            Color.Light => "text-light-emphasis",
+            Color.Dark => "text-dark-emphasis",
+            _ => throw new ArgumentOutOfRangeException(nameof(c))
+        };
         // --------------------------------------------------------------------
         // Backgrounds
         // --------------------------------------------------------------------
@@ -772,12 +857,6 @@ namespace HeimdallTemplateApp.Utilities
             public const string Rounded4 = "rounded-4";
             public const string Rounded5 = "rounded-5";
             public const string Rounded = "rounded";
-            public const string RoundedSm = "rounded-sm";
-            public const string RoundedLg = "rounded-lg";
-            public const string RoundedXl = "rounded-xl";
-            public const string RoundedXxl = "rounded-xxl";
-            public const string RoundedPill = "rounded-pill";
-            public const string RoundedCircle = "rounded-circle";
 
             public const string RoundedTop = "rounded-top";
             public const string RoundedBottom = "rounded-bottom";
@@ -788,6 +867,13 @@ namespace HeimdallTemplateApp.Utilities
             public const string RoundedBottom0 = "rounded-bottom-0";
             public const string RoundedStart0 = "rounded-start-0";
             public const string RoundedEnd0 = "rounded-end-0";
+
+            public static string Round(int n)
+            {
+                if (n < 0 || n > 5) 
+                    throw new ArgumentOutOfRangeException(nameof(n));
+                return n == 0 ? "rounded-0" : $"rounded-{n}";
+            }
         }
 
         public static class Shadow
@@ -859,12 +945,6 @@ namespace HeimdallTemplateApp.Utilities
             public const string ObjectFitFill = "object-fit-fill";
             public const string ObjectFitScale = "object-fit-scale";
             public const string ObjectFitNone = "object-fit-none";
-
-            public const string ObjectPositionTop = "object-fit-top";
-            public const string ObjectPositionBottom = "object-fit-bottom";
-            public const string ObjectPositionStart = "object-fit-start";
-            public const string ObjectPositionEnd = "object-fit-end";
-            public const string ObjectPositionCenter = "object-fit-center";
         }
 
         public static class Helpers
@@ -891,7 +971,7 @@ namespace HeimdallTemplateApp.Utilities
             public const string Light = "btn btn-light";
             public const string Dark = "btn btn-dark";
             public const string Link = "btn btn-link";
-            public const string Close = "Btn btn-close";
+            public const string Close = "btn btn-close";
             // Outline variants
             public const string OutlinePrimary = "btn btn-outline-primary";
             public const string OutlineSecondary = "btn btn-outline-secondary";
