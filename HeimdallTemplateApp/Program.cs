@@ -1,5 +1,4 @@
 using Heimdall.Server;
-using HeimdallTemplateApp.Pages;
 using HeimdallTemplateApp.Rendering.Layouts;
 using HeimdallTemplateApp.Rendering.Pages;
 

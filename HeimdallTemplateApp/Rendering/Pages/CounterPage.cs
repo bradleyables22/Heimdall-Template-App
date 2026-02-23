@@ -3,7 +3,7 @@ using Microsoft.AspNetCore.Html;
 using HeimdallTemplateApp.Heimdall;
 using HeimdallTemplateApp.Utilities;
 
-namespace HeimdallTemplateApp.Pages
+namespace HeimdallTemplateApp.Rendering.Pages
 {
     public static class CounterPage
     {
