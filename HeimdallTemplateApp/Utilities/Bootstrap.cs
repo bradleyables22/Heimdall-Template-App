@@ -646,7 +646,6 @@ namespace HeimdallTemplateApp.Utilities
                 _ => throw new ArgumentOutOfRangeException(nameof(o))
             };
 
-            Consistency thing.
             // Decorations
             public const string DecorationNone = "text-decoration-none";
             public const string DecorationUnderline = "text-decoration-underline";
