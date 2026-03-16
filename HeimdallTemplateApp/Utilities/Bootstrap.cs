@@ -1,6 +1,4 @@
 ﻿
-using System.Runtime.ConstrainedExecution;
-
 namespace HeimdallTemplateApp.Utilities
 {
     public static class Bootstrap
