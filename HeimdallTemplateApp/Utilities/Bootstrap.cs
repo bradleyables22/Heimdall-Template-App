@@ -1,7 +1,7 @@
 ﻿
 using System.Runtime.ConstrainedExecution;
 
-namespace Server.Utilities
+namespace HeimdallTemplateApp.Utilities
 {
     public static class Bootstrap
     {
