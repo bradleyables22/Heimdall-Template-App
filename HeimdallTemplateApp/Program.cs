@@ -1,6 +1,7 @@
 using Heimdall.Server;
 using HeimdallTemplateApp.Rendering.Layouts;
 using HeimdallTemplateApp.Rendering.Pages;
+using HeimdallTemplateApp.Utilities;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -11,6 +12,8 @@ builder.Services.AddHeimdall(options =>
 );
 
 var app = builder.Build();
+
+StaticAssets.Discover(app.Environment.WebRootPath);
 
 app.UseAntiforgery();
 app.UseCors();

@@ -1,7 +1,7 @@
 ﻿
 using System.Runtime.ConstrainedExecution;
 
-namespace HeimdallTemplateApp.Utilities
+namespace Server.Utilities
 {
     public static class Bootstrap
     {
@@ -76,6 +76,9 @@ namespace HeimdallTemplateApp.Utilities
             // not part of the 8 semantic colors, but common helpers below can use these:
             Body, BodySecondary, BodyTertiary, Transparent
         }
+
+        //randoms
+        public const string Collapse = "collapse";
 
         // --------------------------------------------------------------------
         // Layout / grid / containers
@@ -747,7 +750,7 @@ namespace HeimdallTemplateApp.Utilities
             _ => throw new ArgumentOutOfRangeException(nameof(c))
         };
         // --------------------------------------------------------------------
-        // Backgrounds
+        // Background
         // --------------------------------------------------------------------
 
         public static class Bg
@@ -756,7 +759,8 @@ namespace HeimdallTemplateApp.Utilities
             public const string BodySecondary = "bg-body-secondary";
             public const string BodyTertiary = "bg-body-tertiary";
             public const string Transparent = "bg-transparent";
-
+            public const string White = "bg-white";
+            public const string Black = "bg-black";
             public static string BgColor(Color c) => c switch
             {
                 Color.Primary => "bg-primary",
@@ -869,7 +873,7 @@ namespace HeimdallTemplateApp.Utilities
 
             public static string Round(int n)
             {
-                if (n < 0 || n > 5) 
+                if (n < 0 || n > 5)
                     throw new ArgumentOutOfRangeException(nameof(n));
                 return n == 0 ? "rounded-0" : $"rounded-{n}";
             }
