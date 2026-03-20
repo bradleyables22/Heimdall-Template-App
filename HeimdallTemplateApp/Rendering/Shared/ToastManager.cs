@@ -40,11 +40,13 @@ namespace HeimdallTemplateApp.Rendering.Shared
 
 				if (useSSE)
 				{
-					root.Add(
-						HeimdallHtml.SseTopic("toasts"),
-						HeimdallHtml.SseTarget("#toast-manager"),
-						HeimdallHtml.SseSwapMode(HeimdallHtml.Swap.BeforeEnd)
-					);
+					//This is a simple example of using Heimdall's SSE features to push toast updates to the client.
+					//update the topic name and target selector as needed to fit your application's structure.
+
+					root.Heimdall()
+					.SseTopic($"toasts:user:{ctx.Connection.Id}")
+					.SseTarget("#toast-manager")
+					.SseSwap(HeimdallHtml.Swap.BeforeEnd);
 				}
 
 				root.Script(s => s.Src("components/js/toast-manager.js"));

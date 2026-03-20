@@ -132,7 +132,7 @@ namespace HeimdallTemplateApp.Rendering.Pages
 		}
 
 		[ContentInvocation]
-		public static async Task<IHtmlContent> ToastSSEHello(Bifrost bifrost)
+		public static async Task<IHtmlContent> ToastSSEHello(Bifrost bifrost,HttpContext ctx)
 		{
 			var toast = new ToastItem
 			{
@@ -144,7 +144,9 @@ namespace HeimdallTemplateApp.Rendering.Pages
 
 			var html = ToastManager.Create(toast);
 
-			await bifrost.PublishAsync("toasts", html, TimeSpan.FromSeconds(10));
+			//This is a simple example of using Heimdall's SSE features to push toast updates to the client.
+			//update the topic name and target selector as needed to fit your application's structure.
+			await bifrost.PublishAsync($"toasts:user:{ctx.Connection.Id}", html, TimeSpan.FromSeconds(10));
 
 			return HtmlString.Empty;
 		}
