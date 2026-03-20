@@ -1,11 +1,9 @@
-﻿
-namespace HeimdallTemplateApp.Utilities
+﻿namespace HeimdallTemplateApp.Utilities
 {
     public static class Bootstrap
     {
         /// <summary>
-        /// Combine CSS tokens; trims, removes empties, and de-dupes tokens.
-        /// Keeps original order only loosely (HashSet-based). If strict ordering matters, use CssOrdered.
+        /// Combine CSS tokens; trims, removes empties, and de-dupes tokens while preserving first-seen order.
         /// </summary>
         public static string Css(params string?[] parts)
             => CssInternal(dedupe: true, parts);
@@ -18,27 +16,38 @@ namespace HeimdallTemplateApp.Utilities
 
         private static string CssInternal(bool dedupe, params string?[] parts)
         {
-            if (parts is null || parts.Length == 0) return string.Empty;
+            if (parts is null || parts.Length == 0)
+                return string.Empty;
+
+            var ordered = new List<string>(64);
 
             if (!dedupe)
             {
-                var ordered = new List<string>(64);
                 foreach (var p in parts)
                 {
                     if (string.IsNullOrWhiteSpace(p)) continue;
-                    ordered.AddRange(p.Split(' ', StringSplitOptions.RemoveEmptyEntries | StringSplitOptions.TrimEntries));
+
+                    ordered.AddRange(
+                        p.Split(' ', StringSplitOptions.RemoveEmptyEntries | StringSplitOptions.TrimEntries));
                 }
+
                 return string.Join(' ', ordered);
             }
 
-            var tokens = new HashSet<string>(StringComparer.Ordinal);
+            var seen = new HashSet<string>(StringComparer.Ordinal);
+
             foreach (var p in parts)
             {
                 if (string.IsNullOrWhiteSpace(p)) continue;
+
                 foreach (var t in p.Split(' ', StringSplitOptions.RemoveEmptyEntries | StringSplitOptions.TrimEntries))
-                    tokens.Add(t);
+                {
+                    if (seen.Add(t))
+                        ordered.Add(t);
+                }
             }
-            return string.Join(' ', tokens);
+
+            return string.Join(' ', ordered);
         }
 
         /// <summary>Escape hatch for any class tokens not covered by helpers.</summary>
@@ -50,7 +59,7 @@ namespace HeimdallTemplateApp.Utilities
 
         public enum Breakpoint { None, Sm, Md, Lg, Xl, Xxl }
         public enum Side { None, Top, Bottom, Start, End, X, Y }
-        public enum DisplayKind { None, Inline, InlineBlock, Block, Grid, InlineGrid, Flex, InlineFlex, Table, TableRow, TableCell, NoneDisplay }
+        public enum DisplayKind { None, Inline, InlineBlock, Block, Grid, InlineGrid, Flex, InlineFlex, Table, TableRow, TableCell }
         public enum PositionKind { Static, Relative, Absolute, Fixed, Sticky }
         public enum TextAlignKind { Start, Center, End }
         public enum FloatKind { Start, End, None }
@@ -67,16 +76,81 @@ namespace HeimdallTemplateApp.Utilities
         public enum ShadowKind { None, Sm, Default, Lg }
         public enum Placement { Top, Bottom, Start, End }
         public enum RatioKind { R1x1, R4x3, R16x9, R21x9 }
+        public enum FontSizeKind { Fs1, Fs2, Fs3, Fs4, Fs5, Fs6 }
+        public enum DisplaySizeKind { Display1, Display2, Display3, Display4, Display5, Display6 }
 
         public enum Color
         {
-            Primary, Secondary, Success, Danger, Warning, Info, Light, Dark,
-            // not part of the 8 semantic colors, but common helpers below can use these:
-            Body, BodySecondary, BodyTertiary, Transparent
+            Primary,
+            Secondary,
+            Success,
+            Danger,
+            Warning,
+            Info,
+            Light,
+            Dark,
+
+            // Theme/body helpers
+            Body,
+            BodySecondary,
+            BodyTertiary,
+
+            // Only valid for a few helpers (e.g. bg-transparent)
+            Transparent
         }
 
-        //randoms
+        // randoms
         public const string Collapse = "collapse";
+
+        // sizing / typography
+        public const string Fs1 = "fs-1";
+        public const string Fs2 = "fs-2";
+        public const string Fs3 = "fs-3";
+        public const string Fs4 = "fs-4";
+        public const string Fs5 = "fs-5";
+        public const string Fs6 = "fs-6";
+
+        public static string Size(FontSizeKind size) => size switch
+        {
+            FontSizeKind.Fs1 => Fs1,
+            FontSizeKind.Fs2 => Fs2,
+            FontSizeKind.Fs3 => Fs3,
+            FontSizeKind.Fs4 => Fs4,
+            FontSizeKind.Fs5 => Fs5,
+            FontSizeKind.Fs6 => Fs6,
+            _ => throw new ArgumentOutOfRangeException(nameof(size))
+        };
+
+        public const string Display1 = "display-1";
+        public const string Display2 = "display-2";
+        public const string Display3 = "display-3";
+        public const string Display4 = "display-4";
+        public const string Display5 = "display-5";
+        public const string Display6 = "display-6";
+
+        public static string DisplaySize(DisplaySizeKind size) => size switch
+        {
+            DisplaySizeKind.Display1 => Display1,
+            DisplaySizeKind.Display2 => Display2,
+            DisplaySizeKind.Display3 => Display3,
+            DisplaySizeKind.Display4 => Display4,
+            DisplaySizeKind.Display5 => Display5,
+            DisplaySizeKind.Display6 => Display6,
+            _ => throw new ArgumentOutOfRangeException(nameof(size))
+        };
+
+        public static string Emphasis(Color c) => c switch
+        {
+            Color.Primary => "text-primary-emphasis",
+            Color.Secondary => "text-secondary-emphasis",
+            Color.Success => "text-success-emphasis",
+            Color.Danger => "text-danger-emphasis",
+            Color.Warning => "text-warning-emphasis",
+            Color.Info => "text-info-emphasis",
+            Color.Light => "text-light-emphasis",
+            Color.Dark => "text-dark-emphasis",
+            _ => throw new ArgumentOutOfRangeException(nameof(c), $"Color '{c}' is not supported for text emphasis.")
+        };
 
         // --------------------------------------------------------------------
         // Layout / grid / containers
@@ -98,29 +172,40 @@ namespace HeimdallTemplateApp.Utilities
 
             public static string ColSpan(int span, Breakpoint bp = Breakpoint.None)
             {
-                if (span < 1 || span > 12) throw new ArgumentOutOfRangeException(nameof(span), "Bootstrap columns are 1..12.");
-                var b = Bp(bp);
-                return bp == Breakpoint.None ? $"col-{span}" : $"col-{b}-{span}";
+                if (span < 1 || span > 12)
+                    throw new ArgumentOutOfRangeException(nameof(span), "Bootstrap columns are 1..12.");
+
+                return bp == Breakpoint.None
+                    ? $"col-{span}"
+                    : $"col-{Bp(bp)}-{span}";
             }
 
             public static string ColAutoAt(Breakpoint bp)
             {
-                var b = Bp(bp);
-                return $"col-{b}-auto";
+                if (bp == Breakpoint.None)
+                    return ColAuto;
+
+                return $"col-{Bp(bp)}-auto";
             }
 
             public static string RowCols(int cols, Breakpoint bp = Breakpoint.None)
             {
-                if (cols < 1 || cols > 6) throw new ArgumentOutOfRangeException(nameof(cols), "Bootstrap row-cols are typically 1..6.");
-                var b = Bp(bp);
-                return bp == Breakpoint.None ? $"row-cols-{cols}" : $"row-cols-{b}-{cols}";
+                if (cols < 1 || cols > 6)
+                    throw new ArgumentOutOfRangeException(nameof(cols), "Bootstrap row-cols are typically 1..6.");
+
+                return bp == Breakpoint.None
+                    ? $"row-cols-{cols}"
+                    : $"row-cols-{Bp(bp)}-{cols}";
             }
 
             public static string Offset(int span, Breakpoint bp = Breakpoint.None)
             {
-                if (span < 0 || span > 11) throw new ArgumentOutOfRangeException(nameof(span), "Bootstrap offsets are 0..11.");
-                var b = Bp(bp);
-                return bp == Breakpoint.None ? $"offset-{span}" : $"offset-{b}-{span}";
+                if (span < 0 || span > 11)
+                    throw new ArgumentOutOfRangeException(nameof(span), "Bootstrap offsets are 0..11.");
+
+                return bp == Breakpoint.None
+                    ? $"offset-{span}"
+                    : $"offset-{Bp(bp)}-{span}";
             }
 
             public static string Gutter(int n, Breakpoint bp = Breakpoint.None)
@@ -134,9 +219,12 @@ namespace HeimdallTemplateApp.Utilities
 
             private static string GutterInternal(string prefix, int n, Breakpoint bp)
             {
-                if (n < 0 || n > 5) throw new ArgumentOutOfRangeException(nameof(n), "Bootstrap gutter scale is 0..5.");
-                var b = Bp(bp);
-                return bp == Breakpoint.None ? $"{prefix}-{n}" : $"{prefix}-{b}-{n}";
+                if (n < 0 || n > 5)
+                    throw new ArgumentOutOfRangeException(nameof(n), "Bootstrap gutter scale is 0..5.");
+
+                return bp == Breakpoint.None
+                    ? $"{prefix}-{n}"
+                    : $"{prefix}-{Bp(bp)}-{n}";
             }
         }
 
@@ -158,9 +246,24 @@ namespace HeimdallTemplateApp.Utilities
             public const string TableCell = "d-table-cell";
             public const string None = "d-none";
 
+            public static string Kind(DisplayKind kind) => kind switch
+            {
+                DisplayKind.Block => Block,
+                DisplayKind.Inline => Inline,
+                DisplayKind.InlineBlock => InlineBlock,
+                DisplayKind.Grid => Grid,
+                DisplayKind.InlineGrid => InlineGrid,
+                DisplayKind.Flex => Flex,
+                DisplayKind.InlineFlex => InlineFlex,
+                DisplayKind.Table => Table,
+                DisplayKind.TableRow => TableRow,
+                DisplayKind.TableCell => TableCell,
+                DisplayKind.None => None,
+                _ => throw new ArgumentOutOfRangeException(nameof(kind))
+            };
+
             public static string At(Breakpoint bp, DisplayKind kind)
             {
-                var b = Bp(bp);
                 var k = kind switch
                 {
                     DisplayKind.Inline => "inline",
@@ -173,10 +276,13 @@ namespace HeimdallTemplateApp.Utilities
                     DisplayKind.Table => "table",
                     DisplayKind.TableRow => "table-row",
                     DisplayKind.TableCell => "table-cell",
-                    DisplayKind.NoneDisplay => "none",
+                    DisplayKind.None => "none",
                     _ => throw new ArgumentOutOfRangeException(nameof(kind))
                 };
-                return $"d-{b}-{k}";
+
+                return bp == Breakpoint.None
+                    ? $"d-{k}"
+                    : $"d-{Bp(bp)}-{k}";
             }
         }
 
@@ -264,7 +370,6 @@ namespace HeimdallTemplateApp.Utilities
         {
             public const string Visible = "visible";
             public const string Invisible = "invisible";
-
             public const string VisuallyHidden = "visually-hidden";
             public const string VisuallyHiddenFocusable = "visually-hidden-focusable";
         }
@@ -319,35 +424,46 @@ namespace HeimdallTemplateApp.Utilities
             public static string Ps(int n, Breakpoint bp = Breakpoint.None) => Space("p", n, Side.Start, bp);
             public static string Pe(int n, Breakpoint bp = Breakpoint.None) => Space("p", n, Side.End, bp);
 
-            // gap (0..5)
+            // gap
             public static string Gap(int n, Breakpoint bp = Breakpoint.None) => GapInternal("gap", n, bp);
             public static string GapX(int n, Breakpoint bp = Breakpoint.None) => GapInternal("column-gap", n, bp);
             public static string GapY(int n, Breakpoint bp = Breakpoint.None) => GapInternal("row-gap", n, bp);
 
             private static string GapInternal(string prefix, int n, Breakpoint bp)
             {
-                if (n < 0 || n > 5) throw new ArgumentOutOfRangeException(nameof(n), "Bootstrap scale is 0..5.");
-                var b = Bp(bp);
-                return bp == Breakpoint.None ? $"{prefix}-{n}" : $"{prefix}-{b}-{n}";
+                if (n < 0 || n > 5)
+                    throw new ArgumentOutOfRangeException(nameof(n), "Bootstrap scale is 0..5.");
+
+                return bp == Breakpoint.None
+                    ? $"{prefix}-{n}"
+                    : $"{prefix}-{Bp(bp)}-{n}";
             }
 
             private static string Space(string prefix, int n, Side side, Breakpoint bp)
             {
-                if (n < 0 || n > 5) throw new ArgumentOutOfRangeException(nameof(n), "Bootstrap spacing scale is 0..5.");
+                if (n < 0 || n > 5)
+                    throw new ArgumentOutOfRangeException(nameof(n), "Bootstrap spacing scale is 0..5.");
+
                 var s = SideToken(side);
-                var b = Bp(bp);
+
                 if (bp == Breakpoint.None)
                     return side == Side.None ? $"{prefix}-{n}" : $"{prefix}{s}-{n}";
-                return side == Side.None ? $"{prefix}-{b}-{n}" : $"{prefix}{s}-{b}-{n}";
+
+                return side == Side.None
+                    ? $"{prefix}-{Bp(bp)}-{n}"
+                    : $"{prefix}{s}-{Bp(bp)}-{n}";
             }
 
             private static string SpaceAuto(string prefix, Side side, Breakpoint bp)
             {
                 var s = SideToken(side);
-                var b = Bp(bp);
+
                 if (bp == Breakpoint.None)
                     return side == Side.None ? $"{prefix}-auto" : $"{prefix}{s}-auto";
-                return side == Side.None ? $"{prefix}-{b}-auto" : $"{prefix}{s}-{b}-auto";
+
+                return side == Side.None
+                    ? $"{prefix}-{Bp(bp)}-auto"
+                    : $"{prefix}{s}-{Bp(bp)}-auto";
             }
 
             private static string SideToken(Side side) => side switch
@@ -429,10 +545,8 @@ namespace HeimdallTemplateApp.Utilities
             public const string Order4 = "order-4";
             public const string Order5 = "order-5";
 
-            // Gap (alias to spacing gap)
             public static string Gap(int n, Breakpoint bp = Breakpoint.None) => Spacing.Gap(n, bp);
 
-            // Responsive variants
             public static string Direction(FlexDirectionKind dir, Breakpoint bp = Breakpoint.None)
             {
                 var t = dir switch
@@ -443,8 +557,10 @@ namespace HeimdallTemplateApp.Utilities
                     FlexDirectionKind.ColumnReverse => "column-reverse",
                     _ => throw new ArgumentOutOfRangeException(nameof(dir))
                 };
-                var b = Bp(bp);
-                return bp == Breakpoint.None ? $"flex-{t}" : $"flex-{b}-{t}";
+
+                return bp == Breakpoint.None
+                    ? $"flex-{t}"
+                    : $"flex-{Bp(bp)}-{t}";
             }
 
             public static string WrapMode(FlexWrapKind wrap, Breakpoint bp = Breakpoint.None)
@@ -456,8 +572,10 @@ namespace HeimdallTemplateApp.Utilities
                     FlexWrapKind.WrapReverse => "wrap-reverse",
                     _ => throw new ArgumentOutOfRangeException(nameof(wrap))
                 };
-                var b = Bp(bp);
-                return bp == Breakpoint.None ? $"flex-{t}" : $"flex-{b}-{t}";
+
+                return bp == Breakpoint.None
+                    ? $"flex-{t}"
+                    : $"flex-{Bp(bp)}-{t}";
             }
 
             public static string Justify(JustifyContentKind justify, Breakpoint bp = Breakpoint.None)
@@ -472,8 +590,10 @@ namespace HeimdallTemplateApp.Utilities
                     JustifyContentKind.Evenly => "evenly",
                     _ => throw new ArgumentOutOfRangeException(nameof(justify))
                 };
-                var b = Bp(bp);
-                return bp == Breakpoint.None ? $"justify-content-{t}" : $"justify-content-{b}-{t}";
+
+                return bp == Breakpoint.None
+                    ? $"justify-content-{t}"
+                    : $"justify-content-{Bp(bp)}-{t}";
             }
 
             public static string AlignItems(AlignItemsKind align, Breakpoint bp = Breakpoint.None)
@@ -487,8 +607,10 @@ namespace HeimdallTemplateApp.Utilities
                     AlignItemsKind.Stretch => "stretch",
                     _ => throw new ArgumentOutOfRangeException(nameof(align))
                 };
-                var b = Bp(bp);
-                return bp == Breakpoint.None ? $"align-items-{t}" : $"align-items-{b}-{t}";
+
+                return bp == Breakpoint.None
+                    ? $"align-items-{t}"
+                    : $"align-items-{Bp(bp)}-{t}";
             }
 
             public static string AlignSelf(AlignSelfKind align, Breakpoint bp = Breakpoint.None)
@@ -503,8 +625,10 @@ namespace HeimdallTemplateApp.Utilities
                     AlignSelfKind.Stretch => "stretch",
                     _ => throw new ArgumentOutOfRangeException(nameof(align))
                 };
-                var b = Bp(bp);
-                return bp == Breakpoint.None ? $"align-self-{t}" : $"align-self-{b}-{t}";
+
+                return bp == Breakpoint.None
+                    ? $"align-self-{t}"
+                    : $"align-self-{Bp(bp)}-{t}";
             }
         }
 
@@ -528,8 +652,10 @@ namespace HeimdallTemplateApp.Utilities
                     TextAlignKind.End => "end",
                     _ => throw new ArgumentOutOfRangeException(nameof(align))
                 };
-                var b = Bp(bp);
-                return bp == Breakpoint.None ? $"text-{t}" : $"text-{b}-{t}";
+
+                return bp == Breakpoint.None
+                    ? $"text-{t}"
+                    : $"text-{Bp(bp)}-{t}";
             }
 
             // Wrapping / breaking
@@ -596,8 +722,8 @@ namespace HeimdallTemplateApp.Utilities
             public const string Mark = "mark";
             public const string Monospace = "font-monospace";
 
-            // Colors (text-*)
-            public const string Muted = "text-muted"; // still present, but prefer body-secondary in BS 5.3
+            // Colors
+            public const string Muted = "text-muted";
             public const string Body = "text-body";
             public const string BodySecondary = "text-body-secondary";
             public const string BodyTertiary = "text-body-tertiary";
@@ -621,15 +747,16 @@ namespace HeimdallTemplateApp.Utilities
                 Color.Body => Body,
                 Color.BodySecondary => BodySecondary,
                 Color.BodyTertiary => BodyTertiary,
-                Color.Transparent => "text-transparent", // not real
+                Color.Transparent => Custom.TextTransparent, // custom utility, not Bootstrap core
                 _ => throw new ArgumentOutOfRangeException(nameof(c))
             };
 
-            // Opacity (text-opacity-*)
+            // Opacity
             public const string Opacity25 = "text-opacity-25";
             public const string Opacity50 = "text-opacity-50";
             public const string Opacity75 = "text-opacity-75";
             public const string Opacity100 = "text-opacity-100";
+
             public enum TextOpacity
             {
                 Opacity25,
@@ -640,10 +767,10 @@ namespace HeimdallTemplateApp.Utilities
 
             public static string Opacity(TextOpacity o) => o switch
             {
-                TextOpacity.Opacity25 => "text-opacity-25",
-                TextOpacity.Opacity50 => "text-opacity-50",
-                TextOpacity.Opacity75 => "text-opacity-75",
-                TextOpacity.Opacity100 => "text-opacity-100",
+                TextOpacity.Opacity25 => Opacity25,
+                TextOpacity.Opacity50 => Opacity50,
+                TextOpacity.Opacity75 => Opacity75,
+                TextOpacity.Opacity100 => Opacity100,
                 _ => throw new ArgumentOutOfRangeException(nameof(o))
             };
 
@@ -677,76 +804,10 @@ namespace HeimdallTemplateApp.Utilities
                 Color.Info => "link-info",
                 Color.Light => "link-light",
                 Color.Dark => "link-dark",
-                _ => throw new ArgumentOutOfRangeException(nameof(c))
+                _ => throw new ArgumentOutOfRangeException(nameof(c), $"Color '{c}' is not supported for link color.")
             };
         }
 
-        //sizing
-        public const string Fs1 = "fs-1";
-        public const string Fs2 = "fs-2";
-        public const string Fs3 = "fs-3";
-        public const string Fs4 = "fs-4";
-        public const string Fs5 = "fs-5";
-        public const string Fs6 = "fs-6";
-
-        public enum FontSizeKind
-        {
-            Fs1,
-            Fs2,
-            Fs3,
-            Fs4,
-            Fs5,
-            Fs6
-        }
-        public static string Size(FontSizeKind size) => size switch
-        {
-            FontSizeKind.Fs1 => "fs-1",
-            FontSizeKind.Fs2 => "fs-2",
-            FontSizeKind.Fs3 => "fs-3",
-            FontSizeKind.Fs4 => "fs-4",
-            FontSizeKind.Fs5 => "fs-5",
-            FontSizeKind.Fs6 => "fs-6",
-            _ => throw new ArgumentOutOfRangeException(nameof(size))
-        };
-
-        public const string Display1 = "display-1";
-        public const string Display2 = "display-2";
-        public const string Display3 = "display-3";
-        public const string Display4 = "display-4";
-        public const string Display5 = "display-5";
-        public const string Display6 = "display-6";
-
-        public enum DisplaySizeKind
-        {
-            Display1,
-            Display2,
-            Display3,
-            Display4,
-            Display5,
-            Display6
-        }
-        public static string DisplaySize(DisplaySizeKind size) => size switch
-        {
-            DisplaySizeKind.Display1 => "display-1",
-            DisplaySizeKind.Display2 => "display-2",
-            DisplaySizeKind.Display3 => "display-3",
-            DisplaySizeKind.Display4 => "display-4",
-            DisplaySizeKind.Display5 => "display-5",
-            DisplaySizeKind.Display6 => "display-6",
-            _ => throw new ArgumentOutOfRangeException(nameof(size))
-        };
-        public static string Emphasis(Color c) => c switch
-        {
-            Color.Primary => "text-primary-emphasis",
-            Color.Secondary => "text-secondary-emphasis",
-            Color.Success => "text-success-emphasis",
-            Color.Danger => "text-danger-emphasis",
-            Color.Warning => "text-warning-emphasis",
-            Color.Info => "text-info-emphasis",
-            Color.Light => "text-light-emphasis",
-            Color.Dark => "text-dark-emphasis",
-            _ => throw new ArgumentOutOfRangeException(nameof(c))
-        };
         // --------------------------------------------------------------------
         // Background
         // --------------------------------------------------------------------
@@ -759,6 +820,7 @@ namespace HeimdallTemplateApp.Utilities
             public const string Transparent = "bg-transparent";
             public const string White = "bg-white";
             public const string Black = "bg-black";
+
             public static string BgColor(Color c) => c switch
             {
                 Color.Primary => "bg-primary",
@@ -786,7 +848,7 @@ namespace HeimdallTemplateApp.Utilities
                 Color.Info => "bg-info-subtle",
                 Color.Light => "bg-light-subtle",
                 Color.Dark => "bg-dark-subtle",
-                _ => throw new ArgumentOutOfRangeException(nameof(c))
+                _ => throw new ArgumentOutOfRangeException(nameof(c), $"Color '{c}' is not supported for subtle background.")
             };
 
             public const string Opacity10 = "bg-opacity-10";
@@ -805,7 +867,7 @@ namespace HeimdallTemplateApp.Utilities
                 Color.Info => "text-bg-info",
                 Color.Light => "text-bg-light",
                 Color.Dark => "text-bg-dark",
-                _ => throw new ArgumentOutOfRangeException(nameof(c))
+                _ => throw new ArgumentOutOfRangeException(nameof(c), $"Color '{c}' is not supported for text background.")
             };
         }
 
@@ -842,7 +904,7 @@ namespace HeimdallTemplateApp.Utilities
                 Color.Info => "border-info",
                 Color.Light => "border-light",
                 Color.Dark => "border-dark",
-                _ => throw new ArgumentOutOfRangeException(nameof(c))
+                _ => throw new ArgumentOutOfRangeException(nameof(c), $"Color '{c}' is not supported for border color.")
             };
 
             public const string Opacity10 = "border-opacity-10";
@@ -872,9 +934,23 @@ namespace HeimdallTemplateApp.Utilities
             public static string Round(int n)
             {
                 if (n < 0 || n > 5)
-                    throw new ArgumentOutOfRangeException(nameof(n));
-                return n == 0 ? "rounded-0" : $"rounded-{n}";
+                    throw new ArgumentOutOfRangeException(nameof(n), "Bootstrap rounded scale is 0..5.");
+
+                return n == 0 ? Rounded0 : $"rounded-{n}";
             }
+
+            public static string RoundedKind(RoundedKind kind) => kind switch
+            {
+                Utilities.Bootstrap.RoundedKind.None => Rounded0,
+                Utilities.Bootstrap.RoundedKind.Sm => "rounded-1",
+                Utilities.Bootstrap.RoundedKind.Default => Rounded,
+                Utilities.Bootstrap.RoundedKind.Lg => "rounded-3",
+                Utilities.Bootstrap.RoundedKind.Xl => "rounded-4",
+                Utilities.Bootstrap.RoundedKind.Xxl => "rounded-5",
+                Utilities.Bootstrap.RoundedKind.Pill => "rounded-pill",
+                Utilities.Bootstrap.RoundedKind.Circle => "rounded-circle",
+                _ => throw new ArgumentOutOfRangeException(nameof(kind))
+            };
         }
 
         public static class Shadow
@@ -903,7 +979,6 @@ namespace HeimdallTemplateApp.Utilities
 
             public static string At(Breakpoint bp, FloatKind kind)
             {
-                var b = Bp(bp);
                 var k = kind switch
                 {
                     FloatKind.Start => "start",
@@ -911,7 +986,10 @@ namespace HeimdallTemplateApp.Utilities
                     FloatKind.None => "none",
                     _ => throw new ArgumentOutOfRangeException(nameof(kind))
                 };
-                return $"float-{b}-{k}";
+
+                return bp == Breakpoint.None
+                    ? $"float-{k}"
+                    : $"float-{Bp(bp)}-{k}";
             }
         }
 
@@ -923,8 +1001,6 @@ namespace HeimdallTemplateApp.Utilities
 
             public const string PeNone = "pe-none";
             public const string PeAuto = "pe-auto";
-
-            public const string CursorPointer = "cursor-pointer"; // not a Bootstrap class; provided as a common convenience if you define it
         }
 
         public static class Media
@@ -953,9 +1029,17 @@ namespace HeimdallTemplateApp.Utilities
             public const string StretchedLink = "stretched-link";
             public const string Vr = "vr";
             public const string Fade = "fade";
+
             // Stacks
             public const string HStack = "hstack";
             public const string VStack = "vstack";
+        }
+
+        public static class Custom
+        {
+            // These are project/custom utilities, not Bootstrap core classes.
+            public const string CursorPointer = "cursor-pointer";
+            public const string TextTransparent = "text-transparent";
         }
 
         public static class Btn
@@ -973,6 +1057,7 @@ namespace HeimdallTemplateApp.Utilities
             public const string Dark = "btn btn-dark";
             public const string Link = "btn btn-link";
             public const string Close = "btn btn-close";
+
             // Outline variants
             public const string OutlinePrimary = "btn btn-outline-primary";
             public const string OutlineSecondary = "btn btn-outline-secondary";
@@ -1008,7 +1093,7 @@ namespace HeimdallTemplateApp.Utilities
                         Color.Info => Info,
                         Color.Light => Light,
                         Color.Dark => Dark,
-                        _ => throw new ArgumentOutOfRangeException(nameof(c))
+                        _ => throw new ArgumentOutOfRangeException(nameof(c), $"Color '{c}' is not supported for button variant.")
                     };
                 }
 
@@ -1022,7 +1107,7 @@ namespace HeimdallTemplateApp.Utilities
                     Color.Info => OutlineInfo,
                     Color.Light => OutlineLight,
                     Color.Dark => OutlineDark,
-                    _ => throw new ArgumentOutOfRangeException(nameof(c))
+                    _ => throw new ArgumentOutOfRangeException(nameof(c), $"Color '{c}' is not supported for button outline variant.")
                 };
             }
         }
@@ -1044,7 +1129,7 @@ namespace HeimdallTemplateApp.Utilities
                 Color.Info => "alert alert-info",
                 Color.Light => "alert alert-light",
                 Color.Dark => "alert alert-dark",
-                _ => throw new ArgumentOutOfRangeException(nameof(c))
+                _ => throw new ArgumentOutOfRangeException(nameof(c), $"Color '{c}' is not supported for alert variant.")
             };
         }
 
@@ -1063,7 +1148,7 @@ namespace HeimdallTemplateApp.Utilities
                 Color.Info => "badge text-bg-info",
                 Color.Light => "badge text-bg-light",
                 Color.Dark => "badge text-bg-dark",
-                _ => throw new ArgumentOutOfRangeException(nameof(c))
+                _ => throw new ArgumentOutOfRangeException(nameof(c), $"Color '{c}' is not supported for badge variant.")
             };
         }
 
@@ -1094,8 +1179,10 @@ namespace HeimdallTemplateApp.Utilities
 
             public static string HorizontalAt(Breakpoint bp)
             {
-                var b = Bp(bp);
-                return $"list-group-horizontal-{b}";
+                if (bp == Breakpoint.None)
+                    return Horizontal;
+
+                return $"list-group-horizontal-{Bp(bp)}";
             }
         }
 
@@ -1113,8 +1200,10 @@ namespace HeimdallTemplateApp.Utilities
 
             public static string ResponsiveAt(Breakpoint bp)
             {
-                var b = Bp(bp);
-                return $"table-responsive-{b}";
+                if (bp == Breakpoint.None)
+                    return Responsive;
+
+                return $"table-responsive-{Bp(bp)}";
             }
 
             public static string Variant(Color c) => c switch
@@ -1127,7 +1216,7 @@ namespace HeimdallTemplateApp.Utilities
                 Color.Info => "table-info",
                 Color.Light => "table-light",
                 Color.Dark => "table-dark",
-                _ => throw new ArgumentOutOfRangeException(nameof(c))
+                _ => throw new ArgumentOutOfRangeException(nameof(c), $"Color '{c}' is not supported for table variant.")
             };
         }
 
@@ -1163,6 +1252,7 @@ namespace HeimdallTemplateApp.Utilities
             public const string IsValid = "is-valid";
             public const string IsInvalid = "is-invalid";
         }
+
         public static class Nav
         {
             public const string Base = "nav";
@@ -1190,7 +1280,7 @@ namespace HeimdallTemplateApp.Utilities
                 return $"navbar-expand-{Bp(bp)}";
             }
 
-            public const string Light = "navbar-light"; // if using legacy scheme (BS 5.3 prefers data-bs-theme)
+            public const string Light = "navbar-light";
             public const string Dark = "navbar-dark";
         }
 
@@ -1208,8 +1298,8 @@ namespace HeimdallTemplateApp.Utilities
 
             public static string MenuAlign(Placement p) => p switch
             {
-                Placement.Start => "dropdown-menu-start",
-                Placement.End => "dropdown-menu-end",
+                Placement.Start => MenuStart,
+                Placement.End => MenuEnd,
                 _ => throw new ArgumentOutOfRangeException(nameof(p))
             };
         }
@@ -1233,7 +1323,13 @@ namespace HeimdallTemplateApp.Utilities
             public const string Xl = "modal-xl";
             public const string Fullscreen = "modal-fullscreen";
 
-            public static string FullscreenAt(Breakpoint bp) => $"modal-fullscreen-{Bp(bp)}-down";
+            public static string FullscreenAt(Breakpoint bp)
+            {
+                if (bp == Breakpoint.None)
+                    return Fullscreen;
+
+                return $"modal-fullscreen-{Bp(bp)}-down";
+            }
         }
 
         public static class Offcanvas
@@ -1305,7 +1401,7 @@ namespace HeimdallTemplateApp.Utilities
                 Color.Info => "bg-info",
                 Color.Light => "bg-light",
                 Color.Dark => "bg-dark",
-                _ => throw new ArgumentOutOfRangeException(nameof(c))
+                _ => throw new ArgumentOutOfRangeException(nameof(c), $"Color '{c}' is not supported for progress variant.")
             };
         }
 
@@ -1326,35 +1422,30 @@ namespace HeimdallTemplateApp.Utilities
                 Color.Info => "text-info",
                 Color.Light => "text-light",
                 Color.Dark => "text-dark",
-                _ => throw new ArgumentOutOfRangeException(nameof(c))
+                _ => throw new ArgumentOutOfRangeException(nameof(c), $"Color '{c}' is not supported for spinner variant.")
             };
         }
 
         public static class Common
         {
-            // Centering helpers
             public const string CenterContent = "d-flex justify-content-center align-items-center";
             public const string CenterText = "text-center";
             public const string CenterBlock = "mx-auto";
 
-            // Sticky top
             public const string StickyTop = "sticky-top";
             public const string StickyBottom = "sticky-bottom";
         }
 
         public static class Misc
         {
-            // Width/height helpers (often used in components)
             public const string W100 = "w-100";
             public const string H100 = "h-100";
 
-            // Borders/shapes
             public const string Rounded = "rounded";
             public const string RoundedPill = "rounded-pill";
             public const string RoundedCircle = "rounded-circle";
 
-            // Cursor-ish (Bootstrap doesn't ship cursor utilities; include your own if desired)
-            public const string CursorPointer = "cursor-pointer";
+            public const string CursorPointer = Custom.CursorPointer;
         }
 
         private static string Bp(Breakpoint bp) => bp switch
