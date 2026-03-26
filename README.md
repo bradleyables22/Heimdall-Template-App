@@ -20,7 +20,7 @@ dotnet new install HeimdallFramework.Templates.WebApp
 
 ## Full Documentation Website
 
-heimdall-framework.org
+https://heimdall-framework.org
 
 ## Why Heimdall Exists
 
