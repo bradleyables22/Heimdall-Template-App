@@ -60,7 +60,7 @@ namespace HeimdallTemplateApp.Rendering.Shared
 			{
 				toastDiv.Class(
 					Bootstrap.Toast.ToastBase,
-					Bootstrap.Helpers.Fade,
+					Bootstrap.Visibility.Fade,
 					toastClass
 				);
 

@@ -261,7 +261,7 @@ namespace HeimdallTemplateApp.Rendering.Pages
 
             return FluentHtml.Div(list =>
             {
-                list.Class(Bootstrap.Helpers.VStack, Bootstrap.Spacing.Gap(2));
+                list.Class(Bootstrap.Flex.VStack, Bootstrap.Spacing.Gap(2));
 
                 foreach (var note in ordered)
                 {
