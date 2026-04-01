@@ -2,15 +2,15 @@
 {
     public static partial class Bootstrap
     {
-        /// <summary>
-        /// Provides CSS class names for breadcrumb navigation elements.
-        /// </summary>
-        /// <remarks>Use the constants in this class to reference standard CSS class names for breadcrumb
-        /// components, ensuring consistency across the application.</remarks>
-        public static class Breadcrumb
-        {
-            public const string Base = "breadcrumb";
-            public const string Item = "breadcrumb-item";
-        }
-    }
+		/// <summary>
+		/// Provides Bootstrap breadcrumb-related CSS class names for building breadcrumb navigation components.
+		/// </summary>
+		/// <remarks>This static class centralizes commonly used Bootstrap breadcrumb class names, enabling
+		/// consistent and maintainable styling of breadcrumb navigation elements across the application.</remarks>
+		public static class Breadcrumb
+		{
+			public const string Base = "breadcrumb";
+			public const string Item = "breadcrumb-item";
+		}
+	}
 }
