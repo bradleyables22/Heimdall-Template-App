@@ -1,7 +1,7 @@
 ﻿using Microsoft.AspNetCore.Html;
 using System.Buffers;
 #pragma warning disable CS7022
-namespace HeimdallTemplateApp.Utilities
+namespace HeimdallTemplateApp.Rendering.Utilities
 {
 	/// <summary>
 	/// Provides a fluent, builder-based API for composing HTML content while preserving

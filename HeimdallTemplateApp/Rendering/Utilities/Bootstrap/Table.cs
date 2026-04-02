@@ -1,6 +1,7 @@
-﻿namespace HeimdallTemplateApp.Utilities
+﻿namespace HeimdallTemplateApp.Rendering.Utilities 
 {
-	public static partial class Bootstrap
+
+    public static partial class Bootstrap
 	{
 		/// <summary>
 		/// Provides constants and helper methods for working with Bootstrap table CSS classes.

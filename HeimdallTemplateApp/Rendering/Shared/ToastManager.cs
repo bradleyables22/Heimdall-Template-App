@@ -1,6 +1,5 @@
-﻿using Microsoft.AspNetCore.Html;
-using HeimdallTemplateApp.Heimdall;
-using HeimdallTemplateApp.Utilities;
+﻿using HeimdallTemplateApp.Rendering.Utilities;
+using Microsoft.AspNetCore.Html;
 
 namespace HeimdallTemplateApp.Rendering.Shared
 {

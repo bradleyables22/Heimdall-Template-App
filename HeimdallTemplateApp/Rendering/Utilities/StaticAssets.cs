@@ -2,7 +2,7 @@
 using System.Collections.Concurrent;
 using System.Text.Encodings.Web;
 
-namespace HeimdallTemplateApp.Utilities
+namespace HeimdallTemplateApp.Rendering.Utilities
 {
 	/// <summary>
 	/// Provides discovery and cached access to static markup assets stored on disk.

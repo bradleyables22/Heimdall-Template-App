@@ -1,9 +1,8 @@
 ﻿using System.Globalization;
 using System.Text.Json;
 using Microsoft.AspNetCore.Html;
-using HeimdallTemplateApp.Utilities;
 
-namespace HeimdallTemplateApp.Heimdall
+namespace HeimdallTemplateApp.Rendering.Utilities
 {
 	/// <summary>
 	/// Provides strongly-typed helpers for emitting Heimdall-compatible HTML attributes.

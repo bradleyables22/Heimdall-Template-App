@@ -5,7 +5,7 @@ using System.Text;
 using System.Text.Encodings.Web;
 
 #pragma warning disable CS7022
-namespace HeimdallTemplateApp.Utilities
+namespace HeimdallTemplateApp.Rendering.Utilities
 {
 	/// <summary>
 	/// Provides a lightweight HTML rendering core for building HTML content in code.

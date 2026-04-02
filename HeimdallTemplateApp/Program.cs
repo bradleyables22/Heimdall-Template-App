@@ -1,7 +1,7 @@
 using Heimdall.Server;
 using HeimdallTemplateApp.Rendering.Layouts;
 using HeimdallTemplateApp.Rendering.Pages;
-using HeimdallTemplateApp.Utilities;
+using HeimdallTemplateApp.Rendering.Utilities;
 
 var builder = WebApplication.CreateBuilder(args);
 

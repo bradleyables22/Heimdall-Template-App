@@ -1,10 +1,9 @@
 ﻿using Heimdall.Server;
-using Microsoft.AspNetCore.Html;
-using HeimdallTemplateApp.Heimdall;         
+using Microsoft.AspNetCore.Html;     
 using HeimdallTemplateApp.Rendering.Shared;
-using HeimdallTemplateApp.Utilities;
 using System.ComponentModel.DataAnnotations;
-using static HeimdallTemplateApp.Utilities.Html;
+using HeimdallTemplateApp.Rendering.Utilities;
+using static HeimdallTemplateApp.Rendering.Utilities.Html;
 
 namespace HeimdallTemplateApp.Rendering.Pages
 {

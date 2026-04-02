@@ -1,5 +1,5 @@
 ﻿
-namespace HeimdallTemplateApp.Utilities
+namespace HeimdallTemplateApp.Rendering.Utilities
 {
     public static partial class Bootstrap
     {

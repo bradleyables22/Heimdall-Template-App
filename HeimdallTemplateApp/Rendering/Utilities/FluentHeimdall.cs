@@ -1,8 +1,7 @@
 ﻿using System.Text.Json;
 using Microsoft.AspNetCore.Html;
-using HeimdallTemplateApp.Utilities;
 
-namespace HeimdallTemplateApp.Heimdall
+namespace HeimdallTemplateApp.Rendering.Utilities
 {
 	/// <summary>
 	/// Provides fluent extension helpers for applying Heimdall attributes to FluentHtml builders.

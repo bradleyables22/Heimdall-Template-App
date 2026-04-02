@@ -1,6 +1,6 @@
 ﻿using Microsoft.AspNetCore.Html;
 using HeimdallTemplateApp.Rendering.Shared;
-using HeimdallTemplateApp.Utilities;
+using HeimdallTemplateApp.Rendering.Utilities;
 
 namespace HeimdallTemplateApp.Rendering.Layouts
 {
