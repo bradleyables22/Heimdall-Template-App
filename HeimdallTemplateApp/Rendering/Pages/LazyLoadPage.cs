@@ -1,6 +1,7 @@
 ﻿using Heimdall.Server;
 using HeimdallTemplateApp.Rendering.Utilities;
 using Microsoft.AspNetCore.Html;
+using Heimdall.Server.Rendering;
 
 namespace HeimdallTemplateApp.Rendering.Pages
 {
