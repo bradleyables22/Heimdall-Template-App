@@ -81,54 +81,26 @@ namespace HeimdallTemplateApp.Rendering.Shared
 							list.Class(Bootstrap.ListGroup.Base);
 							list.Id("navList");
 
-							list.A(a =>
-							{
-								a.Class(Bootstrap.ListGroup.Item, Bootstrap.ListGroup.ItemAction);
-								a.Href("/");
-
-								a.Tag("i", i => i.Class("bi", "bi-house", Bootstrap.Spacing.Me(2)));
-								a.Text(" Home");
-							});
-
-							list.A(a =>
-							{
-								a.Class(Bootstrap.ListGroup.Item, Bootstrap.ListGroup.ItemAction);
-								a.Href("/out-of-band");
-
-								a.Tag("i", i => i.Class("bi", "bi-chat-dots", Bootstrap.Spacing.Me(2)));
-								a.Text(" Out Of Band");
-							});
-
-							list.A(a =>
-							{
-								a.Class(Bootstrap.ListGroup.Item, Bootstrap.ListGroup.ItemAction);
-								a.Href("/state");
-
-								a.Tag("i", i => i.Class("bi", "bi-bezier2", Bootstrap.Spacing.Me(2)));
-								a.Text(" State");
-							});
-							list.A(a =>
-							{
-								a.Class(Bootstrap.ListGroup.Item, Bootstrap.ListGroup.ItemAction);
-								a.Href("/forms");
-
-								a.Tag("i", i => i.Class("bi", "bi-journal", Bootstrap.Spacing.Me(2)));
-								a.Text(" Forms");
-							});
-
-                            list.A(a =>
-                            {
-                                a.Class(Bootstrap.ListGroup.Item, Bootstrap.ListGroup.ItemAction);
-                                a.Href("/lazy");
-
-                                a.Tag("i", i => i.Class("bi", "bi-arrow-repeat", Bootstrap.Spacing.Me(2)));
-                                a.Text(" Lazy Loading");
-                            });
-                        });
+							list.Add(NavItem("bi-house", "Home", "/"));
+							list.Add(NavItem("bi-chat-dots", "Out Of Band", "/out-of-band"));
+							list.Add(NavItem("bi-bezier2", "State", "/state"));
+							list.Add(NavItem("bi-journal", "Forms", "/forms"));
+							list.Add(NavItem("bi-arrow-repeat", "Lazy Loading", "/lazy"));
+						});
 					});
 				});
 
 				f.Script(s => s.Src("components/js/menu-component.js"));
+			});
+
+		private static IHtmlContent NavItem(string icon, string text, string href)
+			=> FluentHtml.A(a =>
+			{
+				a.Class(Bootstrap.ListGroup.Item, Bootstrap.ListGroup.ItemAction);
+				a.Href(href);
+
+				a.Tag("i", i => i.Class("bi", icon, Bootstrap.Spacing.Me(2)));
+				a.Text($" {text}");
 			});
 	}
 }
