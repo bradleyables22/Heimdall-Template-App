@@ -77,9 +77,6 @@
 			public const string Order4 = "order-4";
 			public const string Order5 = "order-5";
 
-			public const string W100 = "w-100";
-			public const string H100 = "h-100";
-
 			public const string CenterContent = "d-flex justify-content-center align-items-center";
 			public const string CenterBlock = "mx-auto";
 
