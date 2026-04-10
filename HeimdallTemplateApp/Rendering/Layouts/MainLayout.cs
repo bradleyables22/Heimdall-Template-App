@@ -61,7 +61,10 @@ namespace HeimdallTemplateApp.Rendering.Layouts
 
 						head.Script(s => s.Src("/_content/HeimdallFramework.Web/heimdall.js"));
 						head.Script(s => s.Src("js/bootstrap-bundle.js"));
-					});
+
+						if (Environment.GetEnvironmentVariable("ASPNETCORE_ENVIRONMENT")?.ToLowerInvariant() == "development") 
+							head.Script(s => s.Src("js/heimdall.debug.js"));
+                    });
 
 					html.Body(body =>
 					{
