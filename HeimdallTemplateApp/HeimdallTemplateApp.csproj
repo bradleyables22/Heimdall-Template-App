@@ -7,8 +7,8 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="HeimdallFramework.Server" Version="0.2.2-alpha.1" />
-    <PackageReference Include="HeimdallFramework.Web" Version="0.1.4-alpha.1" />
+    <PackageReference Include="HeimdallFramework.Server" Version="0.2.3-alpha.1" />
+    <PackageReference Include="HeimdallFramework.Web" Version="0.1.5-alpha.1" />
   </ItemGroup>
 
 </Project>
