@@ -1,4 +1,4 @@
-﻿using HeimdallTemplateApp.Rendering.Utilities;
+﻿using Heimdall.Bootstrap;
 using Microsoft.AspNetCore.Html;
 using Heimdall.Server.Rendering;
 

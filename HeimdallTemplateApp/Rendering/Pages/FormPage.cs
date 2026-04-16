@@ -3,7 +3,7 @@ using Heimdall.Server.Rendering;
 using Microsoft.AspNetCore.Html;     
 using HeimdallTemplateApp.Rendering.Shared;
 using System.ComponentModel.DataAnnotations;
-using HeimdallTemplateApp.Rendering.Utilities;
+using Heimdall.Bootstrap;
 using static Heimdall.Server.Rendering.Html;
 
 namespace HeimdallTemplateApp.Rendering.Pages
