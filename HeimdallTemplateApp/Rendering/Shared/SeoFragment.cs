@@ -9,20 +9,18 @@ namespace HeimdallTemplateApp.Rendering.Shared
 		{
 			f.Meta(m =>
 			{
-				m.Attr("name", "description");
-				m.ContentAttr("A modern Heimdall-powered web application.");
-			});
-
-			f.Meta(m =>
+				m.Attr("name", "description")
+				.ContentAttr("A modern Heimdall-powered web application.");
+			})
+			.Meta(m =>
 			{
-				m.Attr("name", "robots");
-				m.ContentAttr("index, follow");
-			});
-
-			f.Meta(m =>
+				m.Attr("name", "robots")
+				.ContentAttr("index, follow");
+			})
+			.Meta(m =>
 			{
-				m.Attr("name", "author");
-				m.ContentAttr("Heimdall");
+				m.Attr("name", "author")
+				.ContentAttr("Heimdall");
 			});
 		});
 
@@ -32,24 +30,21 @@ namespace HeimdallTemplateApp.Rendering.Shared
 			{
 				m.Attr("name", "twitter:card");
 				m.ContentAttr("summary_large_image");
-			});
-
-			f.Meta(m =>
+			})
+			.Meta(m =>
 			{
-				m.Attr("name", "twitter:title");
-				m.ContentAttr("Heimdall Web App");
-			});
-
-			f.Meta(m =>
+				m.Attr("name", "twitter:title")
+				.ContentAttr("Heimdall Web App");
+			})
+			.Meta(m =>
 			{
-				m.Attr("name", "twitter:description");
-				m.ContentAttr("A modern Heimdall-powered web application.");
-			});
-
-			f.Meta(m =>
+				m.Attr("name", "twitter:description")
+				.ContentAttr("A modern Heimdall-powered web application.");
+			})
+			.Meta(m =>
 			{
-				m.Attr("name", "twitter:image");
-				m.ContentAttr("/images/favicon.png");
+				m.Attr("name", "twitter:image")
+				.ContentAttr("/images/favicon.png");
 			});
 		});
 
@@ -57,32 +52,28 @@ namespace HeimdallTemplateApp.Rendering.Shared
 		{
 			f.Meta(m =>
 			{
-				m.Attr("property", "og:type");
-				m.ContentAttr("website");
-			});
-
-			f.Meta(m =>
+				m.Attr("property", "og:type")
+				.ContentAttr("website");
+			})
+			.Meta(m =>
 			{
-				m.Attr("property", "og:site_name");
-				m.ContentAttr("Heimdall Web App");
-			});
-
-			f.Meta(m =>
+				m.Attr("property", "og:site_name")
+				.ContentAttr("Heimdall Web App");
+			})
+			.Meta(m =>
 			{
-				m.Attr("property", "og:title");
-				m.ContentAttr("Heimdall Web App");
-			});
-
-			f.Meta(m =>
+				m.Attr("property", "og:title")
+				.ContentAttr("Heimdall Web App");
+			})
+			.Meta(m =>
 			{
-				m.Attr("property", "og:description");
-				m.ContentAttr("A modern Heimdall-powered web application.");
-			});
-
-			f.Meta(m =>
+				m.Attr("property", "og:description")
+				.ContentAttr("A modern Heimdall-powered web application.");
+			})
+			.Meta(m =>
 			{
-				m.Attr("property", "og:image");
-				m.ContentAttr("/images/favicon.png");
+				m.Attr("property", "og:image")
+				.ContentAttr("/images/favicon.png");
 			});
 		});
 	}

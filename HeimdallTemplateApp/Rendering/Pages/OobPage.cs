@@ -13,26 +13,26 @@ namespace HeimdallTemplateApp.Rendering.Pages
 
 		private static IHtmlContent BtnSse => FluentHtml.Button(b =>
 		{
-			b.Type("button");
-			b.Class(Bootstrap.Btn.Primary, Bootstrap.Spacing.Me(2));
-			b.Add(
+			b.Type("button")
+			.Class(Bootstrap.Btn.Primary, Bootstrap.Spacing.Me(2))
+			.Add(
 				HeimdallHtml.OnClick(ActionToastSse),
 				HeimdallHtml.SwapMode(HeimdallHtml.Swap.None),
 				HeimdallHtml.PayloadEmptyObject()
-			);
-			b.Text("Send toast via SSE");
+			)
+			.Text("Send toast via SSE");
 		});
 
 		private static IHtmlContent BtnOob => FluentHtml.Button(b =>
 		{
-			b.Type("button");
-			b.Class(Bootstrap.Btn.OutlinePrimary);
-			b.Add(
+			b.Type("button")
+			.Class(Bootstrap.Btn.OutlinePrimary)
+			.Add(
 				HeimdallHtml.OnClick(ActionToastOob),
 				HeimdallHtml.SwapMode(HeimdallHtml.Swap.None),
 				HeimdallHtml.PayloadEmptyObject()
-			);
-			b.Text("Send toast via OOB Invocation");
+			)
+			.Text("Send toast via OOB Invocation");
 		});
 
 		private static IHtmlContent Explainer => FluentHtml.Div(d =>
@@ -41,42 +41,36 @@ namespace HeimdallTemplateApp.Rendering.Pages
 				Bootstrap.Alert.Variant(Bootstrap.Color.Light),
 				Bootstrap.Spacing.Mt(3),
 				Bootstrap.Text.Align(Bootstrap.TextAlignKind.Start)
-			);
-
-			d.H5(h => h.Text("Where the toast manager comes from"));
-
-			d.P(p =>
+			)
+			.H5(h => h.Text("Where the toast manager comes from"))
+			.P(p =>
 			{
-				p.Text("This page does not render the toast container. ");
-				p.Strong(s => s.Text("The layout is responsible for rendering "));
-				p.Code(c => c.Text("#toast-manager"));
-				p.Text(" (and, if enabled, subscribing it to the ");
-				p.Code(c => c.Text("toasts"));
-				p.Text(" topic via SSE).");
-			});
-
-			d.Hr(_ => { });
-
-			d.H6(h => h.Text("Two methodologies"));
-
-			d.Ul(ul =>
+				p.Text("This page does not render the toast container. ")
+				.Strong(s => s.Text("The layout is responsible for rendering "))
+				.Code(c => c.Text("#toast-manager"))
+				.Text(" (and, if enabled, subscribing it to the ")
+				.Code(c => c.Text("toasts"))
+				.Text(" topic via SSE).");
+			})
+			.Hr(_ => { })
+			.H6(h => h.Text("Two methodologies"))
+			.Ul(ul =>
 			{
 				ul.Li(li =>
 				{
-					li.Strong(s => s.Text("SSE (Bifrost): "));
-					li.Text("The click calls a server action that publishes toast HTML to topic ");
-					li.Code(c => c.Text("toasts"));
-					li.Text(". Any connected page subscribed to that topic receives the toast.");
-				});
-
-				ul.Li(li =>
+					li.Strong(s => s.Text("SSE (Bifrost): "))
+					.Text("The click calls a server action that publishes toast HTML to topic ")
+					.Code(c => c.Text("toasts"))
+					.Text(". Any connected page subscribed to that topic receives the toast.");
+				})
+				.Li(li =>
 				{
-					li.Strong(s => s.Text("OOB Invocation: "));
-					li.Text("The click calls a server action that returns an ");
-					li.Code(c => c.Text("<invocation>"));
-					li.Text(" targeting ");
-					li.Code(c => c.Text("#toast-manager"));
-					li.Text(". Heimdall.js applies it client-side without rendering the invocation element.");
+					li.Strong(s => s.Text("OOB Invocation: "))
+					.Text("The click calls a server action that returns an ")
+					.Code(c => c.Text("<invocation>"))
+					.Text(" targeting ")
+					.Code(c => c.Text("#toast-manager"))
+				    .Text(". Heimdall.js applies it client-side without rendering the invocation element.");
 				});
 			});
 		});
@@ -85,25 +79,21 @@ namespace HeimdallTemplateApp.Rendering.Pages
 		{
 			var card = FluentHtml.Div(d =>
 			{
-				d.Class(Bootstrap.Card.Base, Bootstrap.Shadow.Lg);
-
-				d.Div(body =>
+				d.Class(Bootstrap.Card.Base, Bootstrap.Shadow.Lg)
+				.Div(body =>
 				{
 					body.Class(
 						Bootstrap.Card.Body,
 						Bootstrap.Text.Align(Bootstrap.TextAlignKind.Center)
-					);
-
-					body.H1(h => h.Text("Send a toast!"));
-					body.P(p => p.Text("Use either approach below. Both ultimately insert a toast into the layout’s #toast-manager."));
-
-					body.Div(btnRow =>
+					)
+					.H1(h => h.Text("Send a toast!"))
+					.P(p => p.Text("Use either approach below. Both ultimately insert a toast into the layout’s #toast-manager."))
+					.Div(btnRow =>
 					{
-						btnRow.Class(Bootstrap.Spacing.Mt(3));
-						btnRow.Add(BtnSse, BtnOob);
-					});
-
-					body.Add(Explainer);
+						btnRow.Class(Bootstrap.Spacing.Mt(3))
+						.Add(BtnSse, BtnOob);
+					})
+					.Add(Explainer);
 				});
 			});
 
@@ -112,21 +102,17 @@ namespace HeimdallTemplateApp.Rendering.Pages
 				frame.Class(
 					Bootstrap.Spacing.M(3, Bootstrap.Side.Top),
 					Bootstrap.Layout.ContainerFluid
-				);
-
-				frame.Div(row =>
+				)
+				.Div(row =>
 				{
-					row.Class(Bootstrap.Layout.Row);
-
-					row.Div(col => col.Class(Bootstrap.Layout.Col));
-
-					row.Div(center =>
+					row.Class(Bootstrap.Layout.Row)
+					.Div(col => col.Class(Bootstrap.Layout.Col))
+					.Div(center =>
 					{
-						center.Class(Bootstrap.Layout.ColSpan(6, Bootstrap.Breakpoint.Lg));
-						center.Add(card);
-					});
-
-					row.Div(col => col.Class(Bootstrap.Layout.Col));
+						center.Class(Bootstrap.Layout.ColSpan(6, Bootstrap.Breakpoint.Lg))
+						.Add(card);
+					})
+					.Div(col => col.Class(Bootstrap.Layout.Col));
 				});
 			});
 		}

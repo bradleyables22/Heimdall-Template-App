@@ -9,43 +9,40 @@ namespace HeimdallTemplateApp.Rendering.Pages
     public static class MainPage
     {
         private const string LoadActionId = "MainPage.RenderBody";
-
-        public static IHtmlContent Render()
+        private const string HostId = "mainpage-host";
+		public static IHtmlContent Render()
         {
             return FluentHtml.Div(host =>
             {
-                host.Id("mainpage-host");
-
-                host.Heimdall()
+                host.Id(HostId)
+                .Heimdall()
                     .Load(LoadActionId)
-                    .Target("#mainpage-host")
+                    .Target($"#{HostId}")
                     .SwapInner();
 
                 host.Div(s =>
                 {
-                    s.Class(Bootstrap.Card.Base, Bootstrap.Shadow.Sm);
-
-                    s.Div(b =>
+                    s.Class(Bootstrap.Card.Base, Bootstrap.Shadow.Sm)
+                    .Div(b =>
                     {
-                        b.Class(Bootstrap.Card.Body);
-
-                        b.Div(r =>
+                        b.Class(Bootstrap.Card.Body)
+                        .Div(r =>
                         {
-                            r.Class(Bootstrap.Display.Flex, Bootstrap.Flex.AlignItemsCenter, Bootstrap.Spacing.Gap(2));
-                            r.Div(spinner =>
+                            r.Class(Bootstrap.Display.Flex, Bootstrap.Flex.AlignItemsCenter, Bootstrap.Spacing.Gap(2))
+                            .Div(spinner =>
                             {
-                                spinner.Class("spinner-border");
-                                spinner.Attr("role", "status");
-                                spinner.Span(sr =>
+                                spinner.Class("spinner-border")
+                                .Attr("role", "status")
+                                .Span(sr =>
                                 {
-                                    sr.Class("visually-hidden");
-                                    sr.Text("Loading...");
+                                    sr.Class("visually-hidden")
+                                    .Text("Loading...");
                                 });
-                            });
-                            r.Div(txt =>
+                            })
+                            .Div(txt =>
                             {
-                                txt.Class(Bootstrap.Text.BodySecondary);
-                                txt.Text("Loading Heimdall…");
+                                txt.Class(Bootstrap.Text.BodySecondary)
+                                .Text("Loading Heimdall…");
                             });
                         });
                     });
@@ -58,14 +55,13 @@ namespace HeimdallTemplateApp.Rendering.Pages
         {
             var hero = FluentHtml.Div(card =>
             {
-                card.Class(Bootstrap.Card.Base, Bootstrap.Shadow.Lg);
-
-                card.Div(body =>
+                card.Class(Bootstrap.Card.Base, Bootstrap.Shadow.Lg)
+                .Div(body =>
                 {
-                    body.Class(Bootstrap.Card.Body);
-                    body.Add(HeaderRow);
-                    body.Hr(_ => { });
-                    body.Add(Features);
+                    body.Class(Bootstrap.Card.Body)
+                    .Add(HeaderRow)
+                    .Hr(_ => { })
+                    .Add(Features);
                 });
             });
 
@@ -73,17 +69,14 @@ namespace HeimdallTemplateApp.Rendering.Pages
             {
                 frame.Div(row =>
                 {
-                    row.Class(Bootstrap.Layout.Row, Bootstrap.Spacing.Mt(3));
-
-                    row.Div(_ => { _.Class(Bootstrap.Layout.Col); });
-
-                    row.Div(center =>
+                    row.Class(Bootstrap.Layout.Row, Bootstrap.Spacing.Mt(3))
+                    .Div(_ => { _.Class(Bootstrap.Layout.Col); })
+                    .Div(center =>
                     {
-                        center.Class(Bootstrap.Layout.ColSpan(8, Bootstrap.Breakpoint.Lg));
-                        center.Add(hero);
-                    });
-
-                    row.Div(_ => { _.Class(Bootstrap.Layout.Col); });
+                        center.Class(Bootstrap.Layout.ColSpan(8, Bootstrap.Breakpoint.Lg))
+                        .Add(hero);
+                    })
+                    .Div(_ => { _.Class(Bootstrap.Layout.Col); });
                 });
             });
         }
@@ -94,9 +87,8 @@ namespace HeimdallTemplateApp.Rendering.Pages
                 row.Class(
                     Bootstrap.Layout.Row,
                     Bootstrap.Layout.Gutter(3)
-                );
-
-                row.Add(
+                )
+                .Add(
                     FeatureCard.Render(
                         icon: "bi bi-lightning-charge-fill",
                         title: "Server actions",
@@ -124,39 +116,33 @@ namespace HeimdallTemplateApp.Rendering.Pages
                     Bootstrap.Flex.JustifyBetween,
                     Bootstrap.Flex.Wrap,
                     Bootstrap.Spacing.Gap(3)
-                );
-
-                row.Div(left =>
+                )
+                .Div(left =>
                 {
-                    left.Class(Bootstrap.Text.Start);
-
-                    left.H1(h =>
+                    left.Class(Bootstrap.Text.Start)
+                    .H1(h =>
                     {
                         h.Class(
                             Bootstrap.Raw("display-6"),
                             Bootstrap.Spacing.Mb(2)
-                        );
-
-                        h.I(i =>
+                        )
+                        .I(i =>
                         {
                             i.Class(
                                 Bootstrap.Raw("bi bi-shield-lock-fill"),
                                 Bootstrap.Spacing.Me(2)
                             );
-                        });
-
-                        h.Text("Welcome to Heimdall");
-                    });
-
-                    left.P(p =>
+                        })
+                        .Text("Welcome to Heimdall");
+                    })
+                    .P(p =>
                     {
                         p.Class(
                             Bootstrap.Text.BodySecondary,
                             Bootstrap.Spacing.Mb(0)
-                        );
-
-                        p.Text("HTML-first server actions + safe DOM swapping + optional SSE. ");
-                        p.Text("Build fast pages without a heavy client framework.");
+                        )
+                        .Text("HTML-first server actions + safe DOM swapping + optional SSE. ")
+                        .Text("Build fast pages without a heavy client framework.");
                     });
                 });
             });

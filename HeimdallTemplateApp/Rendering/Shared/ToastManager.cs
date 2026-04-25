@@ -1,6 +1,7 @@
 ﻿using Heimdall.Bootstrap;
-using Microsoft.AspNetCore.Html;
 using Heimdall.Server.Rendering;
+using Microsoft.AspNetCore.Html;
+using static Heimdall.Bootstrap.Bootstrap;
 
 namespace HeimdallTemplateApp.Rendering.Shared
 {
@@ -22,6 +23,9 @@ namespace HeimdallTemplateApp.Rendering.Shared
 
 	public static class ToastManager
 	{
+		public const string Id = "toast-manager";
+		public static string GetUserToastTopic(this HttpContext ctx) => $"toasts:user:{ctx.Connection.Id}";
+
 		public static IHtmlContent Render(HttpContext ctx, bool useSSE = true)
 			=> FluentHtml.Div(root =>
 			{
@@ -31,12 +35,10 @@ namespace HeimdallTemplateApp.Rendering.Shared
 					Bootstrap.Position.Top0,
 					Bootstrap.Position.End0,
 					Bootstrap.Spacing.P(3)
-				);
-
-				root.Style("z-index:1000");
-				root.Id("toast-manager");
-				root.Aria("live", "polite");
-				root.Aria("atomic", "true");
+				).Style("z-index:1000")
+				.Id(Id)
+				.Aria("live", "polite")
+				.Aria("atomic", "true");
 
 				if (useSSE)
 				{
@@ -44,8 +46,8 @@ namespace HeimdallTemplateApp.Rendering.Shared
 					//update the topic name and target selector as needed to fit your application's structure.
 
 					root.Heimdall()
-					.SseTopic($"toasts:user:{ctx.Connection.Id}")
-					.SseTarget("#toast-manager")
+					.SseTopic($"{GetUserToastTopic(ctx)}")
+					.SseTarget($"#{Id}")
 					.SseSwap(HeimdallHtml.Swap.BeforeEnd);
 				}
 
@@ -62,13 +64,12 @@ namespace HeimdallTemplateApp.Rendering.Shared
 					Bootstrap.Toast.ToastBase,
 					Bootstrap.Visibility.Fade,
 					toastClass
-				);
-
-				toastDiv.Role("alert");
-				toastDiv.Aria("live", "assertive");
-				toastDiv.Aria("atomic", "true");
-				toastDiv.Data("bs-autohide", "true");
-				toastDiv.Data("bs-delay", toast.DurationMs.ToString());
+				)
+				.Role("alert")
+				.Aria("live", "assertive")
+				.Aria("atomic", "true")
+				.Data("bs-autohide", "true")
+				.Data("bs-delay", toast.DurationMs.ToString());
 
 				// Header
 				toastDiv.Div(header =>
@@ -77,31 +78,29 @@ namespace HeimdallTemplateApp.Rendering.Shared
 						Bootstrap.Toast.Header,
 						toastClass,
 						Bootstrap.Border.None
-					);
-
-					header.Tag("strong", strong =>
+					)
+					.Tag("strong", strong =>
 					{
-						strong.Class(Bootstrap.Spacing.MeAuto());
-						strong.Text(toast.Header);
-					});
-
-					header.Button(close =>
+						strong.Class(Bootstrap.Spacing.MeAuto())
+						.Text(toast.Header);
+					})
+					.Button(close =>
 					{
 						close.Class(
 							Bootstrap.Btn.Close,
 							Bootstrap.Spacing.Mb(1),
 							Bootstrap.Spacing.Ms(2)
-						);
-						close.Data("bs-dismiss", "toast");
-						close.Aria("label", "Close");
+						)
+						.Data("bs-dismiss", "toast")
+						.Aria("label", "Close");
 					});
 				});
 
 				// Body
 				toastDiv.Div(body =>
 				{
-					body.Class(Bootstrap.Toast.Body);
-					body.Text(toast.Content);
+					body.Class(Bootstrap.Toast.Body)
+					.Text(toast.Content);
 				});
 			});
 		}

@@ -1,13 +1,15 @@
-﻿using Heimdall.Server;
-using Heimdall.Bootstrap;
-using Microsoft.AspNetCore.Html;
+﻿using Heimdall.Bootstrap;
+using Heimdall.Server;
 using Heimdall.Server.Rendering;
+using Microsoft.AspNetCore.Html;
 
 namespace HeimdallTemplateApp.Rendering.Pages
 {
     public static class CounterPage
     {
-        public static class Actions
+        public const string HostId = "counter-host";
+
+		public static class Actions
         {
             public const string Inc = "CounterPage.Inc";
             public const string Dec = "CounterPage.Dec";
@@ -48,8 +50,8 @@ namespace HeimdallTemplateApp.Rendering.Pages
         {
             return FluentHtml.Div(host =>
             {
-                host.Id("counter-host");
-                host.Class(
+                host.Id("counter-host")
+                .Class(
                     Bootstrap.Card.Base,
                     Bootstrap.Shadow.Sm,
                     Bootstrap.Spacing.P(3),
@@ -57,60 +59,52 @@ namespace HeimdallTemplateApp.Rendering.Pages
                 );
 
                 // State stored in DOM (read by Heimdall.js closest-state)
-                host.Add(HeimdallHtml.State(new CounterState(count)));
-
-                host.Div(row =>
+                host.Add(HeimdallHtml.State(new CounterState(count)))
+                .Div(row =>
                 {
                     row.Class(
                         Bootstrap.Display.Flex,
                         Bootstrap.Flex.AlignItemsCenter,
                         Bootstrap.Flex.JustifyBetween,
                         Bootstrap.Spacing.Gap(3)
-                    );
-
-                    row.Div(left =>
+                    )
+                    .Div(left =>
                     {
-                        left.Div(lbl => lbl.Class(Bootstrap.Text.BodySecondary, Bootstrap.Text.Small).Text("Count"));
-                        left.Div(val => val.Class(Bootstrap.Raw("display-6"), Bootstrap.Spacing.Mb(0)).Text(count.ToString()));
-                    });
-
-                    row.Div(btns =>
+                        left.Div(lbl => lbl.Class(Bootstrap.Text.BodySecondary, Bootstrap.Text.Small).Text("Count"))
+                        .Div(val => val.Class(Bootstrap.Raw("display-6"), Bootstrap.Spacing.Mb(0)).Text(count.ToString()));
+                    })
+                    .Div(btns =>
                     {
-                        btns.Class(Bootstrap.Display.Flex, Bootstrap.Spacing.Gap(2));
-
-                        btns.Button(b =>
+                        btns.Class(Bootstrap.Display.Flex, Bootstrap.Spacing.Gap(2))
+                        .Button(b =>
                         {
-                            b.Class(Bootstrap.Btn.OutlineSecondary);
-                            b.Type("button");
-                            b.Text("−");
-
-                            b.Heimdall()
+                            b.Class(Bootstrap.Btn.OutlineSecondary)
+                            .Type("button")
+                            .Text("−")
+                            .Heimdall()
                                 .Click(Actions.Dec)
                                 .PayloadFromClosestState()
                                 .Target("#counter-host")
                                 .SwapOuter();
-                        });
-
-                        btns.Button(b =>
+                        })
+                        .Button(b =>
                         {
-                            b.Class(Bootstrap.Btn.Primary);
-                            b.Type("button");
-                            b.Text("+");
+                            b.Class(Bootstrap.Btn.Primary)
+                            .Type("button")
+                            .Text("+")
 
-                            b.Heimdall()
+                            .Heimdall()
                                 .Click(Actions.Inc)
                                 .PayloadFromClosestState()
                                 .Target("#counter-host")
                                 .SwapOuter();
-                        });
-
-                        btns.Button(b =>
+                        })
+                        .Button(b =>
                         {
-                            b.Class(Bootstrap.Btn.OutlineDanger);
-                            b.Type("button");
-                            b.Text("Reset");
-
-                            b.Heimdall()
+                            b.Class(Bootstrap.Btn.OutlineDanger)
+                            .Type("button")
+                            .Text("Reset")
+                            .Heimdall()
                                 .Click(Actions.Reset)
                                 .PayloadFromClosestState()
                                 .Target("#counter-host")

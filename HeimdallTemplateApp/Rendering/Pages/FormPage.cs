@@ -1,16 +1,20 @@
-﻿using Heimdall.Server;
+﻿using Heimdall.Bootstrap;
+using Heimdall.Server;
 using Heimdall.Server.Rendering;
-using Microsoft.AspNetCore.Html;     
 using HeimdallTemplateApp.Rendering.Shared;
+using Microsoft.AspNetCore.Html;     
 using System.ComponentModel.DataAnnotations;
-using Heimdall.Bootstrap;
+using static Heimdall.Bootstrap.Bootstrap;
 using static Heimdall.Server.Rendering.Html;
 
 namespace HeimdallTemplateApp.Rendering.Pages
 {
     public static class FormPage
     {
-        public static List<NoteEntity> Notes { get; set; } = new();
+        public const string CreateHostId = "create-note-host";
+        public const string HostId = "notes-host";
+        public const string FormId = "create-note-form";
+		public static List<NoteEntity> Notes { get; set; } = new();
 
         public sealed class NoteEntity
         {
@@ -42,65 +46,53 @@ namespace HeimdallTemplateApp.Rendering.Pages
 
             return FluentHtml.Div(row =>
             {
-                row.Class(Bootstrap.Layout.Row, Bootstrap.Spacing.Mt(4));
-
-                row.Div(col1 =>
+                row.Class(Bootstrap.Layout.Row, Bootstrap.Spacing.Mt(4))
+                .Div(col1 =>
                 {
                     col1.Class(Bootstrap.Layout.ColSpan(3, Bootstrap.Breakpoint.Lg));
-                });
-
-                row.Div(col2 =>
+                })
+                .Div(col2 =>
                 {
-                    col2.Class(Bootstrap.Layout.ColSpan(6, Bootstrap.Breakpoint.Lg));
-
-                    col2.Div(card =>
+                    col2.Class(Bootstrap.Layout.ColSpan(6, Bootstrap.Breakpoint.Lg))
+                    .Div(card =>
                     {
-                        card.Class(Bootstrap.Card.Base, Bootstrap.Shadow.Lg);
-
-                        card.Div(header =>
+                        card.Class(Bootstrap.Card.Base, Bootstrap.Shadow.Lg)
+                        .Div(header =>
                         {
-                            header.Class(Bootstrap.Card.Header);
-                            header.H2(h => h.Text("Create New Note"));
-                        });
-
-                        card.Div(body =>
+                            header.Class(Bootstrap.Card.Header)
+                            .H2(h => h.Text("Create New Note"));
+                        })
+                        .Div(body =>
                         {
-                            body.Class(Bootstrap.Card.Body);
-
-                            body.Div(host =>
+                            body.Class(Bootstrap.Card.Body)
+                            .Div(host =>
                             {
-                                host.Id("create-note-host");
-                                host.Add(GenerateForm(request, results));
+                                host.Id(CreateHostId)
+                                .Add(GenerateForm(request, results));
                             });
                         });
-                    });
-
-                    col2.Div(sp => sp.Class(Bootstrap.Spacing.Mt(4)));
-
-                    col2.Div(card =>
+                    }).Div(sp => sp.Class(Bootstrap.Spacing.Mt(4)))
+                    .Div(card =>
                     {
-                        card.Class(Bootstrap.Card.Base, Bootstrap.Shadow.Lg);
-
-                        card.Div(header =>
+                        card.Class(Bootstrap.Card.Base, Bootstrap.Shadow.Lg)
+                        .Div(header =>
                         {
                             header.Class(Bootstrap.Card.Header);
                             header.H2(h => h.Text("Notes"));
-                        });
-
-                        card.Div(body =>
+                        })
+                        .Div(body =>
                         {
                             body.Class(Bootstrap.Card.Body);
 
                             body.Div(host =>
                             {
-                                host.Id("notes-host");
+                                host.Id(HostId);
                                 host.Add(RenderNotesList());
                             });
                         });
                     });
-                });
-
-                row.Div(col3 =>
+                })
+                .Div(col3 =>
                 {
                     col3.Class(Bootstrap.Layout.ColSpan(3, Bootstrap.Breakpoint.Lg));
                 });
@@ -120,36 +112,35 @@ namespace HeimdallTemplateApp.Rendering.Pages
 
             return FluentHtml.Form(form =>
             {
-                form.Id("create-note-form");
+                form.Id(FormId);
 
                 // Submit -> CreateNote
                 // Target the host but swap INNER to avoid replacing the host node.
                 form.Heimdall()
-                    .Submit(new HeimdallHtml.ActionId("FormPage.CreateNote"))
+                    .Submit("FormPage.CreateNote")
                     .PayloadFromClosestForm()
-                    .Target("#create-note-host")
+                    .Target($"#{CreateHostId}")
                     .SwapInner()
                     .PreventDefault(true);
 
                 // Hidden field so Validated round-trips through closest-form payload
                 form.Input(InputType.hidden, h =>
                 {
-                    h.Name(nameof(CreateNoteRequest.IsDirty));
-                    h.Value(req.IsDirty ? "true" : "false");
-                });
-                form.Label(l =>
+                    h.Name(nameof(CreateNoteRequest.IsDirty))
+                    .Value(req.IsDirty ? "true" : "false");
+                })
+                .Label(l =>
                 {
-                    l.Class(Bootstrap.Form.Label);
-                    l.For("title");
-                    l.Text("Title");
-                });
-
-                form.Input(InputType.text, input =>
+                    l.Class(Bootstrap.Form.Label)
+                    .For("title")
+                    .Text("Title");
+                })
+                .Input(InputType.text, input =>
                 {
-                    input.Id("title");
-                    input.Name(nameof(CreateNoteRequest.Title));
-                    input.Value(req.Title ?? string.Empty);
-                    input.Attr("maxlength", "125");
+                    input.Id("title")
+                    .Name(nameof(CreateNoteRequest.Title))
+                    .Value(req.Title ?? string.Empty)
+                    .Attr("maxlength", "125");
 
                     // Validate on input with debounce
                     // Swap INNER so we update the form contents without replacing the host node.
@@ -167,8 +158,8 @@ namespace HeimdallTemplateApp.Rendering.Pages
                 {
                     form.Div(err =>
                     {
-                        err.Class(Bootstrap.Form.Text, Bootstrap.Text.TxtColor(Bootstrap.Color.Danger), Bootstrap.Spacing.Mb(3));
-                        err.Text(titleError);
+                        err.Class(Bootstrap.Form.Text, Bootstrap.Text.TxtColor(Bootstrap.Color.Danger), Bootstrap.Spacing.Mb(3))
+                        .Text(titleError);
                     });
                 }
                 else
@@ -177,25 +168,24 @@ namespace HeimdallTemplateApp.Rendering.Pages
                 }
                 form.Label(l =>
                 {
-                    l.Class(Bootstrap.Form.Label);
-                    l.For("content");
-                    l.Text("Content");
+                    l.Class(Bootstrap.Form.Label)
+                    .For("content")
+                    .Text("Content");
                 });
 
                 // Assumes you added FluentHtml.TextArea(...) wrapper previously.
                 // If not, you can replace with form.Tag("textarea", ...)
                 form.TextArea(input =>
                 {
-                    input.Id("content");
-                    input.Name(nameof(CreateNoteRequest.Content));
-                    input.Text(req.Content ?? string.Empty); 
-                    input.Attr("maxlength", "500");
-                    input.Attr("rows", "5");
-
-                    input.Heimdall()
-                        .Input(new HeimdallHtml.ActionId("FormPage.Validate"))
+                    input.Id("content")
+                    .Name(nameof(CreateNoteRequest.Content))
+                    .Text(req.Content ?? string.Empty)
+                    .Attr("maxlength", "500")
+                    .Attr("rows", "5")
+                    .Heimdall()
+                        .Input("FormPage.Validate")
                         .PayloadFromClosestForm()
-                        .Target("#create-note-host")
+                        .Target($"#{CreateHostId}")
                         .SwapInner()
                         .DebounceMs(250);
 
@@ -206,8 +196,8 @@ namespace HeimdallTemplateApp.Rendering.Pages
                 {
                     form.Div(err =>
                     {
-                        err.Class(Bootstrap.Form.Text, Bootstrap.Text.TxtColor(Bootstrap.Color.Danger), Bootstrap.Spacing.Mb(3));
-                        err.Text(contentError);
+                        err.Class(Bootstrap.Form.Text, Bootstrap.Text.TxtColor(Bootstrap.Color.Danger), Bootstrap.Spacing.Mb(3))
+                        .Text(contentError);
                     });
                 }
                 else
@@ -220,8 +210,8 @@ namespace HeimdallTemplateApp.Rendering.Pages
 
                     r.Div(full =>
                     {
-                        full.Class(Bootstrap.Layout.ColSpan(12, Bootstrap.Breakpoint.Lg));
-                        full.Add(SubmitButton(isValid));
+                        full.Class(Bootstrap.Layout.ColSpan(12, Bootstrap.Breakpoint.Lg))
+                        .Add(SubmitButton(isValid));
                     });
                 });
             });
@@ -231,13 +221,13 @@ namespace HeimdallTemplateApp.Rendering.Pages
         {
             return FluentHtml.Button(btn =>
             {
-                btn.Class(Bootstrap.Btn.Primary, Bootstrap.Sizing.W100);
-                btn.Attr("type", "submit");
+                btn.Class(Bootstrap.Btn.Primary, Bootstrap.Sizing.W100)
+                .Attr("type", "submit");
 
                 if (!isValid)
                 {
-                    btn.Class(Bootstrap.Btn.Disabled);
-                    btn.Attr("disabled", "disabled");
+                    btn.Class(Bootstrap.Btn.Disabled)
+                    .Attr("disabled", "disabled");
                 }
 
                 btn.Text("Submit");
@@ -250,8 +240,8 @@ namespace HeimdallTemplateApp.Rendering.Pages
             {
                 return FluentHtml.Div(d =>
                 {
-                    d.Class(Bootstrap.Text.BodySecondary);
-                    d.Text("No notes yet.");
+                    d.Class(Bootstrap.Text.BodySecondary)
+                    .Text("No notes yet.");
                 });
             }
 
@@ -271,24 +261,21 @@ namespace HeimdallTemplateApp.Rendering.Pages
 
                         card.Div(body =>
                         {
-                            body.Class(Bootstrap.Card.Body);
-
-                            body.H5(h =>
+                            body.Class(Bootstrap.Card.Body)
+                            .H5(h =>
                             {
-                                h.Class(Bootstrap.Card.Title);
-                                h.Text(note.Title);
-                            });
-
-                            body.Div(s =>
+                                h.Class(Bootstrap.Card.Title)
+                                .Text(note.Title);
+                            })
+                            .Div(s =>
                             {
-                                s.Class(Bootstrap.Text.BodySecondary, Bootstrap.Text.Small, Bootstrap.Spacing.Mb(2));
-                                s.Text($"Created {note.CreatedUtc:yyyy-MM-dd HH:mm} UTC");
-                            });
-
-                            body.Div(p =>
+                                s.Class(Bootstrap.Text.BodySecondary, Bootstrap.Text.Small, Bootstrap.Spacing.Mb(2))
+                                .Text($"Created {note.CreatedUtc:yyyy-MM-dd HH:mm} UTC");
+                            })
+                            .Div(p =>
                             {
-                                p.Class(Bootstrap.Card.Text);
-                                p.Text(note.Content);
+                                p.Class(Bootstrap.Card.Text)
+                                .Text(note.Content);
                             });
                         });
                     });
@@ -357,7 +344,7 @@ namespace HeimdallTemplateApp.Rendering.Pages
                 };
 
                 f.Heimdall().Invocation(
-                    targetSelector: "#toast-manager",
+                    targetSelector: $"#{ToastManager.Id}",
                     swap: HeimdallHtml.Swap.AfterBegin,
                     payload: ToastManager.Create(toast),
                     wrapInTemplate: false

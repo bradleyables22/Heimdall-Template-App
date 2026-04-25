@@ -10,70 +10,58 @@ namespace HeimdallTemplateApp.Rendering.Layouts
 		public static IHtmlContent Render(HttpContext ctx, IHtmlContent page, string title, bool enableSSE = true)
 			=> FluentHtml.Fragment(f =>
 			{
-				f.Raw("<!DOCTYPE html>");
-
-				f.HtmlTag(html =>
+				f.Raw("<!DOCTYPE html>")
+				.HtmlTag(html =>
 				{
-					html.Attr("lang", "en");
-
-					html.Head(head =>
+					html.Attr("lang", "en")
+					.Head(head =>
 					{
-						head.Meta(m => m.Attr("charset", "utf-8"));
-
-						head.Meta(m =>
+						head.Meta(m => m.Attr("charset", "utf-8"))
+						.Meta(m =>
 						{
-							m.Name("viewport");
-							m.ContentAttr("width=device-width, initial-scale=1");
-						});
-
-						head.Title(t => t.Text(title));
-
-						head.Add(
+							m.Name("viewport")
+							.ContentAttr("width=device-width, initial-scale=1");
+						})
+						.Title(t => t.Text(title))
+						.Add(
 							SeoFragment.Twitter,
 							SeoFragment.OpenGraph,
 							SeoFragment.Default
-						);
-
-						head.Link(l =>
+						)
+						.Link(l =>
 						{
-							l.Attr("rel", "icon");
-							l.Type("image/png");
-							l.Href("images/favicon.png");
-						});
-
-						head.Link(l =>
+							l.Attr("rel", "icon")
+							.Type("image/png")
+							.Href("images/favicon.png");
+						})
+						.Link(l =>
 						{
-							l.Attr("rel", "stylesheet");
-							l.Href("css/app.css");
-						});
-
-						head.Link(l =>
+							l.Attr("rel", "stylesheet")
+							.Href("css/app.css");
+						})
+						.Link(l =>
 						{
-							l.Attr("rel", "stylesheet");
-							l.Href("css/bootstrap.css");
-						});
-
-						head.Link(l =>
+							l.Attr("rel", "stylesheet")
+							.Href("css/bootstrap.css");
+						})
+						.Link(l =>
 						{
-							l.Attr("rel", "stylesheet");
-							l.Href("css/bootstrap-icons.css");
-						});
-
-						head.Script(s => s.Src("/_content/HeimdallFramework.Web/heimdall.js"));
-						head.Script(s => s.Src("js/bootstrap-bundle.js"));
+							l.Attr("rel", "stylesheet")
+							.Href("css/bootstrap-icons.css");
+						})
+						.Script(s => s.Src("/_content/HeimdallFramework.Web/heimdall.js"))
+						.Script(s => s.Src("js/bootstrap-bundle.js"));
 
 						if (Environment.GetEnvironmentVariable("ASPNETCORE_ENVIRONMENT")?.ToLowerInvariant() == "development") 
 							head.Script(s => s.Src("js/heimdall.debug.js"));
-                    });
-
-					html.Body(body =>
+                    })
+					.Body(body =>
 					{
 						body.Add(
 							ToastManager.Render(ctx, enableSSE),
 							MenuComponent.Render(ctx)
-						);
-
-						body.Div(d =>
+						)
+						.Div(d =>
 						{
 							d.Class(Bootstrap.Layout.ContainerFluid, Bootstrap.Spacing.Py(2));
 							d.Add(page);

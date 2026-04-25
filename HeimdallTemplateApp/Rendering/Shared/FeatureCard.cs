@@ -12,50 +12,44 @@ namespace HeimdallTemplateApp.Rendering.Shared
 				col.Class(
 					Bootstrap.Layout.ColSpan(12),
 					Bootstrap.Layout.ColSpan(4, Bootstrap.Breakpoint.Lg)
-				);
-
-				col.Div(card =>
+				)
+				.Div(card =>
 				{
 					card.Class(
 						Bootstrap.Border.Default,
 						Bootstrap.Border.Rounded,
 						Bootstrap.Spacing.P(3),
 						Bootstrap.Sizing.H100
-					);
-
-					card.Div(row =>
+					)
+					.Div(row =>
 					{
 						row.Class(
 							Bootstrap.Display.Flex,
 							Bootstrap.Spacing.Gap(2)
-						);
-
-						row.I(i =>
+						)
+						.I(i =>
 						{
 							i.Class(
 								Bootstrap.Raw(icon),
 								Bootstrap.Raw("fs-4")
 							);
-						});
-
-						row.Div(text =>
+						})
+						.Div(text =>
 						{
 							text.H4(h =>
 							{
 								h.Class(
 									Bootstrap.Raw("h6"),
 									Bootstrap.Spacing.Mb(1)
-								);
-								h.Text(title);
-							});
-
-							text.P(p =>
+								)
+								.Text(title);
+							})
+							.P(p =>
 							{
 								p.Class(
 									Bootstrap.Spacing.Mb(0),
 									Bootstrap.Text.BodySecondary
-								);
-								p.Text(body);
+								).Text(body);
 							});
 						});
 					});

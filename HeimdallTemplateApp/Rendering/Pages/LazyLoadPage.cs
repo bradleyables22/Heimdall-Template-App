@@ -64,59 +64,52 @@ namespace HeimdallTemplateApp.Rendering.Pages
 
             return FluentHtml.Div(page =>
             {
-                page.Class(Bootstrap.Layout.Container, Bootstrap.Spacing.Mt(4));
-
-                page.Div(card =>
+                page.Class(Bootstrap.Layout.Container, Bootstrap.Spacing.Mt(4))
+                .Div(card =>
                 {
-                    card.Class(Bootstrap.Card.Base, Bootstrap.Shadow.Lg);
-
-                    card.Div(header =>
+                    card.Class(Bootstrap.Card.Base, Bootstrap.Shadow.Lg)
+                    .Div(header =>
                     {
-                        header.Class(Bootstrap.Card.Header);
-                        header.H2(h => h.Text("Lazy-loading Scroll Table (Weather Data)"));
+                        header.Class(Bootstrap.Card.Header)
+                        .H2(h => h.Text("Lazy-loading Scroll Table (Weather Data)"));
                     });
 
                     card.Div(body =>
                     {
-                        body.Class(Bootstrap.Card.Body);
-
-                        body.P(p =>
+                        body.Class(Bootstrap.Card.Body)
+                        .P(p =>
                         {
-                            p.Class(Bootstrap.Text.BodySecondary);
-                            p.Text("Scroll the table. When the sentinel row becomes visible, it loads the next page.");
-                        });
-
-                        body.Div(scroller =>
+                            p.Class(Bootstrap.Text.BodySecondary)
+                            .Text("Scroll the table. When the sentinel row becomes visible, it loads the next page.");
+                        })
+                        .Div(scroller =>
                         {
-                            scroller.Class(Bootstrap.Border.Default, Bootstrap.Border.Rounded, Bootstrap.Spacing.P(2));
-                            scroller.Style("overflow: auto;");
-
-                            scroller.Tag("table", table =>
+                            scroller.Class(Bootstrap.Border.Default, Bootstrap.Border.Rounded, Bootstrap.Spacing.P(2))
+                            .Style("overflow: auto;")
+                            .Table( table =>
                             {
                                 table.Class(
                                     Bootstrap.Table.Base,
                                     Bootstrap.Table.Hover,
                                     Bootstrap.Table.Sm,
-                                    Bootstrap.Spacing.Mb(0));
-
-                                table.Tag("thead", thead =>
+                                    Bootstrap.Spacing.Mb(0))
+                                .TableHead(thead =>
                                 {
-                                    thead.Tag("tr", tr =>
+                                    thead.TableRow(tr =>
                                     {
-                                        tr.Tag("th", th => th.Text("UTC"));
-                                        tr.Tag("th", th => th.Text("Station"));
-                                        tr.Tag("th", th => th.Text("Temp (°C)"));
-                                        tr.Tag("th", th => th.Text("Humidity (%)"));
-                                        tr.Tag("th", th => th.Text("Wind (mph)"));
-                                        tr.Tag("th", th => th.Text("Condition"));
+                                        tr.TableHeaderCell(th => th.Text("UTC"))
+                                        .TableHeaderCell(th => th.Text("Station"))
+                                        .TableHeaderCell(th => th.Text("Temp (°C)"))
+                                        .TableHeaderCell(th => th.Text("Humidity (%)"))
+                                        .TableHeaderCell(th => th.Text("Wind (mph)"))
+                                        .TableHeaderCell(th => th.Text("Condition"));
                                     });
-                                });
-
-                                table.Tag("tbody", tbody =>
+                                })
+                                .TableBody(tbody =>
                                 {
-                                    tbody.Id("weather-rows");
-                                    tbody.Add(RenderWeatherRows(first));
-                                    tbody.Add(RenderSentinelRow(offset: initialTake, take: 10));
+                                    tbody.Id("weather-rows")
+                                    .Add(RenderWeatherRows(first))
+                                    .Add(RenderSentinelRow(offset: initialTake, take: 10));
                                 });
                             });
                         });
@@ -151,12 +144,12 @@ namespace HeimdallTemplateApp.Rendering.Pages
 
                 tr.Tag("td", td =>
                 {
-                    td.Attr("colspan", "6");
-                    td.Class(Bootstrap.Text.Center, Bootstrap.Text.BodySecondary, Bootstrap.Spacing.Py(2));
+                    td.Attr("colspan", "6")
+                    .Class(Bootstrap.Text.Center, Bootstrap.Text.BodySecondary, Bootstrap.Spacing.Py(2));
 
                     if (!hasMore)
                     {
-                        td.Text("✅ All records loaded.");
+                        td.Text("All records loaded.");
                         return;
                     }
 
@@ -200,14 +193,14 @@ namespace HeimdallTemplateApp.Rendering.Pages
 
         private static IHtmlContent RenderWeatherRow(WeatherRow r)
         {
-            return FluentHtml.Tag("tr", tr =>
+            return FluentHtml.TableRow(tr =>
             {
-                tr.Tag("td", td => td.Text(r.Utc.ToString("yyyy-MM-dd HH:mm")));
-                tr.Tag("td", td => td.Text(r.Station));
-                tr.Tag("td", td => td.Text(r.TempC.ToString("0.0")));
-                tr.Tag("td", td => td.Text(r.HumidityPct.ToString()));
-                tr.Tag("td", td => td.Text(r.WindMph.ToString("0.0")));
-                tr.Tag("td", td => td.Text(r.Condition));
+                tr.TableDataCell(td => td.Text(r.Utc.ToString("yyyy-MM-dd HH:mm")))
+                .TableDataCell(td => td.Text(r.Station))
+                .TableDataCell(td => td.Text(r.TempC.ToString("0.0")))
+                .TableDataCell(td => td.Text(r.HumidityPct.ToString()))
+                .TableDataCell(td => td.Text(r.WindMph.ToString("0.0")))
+                .TableDataCell(td => td.Text(r.Condition));
             });
         }
     }
