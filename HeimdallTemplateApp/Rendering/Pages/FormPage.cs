@@ -26,9 +26,6 @@ namespace HeimdallTemplateApp.Rendering.Pages
 
         public sealed class CreateNoteRequest
         {
-            // Used only for UX: don’t show errors until user has interacted.
-            public bool IsDirty { get; set; }
-
             [StringLength(125, MinimumLength = 5,
                 ErrorMessage = "Title must be between 5 and 125 characters long.")]
             public string Title { get; set; } = string.Empty;
@@ -40,8 +37,8 @@ namespace HeimdallTemplateApp.Rendering.Pages
 
         public static IHtmlContent Render()
         {
-            // Initial render: don’t show errors until the user types.
-            var request = new CreateNoteRequest { IsDirty = false };
+            // Initial render: don't show errors until submit.
+            var request = new CreateNoteRequest();
             var results = ValidateInternal(Normalize(request));
 
             return FluentHtml.Div(row =>
@@ -99,16 +96,10 @@ namespace HeimdallTemplateApp.Rendering.Pages
             });
         }
 
-        private static IHtmlContent GenerateForm(CreateNoteRequest req, List<ValidationResult> results)
+        private static IHtmlContent GenerateForm(CreateNoteRequest req, List<ValidationResult> results, bool showErrors = false)
         {
             var titleError = FirstErrorFor(results, nameof(CreateNoteRequest.Title));
             var contentError = FirstErrorFor(results, nameof(CreateNoteRequest.Content));
-
-            // Only show field errors after first interaction
-            var showErrors = req.IsDirty;
-
-            // Submit disabled until truly valid
-            var isValid = !results.Any();
 
             return FluentHtml.Form(form =>
             {
@@ -123,13 +114,7 @@ namespace HeimdallTemplateApp.Rendering.Pages
                     .SwapInner()
                     .PreventDefault(true);
 
-                // Hidden field so Validated round-trips through closest-form payload
-                form.Input(InputType.hidden, h =>
-                {
-                    h.Name(nameof(CreateNoteRequest.IsDirty))
-                    .Value(req.IsDirty ? "true" : "false");
-                })
-                .Label(l =>
+                form.Label(l =>
                 {
                     l.Class(Bootstrap.Form.Label)
                     .For("title")
@@ -141,15 +126,6 @@ namespace HeimdallTemplateApp.Rendering.Pages
                     .Name(nameof(CreateNoteRequest.Title))
                     .Value(req.Title ?? string.Empty)
                     .Attr("maxlength", "125");
-
-                    // Validate on input with debounce
-                    // Swap INNER so we update the form contents without replacing the host node.
-                    input.Heimdall()
-                        .Input(new HeimdallHtml.ActionId("FormPage.Validate"))
-                        .PayloadFromClosestForm()
-                        .Target("#create-note-host")
-                        .SwapInner()
-                        .DebounceMs(250);
 
                     input.Class(Bootstrap.Form.Control, Bootstrap.Spacing.Mb(1));
                 });
@@ -181,13 +157,7 @@ namespace HeimdallTemplateApp.Rendering.Pages
                     .Name(nameof(CreateNoteRequest.Content))
                     .Text(req.Content ?? string.Empty)
                     .Attr("maxlength", "500")
-                    .Attr("rows", "5")
-                    .Heimdall()
-                        .Input("FormPage.Validate")
-                        .PayloadFromClosestForm()
-                        .Target($"#{CreateHostId}")
-                        .SwapInner()
-                        .DebounceMs(250);
+                    .Attr("rows", "5");
 
                     input.Class(Bootstrap.Form.Control, Bootstrap.Spacing.Mb(1));
                 });
@@ -211,24 +181,18 @@ namespace HeimdallTemplateApp.Rendering.Pages
                     r.Div(full =>
                     {
                         full.Class(Bootstrap.Layout.ColSpan(12, Bootstrap.Breakpoint.Lg))
-                        .Add(SubmitButton(isValid));
+                        .Add(SubmitButton());
                     });
                 });
             });
         }
 
-        private static IHtmlContent SubmitButton(bool isValid)
+        private static IHtmlContent SubmitButton()
         {
             return FluentHtml.Button(btn =>
             {
                 btn.Class(Bootstrap.Btn.Primary, Bootstrap.Sizing.W100)
                 .Attr("type", "submit");
-
-                if (!isValid)
-                {
-                    btn.Class(Bootstrap.Btn.Disabled)
-                    .Attr("disabled", "disabled");
-                }
 
                 btn.Text("Submit");
             });
@@ -284,30 +248,15 @@ namespace HeimdallTemplateApp.Rendering.Pages
         }
 
 
-        // Called on every keystroke (debounced). Re-renders only the form host.
-        [ContentInvocation]
-        public static IHtmlContent Validate(CreateNoteRequest draft)
-        {
-            draft ??= new CreateNoteRequest();
-
-            // Once they type, we start showing errors
-            draft.IsDirty = true;
-
-            draft = Normalize(draft);
-            var results = ValidateInternal(draft);
-
-            return GenerateForm(draft, results);
-        }
-
         // Called on submit. Re-validates, creates, clears, and OOB-updates notes list.
         [ContentInvocation]
         public static IHtmlContent CreateNote(CreateNoteRequest noteRequest)
         {
             noteRequest ??= new CreateNoteRequest();
-            noteRequest.IsDirty = true;
 
             noteRequest = Normalize(noteRequest);
             var results = ValidateInternal(noteRequest);
+            var noteCreated = false;
 
             if (!results.Any())
             {
@@ -316,18 +265,22 @@ namespace HeimdallTemplateApp.Rendering.Pages
                     Title = noteRequest.Title,
                     Content = noteRequest.Content
                 });
+                noteCreated = true;
 
-                // Clear form after success, and reset "Validated" so we don't show errors on empty.
-                noteRequest = new CreateNoteRequest { IsDirty= false };
+                // Clear form after success, and don't show errors on empty.
+                noteRequest = new CreateNoteRequest();
                 results = ValidateInternal(Normalize(noteRequest));
             }
 
-            // Main swap updates #create-note-host (inner swap),
-            // and we also push an OOB invocation for #notes-host and toast-manager
+            // Main swap updates #create-note-host (inner swap). Successful submits also
+            // push OOB updates for #notes-host and toast-manager.
             return FluentHtml.Fragment(f =>
             {
                 // Main content for the target: just the form markup
-                f.Add(GenerateForm(noteRequest, results));
+                f.Add(GenerateForm(noteRequest, results, showErrors: !noteCreated));
+
+                if (!noteCreated)
+                    return;
 
                 f.Heimdall().Invocation(
                     targetSelector: "#notes-host",

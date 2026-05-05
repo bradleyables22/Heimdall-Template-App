@@ -49,7 +49,7 @@ namespace HeimdallTemplateApp.Rendering.Layouts
 							l.Attr("rel", "stylesheet")
 							.Href("css/bootstrap-icons.css");
 						})
-						.Script(s => s.Src("/_content/HeimdallFramework.Web/heimdall.js"))
+						.Script(s => s.Src("/_content/HeimdallFramework.Web/heimdall-bundle.min.js"))
 						.Script(s => s.Src("js/bootstrap-bundle.js"));
 
 						if (Environment.GetEnvironmentVariable("ASPNETCORE_ENVIRONMENT")?.ToLowerInvariant() == "development") 
