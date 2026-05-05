@@ -9,7 +9,7 @@
     "MPA"
   ],
   "identity": "Heimdall.WebApp.Template",
-  "name": "Heimdall Web App (Alpha)",
+  "name": "Heimdall Web App",
   "shortName": "heimdall-webapp",
   "sourceName": "HeimdallTemplateApp",
   "description": "Full ASP.NET Core web application starter using Heimdall for server-driven UI, strongly-typed HTML rendering, and real-time updates without SPA complexity.",
