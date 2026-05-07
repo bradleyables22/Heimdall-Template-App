@@ -1,8 +1,9 @@
-﻿using Heimdall.Server;
-using Microsoft.AspNetCore.Html;
-using HeimdallTemplateApp.Rendering.Shared;
-using Heimdall.Bootstrap;
+﻿using Heimdall.Bootstrap;
+using Heimdall.Server;
 using Heimdall.Server.Rendering;
+using HeimdallTemplateApp.Rendering.Shared;
+using Microsoft.AspNetCore.Html;
+using Microsoft.AspNetCore.Http.Timeouts;
 
 namespace HeimdallTemplateApp.Rendering.Pages
 {
@@ -51,7 +52,8 @@ namespace HeimdallTemplateApp.Rendering.Pages
         }
 
         [ContentInvocation]
-        public static IHtmlContent RenderBody()
+		[RequestTimeout(3000)]
+		public static IHtmlContent RenderBody()
         {
             var hero = FluentHtml.Div(card =>
             {

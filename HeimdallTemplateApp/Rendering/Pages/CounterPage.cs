@@ -2,6 +2,7 @@
 using Heimdall.Server;
 using Heimdall.Server.Rendering;
 using Microsoft.AspNetCore.Html;
+using Microsoft.AspNetCore.Http.Timeouts;
 
 namespace HeimdallTemplateApp.Rendering.Pages
 {
@@ -116,15 +117,18 @@ namespace HeimdallTemplateApp.Rendering.Pages
         }
 
         [ContentInvocation]
-        public static IHtmlContent Inc(CounterState state)
+		[RequestTimeout(3000)]
+		public static IHtmlContent Inc([ContentPayload] CounterState state)
             => RenderCounterHost((state?.Count ?? 0) + 1);
 
         [ContentInvocation]
-        public static IHtmlContent Dec(CounterState state)
+		[RequestTimeout(3000)]
+		public static IHtmlContent Dec([ContentPayload] CounterState state)
             => RenderCounterHost((state?.Count ?? 0) - 1);
 
         [ContentInvocation]
-        public static IHtmlContent Reset(CounterState state)
+		[RequestTimeout(3000)]
+		public static IHtmlContent Reset([ContentPayload] CounterState state)
             => RenderCounterHost(0);
     }
 }

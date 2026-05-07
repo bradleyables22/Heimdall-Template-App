@@ -2,6 +2,7 @@
 using Heimdall.Bootstrap;
 using Microsoft.AspNetCore.Html;
 using Heimdall.Server.Rendering;
+using Microsoft.AspNetCore.Http.Timeouts;
 
 namespace HeimdallTemplateApp.Rendering.Pages
 {
@@ -168,7 +169,8 @@ namespace HeimdallTemplateApp.Rendering.Pages
 
 
         [ContentInvocation]
-        public static IHtmlContent LoadMore(LoadMoreRequest req)
+        [RequestTimeout(3000)]
+        public static IHtmlContent LoadMore([ContentPayload] LoadMoreRequest req)
         {
             req ??= new LoadMoreRequest();
             if (req.Take <= 0) req.Take = 10;

@@ -74,17 +74,16 @@ namespace HeimdallTemplateApp.Rendering.Pages
                         card.Class(Bootstrap.Card.Base, Bootstrap.Shadow.Lg)
                         .Div(header =>
                         {
-                            header.Class(Bootstrap.Card.Header);
-                            header.H2(h => h.Text("Notes"));
+                            header.Class(Bootstrap.Card.Header)
+                            .H2(h => h.Text("Notes"));
                         })
                         .Div(body =>
                         {
-                            body.Class(Bootstrap.Card.Body);
-
-                            body.Div(host =>
+                            body.Class(Bootstrap.Card.Body)
+                            .Div(host =>
                             {
-                                host.Id(HostId);
-                                host.Add(RenderNotesList());
+                                host.Id(HostId)
+                                .Add(RenderNotesList());
                             });
                         });
                     });
@@ -250,7 +249,7 @@ namespace HeimdallTemplateApp.Rendering.Pages
 
         // Called on submit. Re-validates, creates, clears, and OOB-updates notes list.
         [ContentInvocation]
-        public static IHtmlContent CreateNote(CreateNoteRequest noteRequest)
+        public static IHtmlContent CreateNote([ContentPayload] CreateNoteRequest noteRequest)
         {
             noteRequest ??= new CreateNoteRequest();
 
