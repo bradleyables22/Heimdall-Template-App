@@ -50,9 +50,7 @@ namespace HeimdallTemplateApp.Rendering.Pages
 				p.Text("This page does not render the toast container. ")
 				.Strong(s => s.Text("The layout is responsible for rendering "))
 				.Code(c => c.Text("#toast-manager"))
-				.Text(" (and, if enabled, subscribing it to the ")
-				.Code(c => c.Text("toasts"))
-				.Text(" topic via SSE).");
+				.Text(" (and, if enabled, subscribing it to a private toast topic via SSE).");
 			})
 			.Hr(_ => { })
 			.H6(h => h.Text("Two methodologies"))
@@ -61,8 +59,7 @@ namespace HeimdallTemplateApp.Rendering.Pages
 				ul.Li(li =>
 				{
 					li.Strong(s => s.Text("SSE (Bifrost): "))
-					.Text("The click calls a server action that publishes toast HTML to topic ")
-					.Code(c => c.Text("toasts"))
+					.Text("The click calls a server action that publishes toast HTML to this browser's private toast topic")
 					.Text(". Any connected page subscribed to that topic receives the toast.");
 				})
 				.Li(li =>
@@ -126,7 +123,7 @@ namespace HeimdallTemplateApp.Rendering.Pages
 			var toast = new ToastItem
 			{
 				Header = "Hello from SSE!",
-				Content = "This toast was published to the 'toasts' topic and delivered over EventSource.",
+				Content = "This toast was published to your private toast topic and delivered over EventSource.",
 				Type = ToastType.Success,
 				DurationMs = 1800
 			};
@@ -135,7 +132,7 @@ namespace HeimdallTemplateApp.Rendering.Pages
 
 			//This is a simple example of using Heimdall's SSE features to push toast updates to the client.
 			//update the topic name and target selector as needed to fit your application's structure.
-			await bifrost.PublishAsync($"toasts:user:{ctx.Connection.Id}", html, TimeSpan.FromSeconds(10));
+			await bifrost.PublishAsync(ctx.GetUserToastTopic(), html, TimeSpan.FromSeconds(10));
 
 			return HtmlString.Empty;
 		}

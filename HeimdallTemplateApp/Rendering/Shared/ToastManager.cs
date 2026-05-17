@@ -1,6 +1,7 @@
 ﻿using Heimdall.Bootstrap;
 using Heimdall.Server.Rendering;
 using Microsoft.AspNetCore.Html;
+using System.Security.Cryptography;
 using static Heimdall.Bootstrap.Bootstrap;
 
 namespace HeimdallTemplateApp.Rendering.Shared
@@ -24,7 +25,54 @@ namespace HeimdallTemplateApp.Rendering.Shared
 	public static class ToastManager
 	{
 		public const string Id = "toast-manager";
-		public static string GetUserToastTopic(this HttpContext ctx) => $"toasts:user:{ctx.Connection.Id}";
+		private const string ToastChannelCookieName = "heimdall.toast-channel";
+		private const string ToastChannelItemKey = "__heimdallToastChannelId";
+		private const string ToastTopicPrefix = "toasts:user:";
+
+		/// <summary>
+		/// This will get or create a cookie-based channel ID for the user and return a unique topic name for that channel. This allows you to send toast notifications to specific users by publishing to their unique topic.
+		/// If you have a different user identification strategy, you can modify this method to generate topic names based on your user IDs or session IDs instead. Just ensure that the topic name is unique per user and consistent across requests for the same user.
+		/// </summary>
+		/// <param name="ctx"></param>
+		/// <returns></returns>
+		public static string GetUserToastTopic(this HttpContext ctx) => $"{ToastTopicPrefix}{ctx.GetOrCreateToastChannelId()}";
+
+		private static string GetOrCreateToastChannelId(this HttpContext ctx)
+		{
+			if (ctx.Items.TryGetValue(ToastChannelItemKey, out var cachedChannelId) &&
+				cachedChannelId is string channelId)
+				return channelId;
+			
+			if (ctx.Request.Cookies.TryGetValue(ToastChannelCookieName, out var existingChannelId) &&
+				IsValidChannelId(existingChannelId))
+			{
+				ctx.Items[ToastChannelItemKey] = existingChannelId;
+				return existingChannelId;
+			}
+
+			var newChannelId = Convert.ToHexString(RandomNumberGenerator.GetBytes(16)).ToLowerInvariant();
+			ctx.Items[ToastChannelItemKey] = newChannelId;
+
+			if (!ctx.Response.HasStarted)
+			{
+				ctx.Response.Cookies.Append(
+					ToastChannelCookieName,
+					newChannelId,
+					new CookieOptions
+					{
+						HttpOnly = true,
+						IsEssential = true,
+						Path = "/",
+						SameSite = SameSiteMode.Lax,
+						Secure = ctx.Request.IsHttps
+					});
+			}
+
+			return newChannelId;
+		}
+
+		private static bool IsValidChannelId(string channelId)
+			=> channelId.Length == 32 && channelId.All(Uri.IsHexDigit);
 
 		public static IHtmlContent Render(HttpContext ctx, bool useSSE = true)
 			=> FluentHtml.Div(root =>
@@ -46,7 +94,7 @@ namespace HeimdallTemplateApp.Rendering.Shared
 					//update the topic name and target selector as needed to fit your application's structure.
 
 					root.Heimdall()
-					.SseTopic($"{GetUserToastTopic(ctx)}")
+					.SseTopic(ctx.GetUserToastTopic())
 					.SseTarget($"#{Id}")
 					.SseSwap(HeimdallHtml.Swap.BeforeEnd);
 				}
