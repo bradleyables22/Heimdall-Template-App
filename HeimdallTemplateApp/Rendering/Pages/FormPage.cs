@@ -14,6 +14,12 @@ namespace HeimdallTemplateApp.Rendering.Pages
         public const string CreateHostId = "create-note-host";
         public const string HostId = "notes-host";
         public const string FormId = "create-note-form";
+
+        public static class Actions
+        {
+            public const string Create = "notes.create";
+        }
+
 		public static List<NoteEntity> Notes { get; set; } = new();
 
         public sealed class NoteEntity
@@ -95,7 +101,7 @@ namespace HeimdallTemplateApp.Rendering.Pages
             });
         }
 
-        private static IHtmlContent GenerateForm(CreateNoteRequest req, List<ValidationResult> results, bool showErrors = false)
+        internal static IHtmlContent GenerateForm(CreateNoteRequest req, List<ValidationResult> results, bool showErrors = false)
         {
             var titleError = FirstErrorFor(results, nameof(CreateNoteRequest.Title));
             var contentError = FirstErrorFor(results, nameof(CreateNoteRequest.Content));
@@ -107,7 +113,7 @@ namespace HeimdallTemplateApp.Rendering.Pages
                 // Submit -> CreateNote
                 // Target the host but swap INNER to avoid replacing the host node.
                 form.Heimdall()
-                    .Submit("FormPage.CreateNote")
+                    .Submit(Actions.Create)
                     .PayloadFromClosestForm()
                     .Target($"#{CreateHostId}")
                     .SwapInner()
@@ -197,7 +203,7 @@ namespace HeimdallTemplateApp.Rendering.Pages
             });
         }
 
-        private static IHtmlContent RenderNotesList()
+        internal static IHtmlContent RenderNotesList()
         {
             if (Notes.Count == 0)
             {
@@ -247,72 +253,14 @@ namespace HeimdallTemplateApp.Rendering.Pages
         }
 
 
-        // Called on submit. Re-validates, creates, clears, and OOB-updates notes list.
-        [ContentInvocation]
-        public static IHtmlContent CreateNote([ContentPayload] CreateNoteRequest noteRequest)
-        {
-            noteRequest ??= new CreateNoteRequest();
-
-            noteRequest = Normalize(noteRequest);
-            var results = ValidateInternal(noteRequest);
-            var noteCreated = false;
-
-            if (!results.Any())
-            {
-                Notes.Add(new NoteEntity
-                {
-                    Title = noteRequest.Title,
-                    Content = noteRequest.Content
-                });
-                noteCreated = true;
-
-                // Clear form after success, and don't show errors on empty.
-                noteRequest = new CreateNoteRequest();
-                results = ValidateInternal(Normalize(noteRequest));
-            }
-
-            // Main swap updates #create-note-host (inner swap). Successful submits also
-            // push OOB updates for #notes-host and toast-manager.
-            return FluentHtml.Fragment(f =>
-            {
-                // Main content for the target: just the form markup
-                f.Add(GenerateForm(noteRequest, results, showErrors: !noteCreated));
-
-                if (!noteCreated)
-                    return;
-
-                f.Heimdall().Invocation(
-                    targetSelector: "#notes-host",
-                    swap: HeimdallHtml.Swap.Inner,
-                    payload: RenderNotesList(),
-                    wrapInTemplate: false
-                );
-
-                var toast = new ToastItem
-                {
-                    Header = "Note Created",
-                    Content = "A new note was successfully created",
-                    Type = ToastType.Success
-                };
-
-                f.Heimdall().Invocation(
-                    targetSelector: $"#{ToastManager.Id}",
-                    swap: HeimdallHtml.Swap.AfterBegin,
-                    payload: ToastManager.Create(toast),
-                    wrapInTemplate: false
-                );
-
-            });
-        }
-
-        private static CreateNoteRequest Normalize(CreateNoteRequest req)
+        internal static CreateNoteRequest Normalize(CreateNoteRequest req)
         {
             req.Title = (req.Title ?? string.Empty).Trim();
             req.Content = (req.Content ?? string.Empty).Trim();
             return req;
         }
 
-        private static List<ValidationResult> ValidateInternal(CreateNoteRequest req)
+        internal static List<ValidationResult> ValidateInternal(CreateNoteRequest req)
         {
             var context = new ValidationContext(req);
             var results = new List<ValidationResult>();
@@ -340,6 +288,67 @@ namespace HeimdallTemplateApp.Rendering.Pages
             }
 
             return null;
+        }
+    }
+
+    [ContentInvocationPrefix("notes")]
+    public sealed class NoteActions
+    {
+        // Called on submit. Re-validates, creates, clears, and OOB-updates notes list.
+        [ContentInvocation("create")]
+        public IHtmlContent Create([ContentPayload] FormPage.CreateNoteRequest noteRequest)
+        {
+            noteRequest ??= new FormPage.CreateNoteRequest();
+
+            noteRequest = FormPage.Normalize(noteRequest);
+            var results = FormPage.ValidateInternal(noteRequest);
+            var noteCreated = false;
+
+            if (!results.Any())
+            {
+                FormPage.Notes.Add(new FormPage.NoteEntity
+                {
+                    Title = noteRequest.Title,
+                    Content = noteRequest.Content
+                });
+                noteCreated = true;
+
+                // Clear form after success, and don't show errors on empty.
+                noteRequest = new FormPage.CreateNoteRequest();
+                results = FormPage.ValidateInternal(FormPage.Normalize(noteRequest));
+            }
+
+            // Main swap updates #create-note-host (inner swap). Successful submits also
+            // push OOB updates for #notes-host and toast-manager.
+            return FluentHtml.Fragment(f =>
+            {
+                // Main content for the target: just the form markup
+                f.Add(FormPage.GenerateForm(noteRequest, results, showErrors: !noteCreated));
+
+                if (!noteCreated)
+                    return;
+
+                f.Heimdall().Invocation(
+                    targetSelector: "#notes-host",
+                    swap: HeimdallHtml.Swap.Inner,
+                    payload: FormPage.RenderNotesList(),
+                    wrapInTemplate: false
+                );
+
+                var toast = new ToastItem
+                {
+                    Header = "Note Created",
+                    Content = "A new note was successfully created",
+                    Type = ToastType.Success
+                };
+
+                f.Heimdall().Invocation(
+                    targetSelector: $"#{ToastManager.Id}",
+                    swap: HeimdallHtml.Swap.AfterBegin,
+                    payload: ToastManager.Create(toast),
+                    wrapInTemplate: false
+                );
+            });
         }
     }
 }

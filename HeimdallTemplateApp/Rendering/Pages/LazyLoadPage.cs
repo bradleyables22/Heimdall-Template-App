@@ -156,7 +156,7 @@ namespace HeimdallTemplateApp.Rendering.Pages
 
                     // Trigger on <td>, state on parent <tr>, target the <tr> for swap.
                     td.Heimdall()
-                        .Visible(new HeimdallHtml.ActionId("LazyLoadPage.LoadMore"))
+                        .Visible(new HeimdallHtml.ActionId("weather.loadMore"))
                         .PayloadFromClosestState("weather")
                         .Target("#weather-sentinel")
                         .SwapOuter()
@@ -167,10 +167,7 @@ namespace HeimdallTemplateApp.Rendering.Pages
             });
         }
 
-
-        [ContentInvocation]
-        [RequestTimeout(3000)]
-        public static IHtmlContent LoadMore([ContentPayload] LoadMoreRequest req)
+        internal static IHtmlContent LoadMoreRows(LoadMoreRequest req)
         {
             req ??= new LoadMoreRequest();
             if (req.Take <= 0) req.Take = 10;
@@ -204,6 +201,17 @@ namespace HeimdallTemplateApp.Rendering.Pages
                 .TableDataCell(td => td.Text(r.WindMph.ToString("0.0")))
                 .TableDataCell(td => td.Text(r.Condition));
             });
+        }
+    }
+
+    [ContentInvocationPrefix("weather")]
+    public sealed class WeatherActions
+    {
+        [ContentInvocation("loadMore")]
+        [RequestTimeout(3000)]
+        public IHtmlContent LoadMore([ContentPayload] LazyLoadPage.LoadMoreRequest req)
+        {
+            return LazyLoadPage.LoadMoreRows(req);
         }
     }
 }

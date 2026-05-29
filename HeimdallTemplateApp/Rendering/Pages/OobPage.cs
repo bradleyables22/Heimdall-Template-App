@@ -4,14 +4,13 @@ using Heimdall.Server.Rendering;
 using HeimdallTemplateApp.Rendering.Shared;
 using Microsoft.AspNetCore.Html;
 using Microsoft.AspNetCore.Http.Timeouts;
-using Microsoft.AspNetCore.Mvc;
 
 namespace HeimdallTemplateApp.Rendering.Pages
 {
 	public class OobPage
 	{
-		private static readonly HeimdallHtml.ActionId ActionToastSse = "OobPage.ToastSSEHello";
-		private static readonly HeimdallHtml.ActionId ActionToastOob = "OobPage.ToastHello";
+		private static readonly HeimdallHtml.ActionId ActionToastSse = "toast.sse";
+		private static readonly HeimdallHtml.ActionId ActionToastOob = "toast.oob";
 
 		private static IHtmlContent BtnSse => FluentHtml.Button(b =>
 		{
@@ -116,9 +115,14 @@ namespace HeimdallTemplateApp.Rendering.Pages
 			});
 		}
 
-		[ContentInvocation]
+	}
+
+	[ContentInvocationPrefix("toast")]
+	public sealed class ToastActions(Bifrost bifrost)
+	{
+		[ContentInvocation("sse")]
 		[RequestTimeout(3000)]
-		public static async Task<IHtmlContent> ToastSSEHello([FromServices] Bifrost bifrost,[FromServices] HttpContext ctx)
+		public async Task<IHtmlContent> Sse(HttpContext ctx)
 		{
 			var toast = new ToastItem
 			{
@@ -137,9 +141,9 @@ namespace HeimdallTemplateApp.Rendering.Pages
 			return HtmlString.Empty;
 		}
 
-		[ContentInvocation]
+		[ContentInvocation("oob")]
 		[RequestTimeout(3000)]
-		public static Task<IHtmlContent> ToastHello()
+		public Task<IHtmlContent> Oob()
 		{
 			var toast = new ToastItem
 			{

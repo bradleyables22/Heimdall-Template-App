@@ -12,9 +12,9 @@ namespace HeimdallTemplateApp.Rendering.Pages
 
 		public static class Actions
         {
-            public const string Inc = "CounterPage.Inc";
-            public const string Dec = "CounterPage.Dec";
-            public const string Reset = "CounterPage.Reset";
+            public const string Inc = "counter.inc";
+            public const string Dec = "counter.dec";
+            public const string Reset = "counter.reset";
         }
 
         public sealed class CounterState
@@ -116,19 +116,24 @@ namespace HeimdallTemplateApp.Rendering.Pages
             });
         }
 
-        [ContentInvocation]
-		[RequestTimeout(3000)]
-		public static IHtmlContent Inc([ContentPayload] CounterState state)
-            => RenderCounterHost((state?.Count ?? 0) + 1);
+    }
 
-        [ContentInvocation]
-		[RequestTimeout(3000)]
-		public static IHtmlContent Dec([ContentPayload] CounterState state)
-            => RenderCounterHost((state?.Count ?? 0) - 1);
+    [ContentInvocationPrefix("counter")]
+    public sealed class CounterActions
+    {
+        [ContentInvocation("inc")]
+        [RequestTimeout(3000)]
+        public IHtmlContent Inc([ContentPayload] CounterPage.CounterState state)
+            => CounterPage.RenderCounterHost((state?.Count ?? 0) + 1);
 
-        [ContentInvocation]
-		[RequestTimeout(3000)]
-		public static IHtmlContent Reset([ContentPayload] CounterState state)
-            => RenderCounterHost(0);
+        [ContentInvocation("dec")]
+        [RequestTimeout(3000)]
+        public IHtmlContent Dec([ContentPayload] CounterPage.CounterState state)
+            => CounterPage.RenderCounterHost((state?.Count ?? 0) - 1);
+
+        [ContentInvocation("reset")]
+        [RequestTimeout(3000)]
+        public IHtmlContent Reset([ContentPayload] CounterPage.CounterState state)
+            => CounterPage.RenderCounterHost(0);
     }
 }

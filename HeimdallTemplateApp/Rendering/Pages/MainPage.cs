@@ -9,7 +9,7 @@ namespace HeimdallTemplateApp.Rendering.Pages
 {
     public static class MainPage
     {
-        private const string LoadActionId = "MainPage.RenderBody";
+        private const string LoadActionId = "main.body";
         private const string HostId = "mainpage-host";
 		public static IHtmlContent Render()
         {
@@ -51,8 +51,6 @@ namespace HeimdallTemplateApp.Rendering.Pages
             });
         }
 
-        [ContentInvocation]
-		[RequestTimeout(3000)]
 		public static IHtmlContent RenderBody()
         {
             var hero = FluentHtml.Div(card =>
@@ -148,5 +146,16 @@ namespace HeimdallTemplateApp.Rendering.Pages
                     });
                 });
             });
+    }
+
+    [ContentInvocationPrefix("main")]
+    public sealed class MainActions
+    {
+        [ContentInvocation("body")]
+        [RequestTimeout(3000)]
+        public IHtmlContent Body()
+        {
+            return MainPage.RenderBody();
+        }
     }
 }

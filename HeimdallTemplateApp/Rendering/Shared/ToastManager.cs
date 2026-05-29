@@ -2,7 +2,6 @@
 using Heimdall.Server.Rendering;
 using Microsoft.AspNetCore.Html;
 using System.Security.Cryptography;
-using static Heimdall.Bootstrap.Bootstrap;
 
 namespace HeimdallTemplateApp.Rendering.Shared
 {

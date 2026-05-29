@@ -129,7 +129,7 @@ using Server.Utilities;
 
 public static class CounterView
 {
-    private static readonly HeimdallHtml.ActionId Inc = "CounterPage.Inc";
+    private static readonly HeimdallHtml.ActionId Inc = "counter.inc";
 
     public static IHtmlContent Render(CounterState state)
         => FluentHtml.Div(host =>
@@ -158,17 +158,18 @@ public record CounterState(int Count);
 
 #### 3) Make a method invokable (server action)
 
-Static action (stateless-by-default style):
+Action class style:
 
 ```csharp
 using Heimdall.Server;
 using Microsoft.AspNetCore.Html;
 using Server.Utilities;
 
-public static class CounterPage
+[ContentInvocationPrefix("counter")]
+public sealed class CounterActions
 {
-    [ContentInvocation] // defaults to ClassName.MethodName if not specified
-    public static IHtmlContent Inc(CounterState payload)
+    [ContentInvocation("inc")]
+    public IHtmlContent Inc(CounterState payload)
     {
         var next = payload with { Count = payload.Count + 1 };
 
@@ -184,13 +185,14 @@ Or DI style (when you need services):
 using Heimdall.Server;
 using Microsoft.AspNetCore.Html;
 
+[ContentInvocationPrefix("notes")]
 public sealed class NotesActions
 {
     private readonly NotesRepository _repo;
 
     public NotesActions(NotesRepository repo) => _repo = repo;
 
-    [ContentInvocation("Notes.Create")]
+    [ContentInvocation("create")]
     public async Task<IHtmlContent> Create(NotesCreatePayload payload)
     {
         await _repo.CreateAsync(payload.Title);
@@ -210,7 +212,7 @@ using Server.Utilities;
 
 public static class NotesPage
 {
-    private static readonly HeimdallHtml.ActionId Create = "Notes.Create";
+    private static readonly HeimdallHtml.ActionId Create = "notes.create";
 
     public static IHtmlContent Render()
         => FluentHtml.Fragment(f =>
