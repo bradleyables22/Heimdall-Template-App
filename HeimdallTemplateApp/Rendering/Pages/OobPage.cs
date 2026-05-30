@@ -10,15 +10,15 @@ namespace HeimdallTemplateApp.Rendering.Pages
 {
 	public class OobPage
 	{
-		private static readonly HeimdallHtml.ActionId ActionToastSse = "OobPage.ToastSSEHello";
-		private static readonly HeimdallHtml.ActionId ActionToastOob = "OobPage.ToastHello";
+		public const string Action_SSE = "ToastSSEHello";
+		private const string Action_OOB = "ToastHello";
 
 		private static IHtmlContent BtnSse => FluentHtml.Button(b =>
 		{
 			b.Type("button")
 			.Class(Bootstrap.Btn.Primary, Bootstrap.Spacing.Me(2))
 			.Add(
-				HeimdallHtml.OnClick(ActionToastSse),
+				HeimdallHtml.OnClick(Action_SSE),
 				HeimdallHtml.SwapMode(HeimdallHtml.Swap.None),
 				HeimdallHtml.PayloadEmptyObject()
 			)
@@ -30,7 +30,7 @@ namespace HeimdallTemplateApp.Rendering.Pages
 			b.Type("button")
 			.Class(Bootstrap.Btn.OutlinePrimary)
 			.Add(
-				HeimdallHtml.OnClick(ActionToastOob),
+				HeimdallHtml.OnClick(Action_OOB),
 				HeimdallHtml.SwapMode(HeimdallHtml.Swap.None),
 				HeimdallHtml.PayloadEmptyObject()
 			)
@@ -119,7 +119,7 @@ namespace HeimdallTemplateApp.Rendering.Pages
 			});
 		}
 
-		[ContentInvocation]
+		[ContentInvocation(Action_SSE)]
 		[RequestTimeout(3000)]
 		public static async Task<IHtmlContent> ToastSSEHello([FromServices] Bifrost bifrost,[FromServices] HttpContext ctx)
 		{
@@ -140,7 +140,7 @@ namespace HeimdallTemplateApp.Rendering.Pages
 			return HtmlString.Empty;
 		}
 
-		[ContentInvocation]
+		[ContentInvocation(Action_OOB)]
 		[RequestTimeout(3000)]
 		public static Task<IHtmlContent> ToastHello()
 		{

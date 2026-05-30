@@ -8,6 +8,7 @@ namespace HeimdallTemplateApp.Rendering.Pages
 {
     public static class LazyLoadPage
     {
+        public const string Action_Load = "Load-more";
         private sealed record WeatherRow(
             DateTime Utc,
             string Station,
@@ -156,7 +157,7 @@ namespace HeimdallTemplateApp.Rendering.Pages
 
                     // Trigger on <td>, state on parent <tr>, target the <tr> for swap.
                     td.Heimdall()
-                        .Visible(new HeimdallHtml.ActionId("LazyLoadPage.LoadMore"))
+                        .Visible(Action_Load)
                         .PayloadFromClosestState("weather")
                         .Target("#weather-sentinel")
                         .SwapOuter()
@@ -168,7 +169,7 @@ namespace HeimdallTemplateApp.Rendering.Pages
         }
 
 
-        [ContentInvocation]
+        [ContentInvocation(Action_Load)]
         [RequestTimeout(3000)]
         public static IHtmlContent LoadMore([ContentPayload] LoadMoreRequest req)
         {

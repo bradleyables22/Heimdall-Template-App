@@ -4,7 +4,6 @@ using Heimdall.Server.Rendering;
 using HeimdallTemplateApp.Rendering.Shared;
 using Microsoft.AspNetCore.Html;     
 using System.ComponentModel.DataAnnotations;
-using static Heimdall.Bootstrap.Bootstrap;
 using static Heimdall.Server.Rendering.Html;
 
 namespace HeimdallTemplateApp.Rendering.Pages
@@ -14,6 +13,8 @@ namespace HeimdallTemplateApp.Rendering.Pages
         public const string CreateHostId = "create-note-host";
         public const string HostId = "notes-host";
         public const string FormId = "create-note-form";
+        public const string Action_Create = "create-note";
+
 		public static List<NoteEntity> Notes { get; set; } = new();
 
         public sealed class NoteEntity
@@ -107,7 +108,7 @@ namespace HeimdallTemplateApp.Rendering.Pages
                 // Submit -> CreateNote
                 // Target the host but swap INNER to avoid replacing the host node.
                 form.Heimdall()
-                    .Submit("FormPage.CreateNote")
+                    .Submit(Action_Create)
                     .PayloadFromClosestForm()
                     .Target($"#{CreateHostId}")
                     .SwapInner()
@@ -246,9 +247,7 @@ namespace HeimdallTemplateApp.Rendering.Pages
             });
         }
 
-
-        // Called on submit. Re-validates, creates, clears, and OOB-updates notes list.
-        [ContentInvocation]
+        [ContentInvocation(Action_Create)]
         public static IHtmlContent CreateNote([ContentPayload] CreateNoteRequest noteRequest)
         {
             noteRequest ??= new CreateNoteRequest();

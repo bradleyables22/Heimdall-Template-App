@@ -8,8 +8,8 @@
 
   <ItemGroup>
     <PackageReference Include="HeimdallFramework.Bootstrap" Version="5.0.0" />
-    <PackageReference Include="HeimdallFramework.Server" Version="1.0.6" />
-    <PackageReference Include="HeimdallFramework.Web" Version="1.0.6" />
+    <PackageReference Include="HeimdallFramework.Server" Version="2.0.1" />
+    <PackageReference Include="HeimdallFramework.Web" Version="2.0.1" />
   </ItemGroup>
 
 </Project>

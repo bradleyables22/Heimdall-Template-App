@@ -9,15 +9,11 @@ namespace HeimdallTemplateApp.Rendering.Pages
     public static class CounterPage
     {
         public const string HostId = "counter-host";
+		public const string Action_Inc = "Inc";
+		public const string Action_Dec = "Dec";
+		public const string Action_Reset = "Reset";
 
-		public static class Actions
-        {
-            public const string Inc = "CounterPage.Inc";
-            public const string Dec = "CounterPage.Dec";
-            public const string Reset = "CounterPage.Reset";
-        }
-
-        public sealed class CounterState
+		public sealed class CounterState
         {
             public CounterState() { }
             public CounterState(int count) => Count = count;
@@ -83,7 +79,7 @@ namespace HeimdallTemplateApp.Rendering.Pages
                             .Type("button")
                             .Text("−")
                             .Heimdall()
-                                .Click(Actions.Dec)
+                                .Click(Action_Dec)
                                 .PayloadFromClosestState()
                                 .Target("#counter-host")
                                 .SwapOuter();
@@ -95,7 +91,7 @@ namespace HeimdallTemplateApp.Rendering.Pages
                             .Text("+")
 
                             .Heimdall()
-                                .Click(Actions.Inc)
+                                .Click(Action_Inc)
                                 .PayloadFromClosestState()
                                 .Target("#counter-host")
                                 .SwapOuter();
@@ -106,7 +102,7 @@ namespace HeimdallTemplateApp.Rendering.Pages
                             .Type("button")
                             .Text("Reset")
                             .Heimdall()
-                                .Click(Actions.Reset)
+                                .Click(Action_Reset)
                                 .PayloadFromClosestState()
                                 .Target("#counter-host")
                                 .SwapOuter();
@@ -116,17 +112,17 @@ namespace HeimdallTemplateApp.Rendering.Pages
             });
         }
 
-        [ContentInvocation]
+        [ContentInvocation(Action_Inc)]
 		[RequestTimeout(3000)]
 		public static IHtmlContent Inc([ContentPayload] CounterState state)
             => RenderCounterHost((state?.Count ?? 0) + 1);
 
-        [ContentInvocation]
+        [ContentInvocation(Action_Dec)]
 		[RequestTimeout(3000)]
 		public static IHtmlContent Dec([ContentPayload] CounterState state)
             => RenderCounterHost((state?.Count ?? 0) - 1);
 
-        [ContentInvocation]
+        [ContentInvocation(Action_Reset)]
 		[RequestTimeout(3000)]
 		public static IHtmlContent Reset([ContentPayload] CounterState state)
             => RenderCounterHost(0);
