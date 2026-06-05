@@ -1,10 +1,6 @@
 # Heimdall Web App Template
 
-⚠️ **Alpha Status**
-
-Heimdall is currently in alpha. APIs, naming, and patterns may change as the project evolves.
-
-It includes a strongly-typed fluent HTML API and is currently experimental. Heimdall can be used with standard HTML files, Blazor, MVC, and other ASP.NET rendering approaches. At its core, Heimdall acts as a hypermedia protocol for ASP.NET.
+Includes a strongly-typed fluent HTML API and is currently experimental. Heimdall can be used with standard HTML files, Blazor, MVC, and other ASP.NET rendering approaches. At its core, Heimdall acts as a hypermedia protocol for ASP.NET.
 
 The template application components included in this repository are optional and can be removed if they do not fit your needs.
 
