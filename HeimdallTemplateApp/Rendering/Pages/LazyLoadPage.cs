@@ -8,6 +8,11 @@ namespace HeimdallTemplateApp.Rendering.Pages
 {
     public static class LazyLoadPage
     {
+        private const string WeatherRowsId = "weather-rows";
+        private const string WeatherSentinelId = "weather-sentinel";
+        private const string WeatherStateKey = "weather";
+        private static readonly HeimdallHtml.ActionId LoadMoreActionId = "weather.loadMore";
+
         private sealed record WeatherRow(
             DateTime Utc,
             string Station,
@@ -108,7 +113,7 @@ namespace HeimdallTemplateApp.Rendering.Pages
                                 })
                                 .TableBody(tbody =>
                                 {
-                                    tbody.Id("weather-rows")
+                                    tbody.Id(WeatherRowsId)
                                     .Add(RenderWeatherRows(first))
                                     .Add(RenderSentinelRow(offset: initialTake, take: 10));
                                 });
@@ -134,13 +139,13 @@ namespace HeimdallTemplateApp.Rendering.Pages
 
             return FluentHtml.Tag("tr", tr =>
             {
-                tr.Id("weather-sentinel");
+                tr.Id(WeatherSentinelId);
 
                 if (hasMore)
                 {
                     // State lives on the <tr>. The <td> trigger walks up one level
                     // and finds it immediately via findClosestStateElement.
-                    tr.Heimdall().State("weather", new { offset, take });
+                    tr.Heimdall().State(WeatherStateKey, new { offset, take });
                 }
 
                 tr.Tag("td", td =>
@@ -156,9 +161,9 @@ namespace HeimdallTemplateApp.Rendering.Pages
 
                     // Trigger on <td>, state on parent <tr>, target the <tr> for swap.
                     td.Heimdall()
-                        .Visible(new HeimdallHtml.ActionId("weather.loadMore"))
-                        .PayloadFromClosestState("weather")
-                        .Target("#weather-sentinel")
+                        .Visible(LoadMoreActionId)
+                        .PayloadFromClosestState(WeatherStateKey)
+                        .Target($"#{WeatherSentinelId}")
                         .SwapOuter()
                         .VisibleOnce(true);
 

@@ -9,6 +9,7 @@ namespace HeimdallTemplateApp.Rendering.Pages
 {
 	public class OobPage
 	{
+		internal const string ToastManagerSelector = "#" + ToastManager.Id;
 		private static readonly HeimdallHtml.ActionId ActionToastSse = "toast.sse";
 		private static readonly HeimdallHtml.ActionId ActionToastOob = "toast.oob";
 
@@ -48,7 +49,7 @@ namespace HeimdallTemplateApp.Rendering.Pages
 			{
 				p.Text("This page does not render the toast container. ")
 				.Strong(s => s.Text("The layout is responsible for rendering "))
-				.Code(c => c.Text("#toast-manager"))
+				.Code(c => c.Text(ToastManagerSelector))
 				.Text(" (and, if enabled, subscribing it to a private toast topic via SSE).");
 			})
 			.Hr(_ => { })
@@ -67,7 +68,7 @@ namespace HeimdallTemplateApp.Rendering.Pages
 					.Text("The click calls a server action that returns an ")
 					.Code(c => c.Text("<invocation>"))
 					.Text(" targeting ")
-					.Code(c => c.Text("#toast-manager"))
+					.Code(c => c.Text(ToastManagerSelector))
 				    .Text(". Heimdall.js applies it client-side without rendering the invocation element.");
 				});
 			});
@@ -85,7 +86,7 @@ namespace HeimdallTemplateApp.Rendering.Pages
 						Bootstrap.Text.Align(Bootstrap.TextAlignKind.Center)
 					)
 					.H1(h => h.Text("Send a toast!"))
-					.P(p => p.Text("Use either approach below. Both ultimately insert a toast into the layout’s #toast-manager."))
+					.P(p => p.Text($"Use either approach below. Both ultimately insert a toast into the layout’s {ToastManagerSelector}."))
 					.Div(btnRow =>
 					{
 						btnRow.Class(Bootstrap.Spacing.Mt(3))
@@ -148,7 +149,7 @@ namespace HeimdallTemplateApp.Rendering.Pages
 			var toast = new ToastItem
 			{
 				Header = "Hello from OOB!",
-				Content = "This toast came back as an <invocation> targeting #toast-manager.",
+				Content = $"This toast came back as an <invocation> targeting {OobPage.ToastManagerSelector}.",
 				Type = ToastType.Success,
 				DurationMs = 1800
 			};
@@ -159,7 +160,7 @@ namespace HeimdallTemplateApp.Rendering.Pages
 			{
 				f.Add(
 					HeimdallHtml.Invocation(
-						targetSelector: "#toast-manager",
+						targetSelector: OobPage.ToastManagerSelector,
 						swap: HeimdallHtml.Swap.AfterBegin,
 						payload: html,
 						wrapInTemplate: false

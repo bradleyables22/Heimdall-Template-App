@@ -14,6 +14,8 @@ namespace HeimdallTemplateApp.Rendering.Pages
         public const string CreateHostId = "create-note-host";
         public const string HostId = "notes-host";
         public const string FormId = "create-note-form";
+        private const string TitleInputId = "title";
+        private const string ContentInputId = "content";
 
         public static class Actions
         {
@@ -122,12 +124,12 @@ namespace HeimdallTemplateApp.Rendering.Pages
                 form.Label(l =>
                 {
                     l.Class(Bootstrap.Form.Label)
-                    .For("title")
+                    .For(TitleInputId)
                     .Text("Title");
                 })
                 .Input(InputType.text, input =>
                 {
-                    input.Id("title")
+                    input.Id(TitleInputId)
                     .Name(nameof(CreateNoteRequest.Title))
                     .Value(req.Title ?? string.Empty)
                     .Attr("maxlength", "125");
@@ -150,7 +152,7 @@ namespace HeimdallTemplateApp.Rendering.Pages
                 form.Label(l =>
                 {
                     l.Class(Bootstrap.Form.Label)
-                    .For("content")
+                    .For(ContentInputId)
                     .Text("Content");
                 });
 
@@ -158,7 +160,7 @@ namespace HeimdallTemplateApp.Rendering.Pages
                 // If not, you can replace with form.Tag("textarea", ...)
                 form.TextArea(input =>
                 {
-                    input.Id("content")
+                    input.Id(ContentInputId)
                     .Name(nameof(CreateNoteRequest.Content))
                     .Text(req.Content ?? string.Empty)
                     .Attr("maxlength", "500")
@@ -318,8 +320,8 @@ namespace HeimdallTemplateApp.Rendering.Pages
                 results = FormPage.ValidateInternal(FormPage.Normalize(noteRequest));
             }
 
-            // Main swap updates #create-note-host (inner swap). Successful submits also
-            // push OOB updates for #notes-host and toast-manager.
+            // Main swap updates the create-note host (inner swap). Successful submits also
+            // push OOB updates for the notes host and toast manager.
             return FluentHtml.Fragment(f =>
             {
                 // Main content for the target: just the form markup
@@ -329,7 +331,7 @@ namespace HeimdallTemplateApp.Rendering.Pages
                     return;
 
                 f.Heimdall().Invocation(
-                    targetSelector: "#notes-host",
+                    targetSelector: $"#{FormPage.HostId}",
                     swap: HeimdallHtml.Swap.Inner,
                     payload: FormPage.RenderNotesList(),
                     wrapInTemplate: false

@@ -51,7 +51,7 @@ namespace HeimdallTemplateApp.Rendering.Pages
         {
             return FluentHtml.Div(host =>
             {
-                host.Id("counter-host")
+                host.Id(HostId)
                 .Class(
                     Bootstrap.Card.Base,
                     Bootstrap.Shadow.Sm,
@@ -85,7 +85,7 @@ namespace HeimdallTemplateApp.Rendering.Pages
                             .Heimdall()
                                 .Click(Actions.Dec)
                                 .PayloadFromClosestState()
-                                .Target("#counter-host")
+                                .Target($"#{HostId}")
                                 .SwapOuter();
                         })
                         .Button(b =>
@@ -97,7 +97,7 @@ namespace HeimdallTemplateApp.Rendering.Pages
                             .Heimdall()
                                 .Click(Actions.Inc)
                                 .PayloadFromClosestState()
-                                .Target("#counter-host")
+                                .Target($"#{HostId}")
                                 .SwapOuter();
                         })
                         .Button(b =>
@@ -108,7 +108,7 @@ namespace HeimdallTemplateApp.Rendering.Pages
                             .Heimdall()
                                 .Click(Actions.Reset)
                                 .PayloadFromClosestState()
-                                .Target("#counter-host")
+                                .Target($"#{HostId}")
                                 .SwapOuter();
                         });
                     });
