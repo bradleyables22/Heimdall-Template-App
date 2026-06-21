@@ -7,9 +7,10 @@
 	<PackageType>Template</PackageType>
 	<IncludeContentInPack>true</IncludeContentInPack>
 	<IncludeBuildOutput>false</IncludeBuildOutput>
+	<SuppressDependenciesWhenPacking>true</SuppressDependenciesWhenPacking>
 
 	<PackageId>HeimdallFramework.Templates.WebApp</PackageId>
-	<Version>2.0.4</Version>
+	<Version>3.0.0</Version>
 	<Authors>Bradley Ables</Authors>
 	<Description>Heimdall full ASP.NET Core web app starter template (HTML-first server actions, strongly-typed rendering, optional SSE).</Description>
 	<PackageTags>heimdall;templates;aspnetcore;server-driven-ui;html;ssr;hypermedia</PackageTags>
@@ -25,13 +26,7 @@
 	</PropertyGroup>
 
 	<ItemGroup>
-		<Content Include="..\HeimdallTemplateApp\**\*"
-				 Exclude="..\HeimdallTemplateApp\**\bin\**;
-                    ..\HeimdallTemplateApp\**\obj\**;
-                    ..\HeimdallTemplateApp\**\.vs\**;
-                    ..\HeimdallTemplateApp\**\.git\**"
-				 Pack="true"
-				 PackagePath="content/" />
+		<Content Include="..\HeimdallTemplateApp\**\*" Exclude="..\HeimdallTemplateApp\**\bin\**;&#xD;&#xA;                    ..\HeimdallTemplateApp\**\obj\**;&#xD;&#xA;                    ..\HeimdallTemplateApp\**\.vs\**;&#xD;&#xA;                    ..\HeimdallTemplateApp\**\.git\**" Pack="true" PackagePath="content/" />
 	</ItemGroup>
 
 	<ItemGroup>
