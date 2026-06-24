@@ -10,7 +10,7 @@
 	<SuppressDependenciesWhenPacking>true</SuppressDependenciesWhenPacking>
 
 	<PackageId>HeimdallFramework.Templates.WebApp</PackageId>
-	<Version>3.0.1</Version>
+	<Version>3.0.3</Version>
 	<Authors>Bradley Ables</Authors>
 	<Description>Heimdall full ASP.NET Core web app starter template (HTML-first server actions, strongly-typed rendering, optional SSE).</Description>
 	<PackageTags>heimdall;templates;aspnetcore;server-driven-ui;html;ssr;hypermedia</PackageTags>
