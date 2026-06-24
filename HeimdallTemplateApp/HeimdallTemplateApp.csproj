@@ -7,9 +7,9 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="HeimdallFramework.Bootstrap" Version="5.0.0" />
-    <PackageReference Include="HeimdallFramework.Server" Version="3.0.0" />
-    <PackageReference Include="HeimdallFramework.Web" Version="3.0.0" />
+    <PackageReference Include="HeimdallFramework.Bootstrap" Version="5.0.1" />
+    <PackageReference Include="HeimdallFramework.Server" Version="3.0.1" />
+    <PackageReference Include="HeimdallFramework.Web" Version="3.0.1" />
   </ItemGroup>
 
 </Project>
