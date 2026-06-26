@@ -291,66 +291,66 @@ namespace HeimdallTemplateApp.Rendering.Pages
 
             return null;
         }
-    }
 
-    [ContentInvocationPrefix("notes")]
-    public sealed class NoteActions
-    {
-        // Called on submit. Re-validates, creates, clears, and OOB-updates notes list.
-        [ContentInvocation("create")]
-        public IHtmlContent Create([ContentPayload] FormPage.CreateNoteRequest noteRequest)
-        {
-            noteRequest ??= new FormPage.CreateNoteRequest();
+		[ContentInvocationPrefix("notes")]
+		public static class NoteActions
+		{
+			// Called on submit. Re-validates, creates, clears, and OOB-updates notes list.
+			[ContentInvocation("create")]
+			public static IHtmlContent Create([ContentPayload] FormPage.CreateNoteRequest noteRequest)
+			{
+				noteRequest ??= new FormPage.CreateNoteRequest();
 
-            noteRequest = FormPage.Normalize(noteRequest);
-            var results = FormPage.ValidateInternal(noteRequest);
-            var noteCreated = false;
+				noteRequest = FormPage.Normalize(noteRequest);
+				var results = FormPage.ValidateInternal(noteRequest);
+				var noteCreated = false;
 
-            if (!results.Any())
-            {
-                FormPage.Notes.Add(new FormPage.NoteEntity
-                {
-                    Title = noteRequest.Title,
-                    Content = noteRequest.Content
-                });
-                noteCreated = true;
+				if (!results.Any())
+				{
+					FormPage.Notes.Add(new FormPage.NoteEntity
+					{
+						Title = noteRequest.Title,
+						Content = noteRequest.Content
+					});
+					noteCreated = true;
 
-                // Clear form after success, and don't show errors on empty.
-                noteRequest = new FormPage.CreateNoteRequest();
-                results = FormPage.ValidateInternal(FormPage.Normalize(noteRequest));
-            }
+					// Clear form after success, and don't show errors on empty.
+					noteRequest = new FormPage.CreateNoteRequest();
+					results = FormPage.ValidateInternal(FormPage.Normalize(noteRequest));
+				}
 
-            // Main swap updates the create-note host (inner swap). Successful submits also
-            // push OOB updates for the notes host and toast manager.
-            return FluentHtml.Fragment(f =>
-            {
-                // Main content for the target: just the form markup
-                f.Add(FormPage.GenerateForm(noteRequest, results, showErrors: !noteCreated));
+				// Main swap updates the create-note host (inner swap). Successful submits also
+				// push OOB updates for the notes host and toast manager.
+				return FluentHtml.Fragment(f =>
+				{
+					// Main content for the target: just the form markup
+					f.Add(FormPage.GenerateForm(noteRequest, results, showErrors: !noteCreated));
 
-                if (!noteCreated)
-                    return;
+					if (!noteCreated)
+						return;
 
-                f.Heimdall().Invocation(
-                    targetSelector: $"#{FormPage.HostId}",
-                    swap: HeimdallHtml.Swap.Inner,
-                    payload: FormPage.RenderNotesList(),
-                    wrapInTemplate: false
-                );
+					f.Heimdall().Invocation(
+						targetSelector: $"#{FormPage.HostId}",
+						swap: HeimdallHtml.Swap.Inner,
+						payload: FormPage.RenderNotesList(),
+						wrapInTemplate: false
+					);
 
-                var toast = new ToastItem
-                {
-                    Header = "Note Created",
-                    Content = "A new note was successfully created",
-                    Type = ToastType.Success
-                };
+					var toast = new ToastItem
+					{
+						Header = "Note Created",
+						Content = "A new note was successfully created",
+						Type = ToastType.Success
+					};
 
-                f.Heimdall().Invocation(
-                    targetSelector: $"#{ToastManager.Id}",
-                    swap: HeimdallHtml.Swap.AfterBegin,
-                    payload: ToastManager.Create(toast),
-                    wrapInTemplate: false
-                );
-            });
-        }
-    }
+					f.Heimdall().Invocation(
+						targetSelector: $"#{ToastManager.Id}",
+						swap: HeimdallHtml.Swap.AfterBegin,
+						payload: ToastManager.Create(toast),
+						wrapInTemplate: false
+					);
+				});
+			}
+		}
+	}
 }

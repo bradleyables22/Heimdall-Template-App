@@ -115,25 +115,26 @@ namespace HeimdallTemplateApp.Rendering.Pages
                 });
             });
         }
+		
+        [ContentInvocationPrefix("counter")]
+		public static class CounterActions
+		{
+			[ContentInvocation("inc")]
+			[RequestTimeout(3000)]
+			public static IHtmlContent Inc([ContentPayload] CounterPage.CounterState state)
+				=> CounterPage.RenderCounterHost((state?.Count ?? 0) + 1);
 
-    }
+			[ContentInvocation("dec")]
+			[RequestTimeout(3000)]
+			public static IHtmlContent Dec([ContentPayload] CounterPage.CounterState state)
+				=> CounterPage.RenderCounterHost((state?.Count ?? 0) - 1);
 
-    [ContentInvocationPrefix("counter")]
-    public sealed class CounterActions
-    {
-        [ContentInvocation("inc")]
-        [RequestTimeout(3000)]
-        public IHtmlContent Inc([ContentPayload] CounterPage.CounterState state)
-            => CounterPage.RenderCounterHost((state?.Count ?? 0) + 1);
+			[ContentInvocation("reset")]
+			[RequestTimeout(3000)]
+			public static IHtmlContent Reset([ContentPayload] CounterPage.CounterState state)
+				=> CounterPage.RenderCounterHost(0);
+		}
+	}
 
-        [ContentInvocation("dec")]
-        [RequestTimeout(3000)]
-        public IHtmlContent Dec([ContentPayload] CounterPage.CounterState state)
-            => CounterPage.RenderCounterHost((state?.Count ?? 0) - 1);
-
-        [ContentInvocation("reset")]
-        [RequestTimeout(3000)]
-        public IHtmlContent Reset([ContentPayload] CounterPage.CounterState state)
-            => CounterPage.RenderCounterHost(0);
-    }
+    
 }

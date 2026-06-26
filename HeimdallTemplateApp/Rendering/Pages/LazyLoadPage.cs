@@ -207,16 +207,19 @@ namespace HeimdallTemplateApp.Rendering.Pages
                 .TableDataCell(td => td.Text(r.Condition));
             });
         }
-    }
 
-    [ContentInvocationPrefix("weather")]
-    public sealed class WeatherActions
-    {
-        [ContentInvocation("loadMore")]
-        [RequestTimeout(3000)]
-        public IHtmlContent LoadMore([ContentPayload] LazyLoadPage.LoadMoreRequest req)
-        {
-            return LazyLoadPage.LoadMoreRows(req);
-        }
-    }
+		[ContentInvocationPrefix("weather")]
+		public static class WeatherActions
+		{
+			[ContentInvocation("loadMore")]
+			[RequestTimeout(3000)]
+			public static IHtmlContent LoadMore([ContentPayload] LazyLoadPage.LoadMoreRequest req)
+			{
+				return LazyLoadPage.LoadMoreRows(req);
+			}
+		}
+
+	}
+
+    
 }
