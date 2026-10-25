@@ -1,0 +1,123 @@
+@page "/forms"
+@using HeimdallTemplateApp.Components.Pages.Forms.Shared
+@using System.ComponentModel.DataAnnotations
+@using Heimdall.Server
+@using Heimdall.Server.Rendering
+@using Microsoft.AspNetCore.Html
+@using Microsoft.AspNetCore.Mvc
+@using HeimdallTemplateApp.Models
+@using HeimdallTemplateApp.Services
+@attribute [ContentInvocationPrefix("notes")]
+@inject NoteStore Notes
+
+<PageTitle>Forms</PageTitle>
+
+<div class="row mt-4">
+    <div class="col-lg-3"></div>
+    <div class="col-lg-6">
+        <div class="card shadow-lg">
+            <div class="card-header">
+                <h2>Create New Note</h2>
+            </div>
+            <div class="card-body">
+                <div id="create-note-host">
+                    <CreateNoteForm Request="@InitialRequest" />
+                </div>
+            </div>
+        </div>
+
+        <div class="mt-4"></div>
+
+        <div class="card shadow-lg">
+            <div class="card-header">
+                <h2>Notes</h2>
+            </div>
+            <div class="card-body">
+                <div id="notes-host">
+                    <NotesList Notes="@Notes.GetAll()" />
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="col-lg-3"></div>
+</div>
+
+@code {
+    private CreateNoteRequest InitialRequest { get; } = new();
+
+    [ContentInvocation("create")]
+    public static async Task<IHtmlContent> Create(
+        [ContentPayload] CreateNoteRequest? noteRequest,
+        [FromServices] NoteStore notes,
+        [FromServices] IHeimdallBlazorRenderer renderer,
+        CancellationToken cancellationToken)
+    {
+        noteRequest ??= new CreateNoteRequest();
+        Normalize(noteRequest);
+        var errors = Validate(noteRequest);
+
+        if (errors.Count > 0)
+        {
+            return await renderer.RenderAsync<CreateNoteForm>(
+                new { Request = noteRequest, ShowErrors = true, Errors = errors },
+                cancellationToken);
+        }
+
+        notes.Add(noteRequest);
+
+        var formHtml = await renderer.RenderAsync<CreateNoteForm>(
+            new { Request = new CreateNoteRequest(), ShowErrors = false, Errors = new Dictionary<string, string>() },
+            cancellationToken);
+        var notesHtml = await renderer.RenderAsync<NotesList>(
+            new { Notes = notes.GetAll() },
+            cancellationToken);
+        var toastHtml = await renderer.RenderAsync<Toast>(
+            new
+            {
+                Header = "Note Created",
+                Content = "A new note was successfully created",
+                BootstrapClass = "text-bg-success",
+                DurationMs = 3000
+            },
+            cancellationToken);
+
+        var response = new HtmlContentBuilder();
+        response.AppendHtml(formHtml);
+        response.AppendHtml(HeimdallHtml.Invocation(
+            targetSelector: "#notes-host",
+            swap: HeimdallHtml.Swap.Inner,
+            payload: notesHtml,
+            wrapInTemplate: false));
+        response.AppendHtml(HeimdallHtml.Invocation(
+            targetSelector: "#toast-manager",
+            swap: HeimdallHtml.Swap.AfterBegin,
+            payload: toastHtml,
+            wrapInTemplate: false));
+
+        return response;
+    }
+
+    private static void Normalize(CreateNoteRequest request)
+    {
+        request.Title = (request.Title ?? string.Empty).Trim();
+        request.Content = (request.Content ?? string.Empty).Trim();
+    }
+
+    private static IReadOnlyDictionary<string, string> Validate(CreateNoteRequest request)
+    {
+        var results = new List<ValidationResult>();
+        Validator.TryValidateObject(request, new ValidationContext(request), results, true);
+
+        var errors = new Dictionary<string, string>(StringComparer.OrdinalIgnoreCase);
+        foreach (var result in results)
+        {
+            if (string.IsNullOrWhiteSpace(result.ErrorMessage))
+                continue;
+
+            foreach (var memberName in result.MemberNames)
+                errors.TryAdd(memberName, result.ErrorMessage);
+        }
+
+        return errors;
+    }
+}

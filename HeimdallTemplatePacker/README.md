@@ -5,8 +5,8 @@ The Heimdall template package provides one NuGet installation with a focused pro
 - `heimdall-native` — native Heimdall pages and content actions
 - `heimdall-mvc` — ASP.NET Core MVC with Heimdall actions
 - `heimdall-razor-pages` — ASP.NET Core Razor Pages with Heimdall actions
-- `heimdall-blazor` — Blazor components alongside Heimdall actions
-- `heimdall-ssg` — static site generation
+- `heimdall-blazor` — statically rendered Blazor components alongside Heimdall actions
+- `heimdall-ssg` — static site generator
 
 The package contains separate template entries so Visual Studio can present only the options that apply to the selected integration. The generated output remains one ordinary ASP.NET Core project; the templates share one source repository and packer solution.
 
@@ -26,7 +26,7 @@ The hosted templates expose:
 The static-site template exposes:
 
 - Target framework
-- Output mode: static artifact, ASP.NET Core web root, or hybrid
+- Output mode: static artifact or ASP.NET Core web root
 
 ## Command Line
 
@@ -52,7 +52,7 @@ Add the optional hosted OpenID Connect scaffold to any hosted template:
 dotnet new heimdall-native -n MyOidcApp --auth oidc
 ```
 
-The generated `appsettings.json` contains the `Authentication:Oidc` provider settings. Replace the authority and client values when you enable OIDC, and keep client secrets in environment variables or a secret manager rather than committing them. The scaffold uses cookie sessions, authorization middleware, `/account/sign-in`, and POST `/account/sign-out`. When `--auth oidc` is selected, the hosted application uses a fallback authorization policy so its pages, component endpoints, controllers, and Heimdall actions require an authenticated session by default. Add `[AllowAnonymous]` only for deliberate public endpoints.
+Selecting `--auth oidc` adds the complete authentication scaffold: the OIDC package reference, authentication extension, provider settings, cookie sessions, authorization middleware, `/account/sign-in`, and POST `/account/sign-out`. Selecting the default `none` choice omits those files, references, routes, configuration, and UI branches entirely. Replace the authority and client values when you enable OIDC, and keep client secrets in environment variables or a secret manager rather than committing them. The OIDC scaffold uses a fallback authorization policy so its pages, component endpoints, controllers, and Heimdall actions require an authenticated session by default. Add `[AllowAnonymous]` only for deliberate public endpoints.
 
 For example:
 
@@ -67,25 +67,23 @@ $env:Authentication__Oidc__ClientSecret = "your-client-secret"
 ```powershell
 dotnet new heimdall-ssg -n MyStaticSite --output-mode artifact
 dotnet new heimdall-ssg -n MyHostedStaticSite --output-mode web-root
-dotnet new heimdall-ssg -n MyHybridSite --output-mode hybrid
 ```
 
 The output modes are:
 
 - `artifact`: writes the generated site to `dist/` for deployment to a static host.
 - `web-root`: writes the generated site to `wwwroot/` and lets ASP.NET Core serve it.
-- `hybrid`: writes the generated pages to `wwwroot/` while keeping live Heimdall pages and actions enabled for the runtime host.
 
 Set `Site:BaseUrl` before generation when you want the template to emit a sitemap. It is intentionally empty by default so a new site does not publish placeholder URLs.
 
-SSG is explicit-route generation. Authentication and per-request user state belong in a hosted or hybrid path, not in pages that must be identical static artifacts.
+SSG is explicit-route generation. Authentication and per-request user state belong in a hosted application, not in pages that must be identical static artifacts.
 
 ## Integration Ownership
 
 - `heimdall-native`: Heimdall owns routing and page rendering through explicit server-side render functions.
 - `heimdall-mvc`: MVC owns routes and initial views; Heimdall actions can return Razor partial HTML.
 - `heimdall-razor-pages`: Razor Pages own routes and page composition; the page model keeps its Heimdall action next to the page and returns a Razor partial.
-- `heimdall-blazor`: Blazor owns the component tree and its interactive lifecycle; the page component keeps its Heimdall action inline and returns another Blazor component through the static renderer.
+- `heimdall-blazor`: Blazor owns the component tree during static SSR; Heimdall owns browser interactions, and the page component keeps its content action inline while returning another Blazor component through the static renderer.
 - `heimdall-ssg`: Heimdall registers explicit routes for static generation.
 
 ## What Every Hosted Path Includes
@@ -95,6 +93,8 @@ SSG is explicit-route generation. Authentication and per-request user state belo
 - Antiforgery and static asset setup
 - Bootstrap styling through Heimdall's typed helpers or integration assets
 - A small working example showing how the selected ownership model and Heimdall work together
+
+Each hosted starter also includes `wwwroot/js/heimdall.config.js`, loaded after the Heimdall browser bundle. Use it for application-wide browser defaults such as request timeouts, client-information opt-in, debug logging during development, or an asynchronous request-header provider. Keep page-specific behavior in the rendered Heimdall attributes, and never place secrets in this file.
 
 ## Documentation
 

@@ -1,0 +1,27 @@
+@using HeimdallTemplateApp.Infrastructure
+@inject IHttpContextAccessor HttpContextAccessor
+
+@{
+    var context = HttpContextAccessor.HttpContext;
+    var topic = context?.GetUserToastTopic();
+}
+
+@if (topic is null)
+{
+    <div class="toast-container position-fixed top-0 end-0 p-3"
+         style="z-index:1000"
+         id="toast-manager"
+         aria-live="polite"
+         aria-atomic="true"></div>
+}
+else
+{
+    <div class="toast-container position-fixed top-0 end-0 p-3"
+         style="z-index:1000"
+         id="toast-manager"
+         aria-live="polite"
+         aria-atomic="true"
+         heimdall-sse="@topic"
+         heimdall-sse-target="#toast-manager"
+         heimdall-sse-swap="beforeend"></div>
+}

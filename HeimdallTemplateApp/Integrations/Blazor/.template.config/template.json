@@ -7,7 +7,7 @@
   "name": "Heimdall Blazor Application",
   "shortName": "heimdall-blazor",
   "sourceName": "HeimdallTemplateApp",
-  "description": "Blazor application with Heimdall actions and server-rendered HTML responses.",
+  "description": "Blazor components rendered with static SSR and Heimdall actions for browser interactions.",
   "tags": { "language": "C#", "type": "project" },
   "symbols": {
     "authentication": {
@@ -28,35 +28,45 @@
       "replaces": "net10.0",
       "choices": [{ "choice": "net10.0", "description": ".NET 10.0" }]
     },
-    "IsOidc": { "type": "computed", "value": "(authentication == \"oidc\")" },
-    "OidcEnabled": {
-      "type": "generated",
-      "generator": "switch",
-      "replaces": "__HEIMDALL_OIDC_ENABLED__",
-      "parameters": {
-        "evaluator": "C++2",
-        "cases": [
-          { "condition": "(authentication == \"oidc\")", "value": "true" },
-          { "value": "false" }
-        ]
-      }
-    }
+    "IsOidc": { "type": "computed", "value": "(authentication == \"oidc\")" }
   },
   "sources": [
     {
       "source": "./",
       "target": "./",
       "modifiers": [
-        { "exclude": [".template.config/**"] }
+        {
+          "exclude": [
+            ".template.config/**",
+            "TemplateVariants/**",
+            "Program.cs",
+            "HeimdallTemplateApp.csproj",
+            "appsettings.json",
+            "Components/Layout/MainLayout.razor",
+            "Components/Routes.razor",
+            "Components/_Imports.razor"
+          ]
+        }
       ]
     },
     {
       "source": "../../Authentication/",
       "target": "./Authentication/",
+      "condition": "IsOidc",
       "modifiers": []
     },
     {
-      "source": "../../Integrations/Mvc/wwwroot/",
+      "source": "./TemplateVariants/NoAuth/",
+      "target": "./",
+      "condition": "!IsOidc"
+    },
+    {
+      "source": "./TemplateVariants/Oidc/",
+      "target": "./",
+      "condition": "IsOidc"
+    },
+    {
+      "source": "../../wwwroot/",
       "target": "./wwwroot/",
       "modifiers": []
     }

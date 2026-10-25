@@ -36,18 +36,6 @@
     "IsOidc": {
       "type": "computed",
       "value": "(authentication == \"oidc\")"
-    },
-    "OidcEnabled": {
-      "type": "generated",
-      "generator": "switch",
-      "replaces": "__HEIMDALL_OIDC_ENABLED__",
-      "parameters": {
-        "evaluator": "C++2",
-        "cases": [
-          { "condition": "(authentication == \"oidc\")", "value": "true" },
-          { "value": "false" }
-        ]
-      }
     }
   },
   "sources": [
@@ -55,8 +43,34 @@
       "source": "./",
       "target": "./",
       "modifiers": [
-        { "exclude": ["Integrations/**", ".template.config/**"] }
+        {
+          "exclude": [
+            "Integrations/**",
+            "Authentication/**",
+            "TemplateVariants/**",
+            "Program.cs",
+            "HeimdallTemplateApp.csproj",
+            "appsettings.json",
+            "Rendering/Shared/MenuComponent.cs",
+            ".template.config/**"
+          ]
+        }
       ]
+    },
+    {
+      "source": "./TemplateVariants/NoAuth/",
+      "target": "./",
+      "condition": "!IsOidc"
+    },
+    {
+      "source": "./TemplateVariants/Oidc/",
+      "target": "./",
+      "condition": "IsOidc"
+    },
+    {
+      "source": "./Authentication/",
+      "target": "./Authentication/",
+      "condition": "IsOidc"
     }
   ],
   "preferNameDirectory": true

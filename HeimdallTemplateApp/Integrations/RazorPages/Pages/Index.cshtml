@@ -1,85 +1,20 @@
 @page
 @model IndexModel
 @{
-    ViewData["Title"] = "Razor Pages integration";
+    ViewData["Title"] = "Home";
 }
 
-<div class="row mt-3">
-    <div class="col"></div>
-
-    <div class="col-lg-8">
-        <div class="card shadow-lg">
-            <div class="card-body">
-                <div class="d-flex align-items-center justify-content-between flex-wrap gap-3">
-                    <div class="text-start">
-                        <span class="badge text-bg-primary mb-3">Razor Pages + Heimdall</span>
-                        <h1 class="display-6 mb-2">
-                            <i class="bi bi-file-earmark-code me-2"></i>
-                            Welcome to Heimdall
-                        </h1>
-                        <p class="text-body-secondary mb-0">
-                            Razor Pages owns navigation and composition while Heimdall adds targeted server actions.
-                        </p>
-                    </div>
+<div id="mainpage-host"
+     heimdall-content-load="main.body"
+     heimdall-content-swap="inner">
+    <div class="card shadow-sm">
+        <div class="card-body">
+            <div class="d-flex align-items-center gap-2">
+                <div class="spinner-border" role="status">
+                    <span class="visually-hidden">Loading...</span>
                 </div>
-
-                <hr />
-
-                @await Html.PartialAsync(
-                    "~/Pages/Shared/_StatusPanel.cshtml",
-                    new IndexModel.StatusPanelModel())
-
-                <div class="row g-3">
-                    <div class="col-12 col-lg-4">
-                        <div class="border rounded p-3 h-100">
-                            <div class="d-flex gap-2">
-                                <i class="bi bi-lightning-charge-fill fs-4"></i>
-                                <div>
-                                    <h2 class="h6 mb-1">Page handlers</h2>
-                                    <p class="mb-0 text-body-secondary">Keep ordinary Razor Pages and add Heimdall actions beside the page that owns them.</p>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-
-                    <div class="col-12 col-lg-4">
-                        <div class="border rounded p-3 h-100">
-                            <div class="d-flex gap-2">
-                                <i class="bi bi-arrow-left-right fs-4"></i>
-                                <div>
-                                    <h2 class="h6 mb-1">Targeted HTML</h2>
-                                    <p class="mb-0 text-body-secondary">Return a partial and replace only the region that changed.</p>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-
-                    <div class="col-12 col-lg-4">
-                        <div class="border rounded p-3 h-100">
-                            <div class="d-flex gap-2">
-                                <i class="bi bi-shield-check fs-4"></i>
-                                <div>
-                                    <h2 class="h6 mb-1">Normal ASP.NET Core</h2>
-                                    <p class="mb-0 text-body-secondary">Use standard routing, authorization, forms, and Razor conventions.</p>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-
-                <div class="mt-4">
-                    <button type="button"
-                            class="btn btn-primary"
-                            heimdall-content-action="status.refresh"
-                            heimdall-content-target="#status-panel"
-                            heimdall-content-swap="outerHTML">
-                        <i class="bi bi-arrow-clockwise me-1"></i>
-                        Refresh with Heimdall
-                    </button>
-                </div>
+                <div class="text-body-secondary">Loading Heimdall...</div>
             </div>
         </div>
     </div>
-
-    <div class="col"></div>
 </div>

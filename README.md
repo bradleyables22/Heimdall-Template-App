@@ -1,6 +1,6 @@
 # Heimdall Templates
 
-ASP.NET Core starters for Heimdall's strongly typed, HTML-first rendering style. The package is installed once but exposes focused templates for native Heimdall, MVC, Razor Pages, Blazor, and static site generation.
+ASP.NET Core starters for Heimdall's strongly typed, HTML-first rendering style. The package is installed once but exposes focused templates for native Heimdall, MVC, Razor Pages, static SSR Blazor, and the static site generator.
 
 Each generated project is a normal single ASP.NET Core project. The template source and packer remain together in this repository so the integrations can evolve and be smoke-tested as one release unit.
 
@@ -28,7 +28,9 @@ Optional hosted OpenID Connect scaffolding is available on the native, MVC, Razo
 dotnet new heimdall-native -n MyOidcApp --auth oidc
 ```
 
-The generated `appsettings.json` contains the `Authentication:Oidc` provider settings. Replace the authority and client values when you enable OIDC, and keep client secrets in environment variables or a secret manager rather than committing them. Selecting OIDC also enables a fallback authorization policy, so the hosted application is authenticated by default rather than merely containing an unused provider registration.
+Selecting OIDC adds the complete authentication scaffold: the OIDC package reference, authentication extension, provider settings, cookie sessions, authorization middleware, sign-in/sign-out routes, and authentication UI. The default `none` choice omits those files, references, routes, configuration, and UI branches entirely. Replace the authority and client values when you enable OIDC, and keep client secrets in environment variables or a secret manager rather than committing them. Selecting OIDC also enables a fallback authorization policy, so the hosted application is authenticated by default.
+
+Hosted templates include `wwwroot/js/heimdall.config.js` as the application-wide browser configuration hook. It is loaded after the Heimdall runtime and starts with commented examples for common defaults; keep secrets and page-specific interaction behavior out of it.
 
 ## Documentation
 

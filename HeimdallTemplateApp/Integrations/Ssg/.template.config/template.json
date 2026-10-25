@@ -4,10 +4,10 @@
   "classifications": ["Web", "ASP.NET", "Heimdall", "SSG"],
   "identity": "Heimdall.Ssg.Template",
   "groupIdentity": "Heimdall.Ssg",
-  "name": "Heimdall Static Site",
+  "name": "Heimdall Static Site Generator",
   "shortName": "heimdall-ssg",
   "sourceName": "HeimdallTemplateApp",
-  "description": "Heimdall static site generation application with artifact, web-root, and hybrid output modes.",
+  "description": "Heimdall static site generator with artifact and web-root output modes.",
   "tags": { "language": "C#", "type": "project" },
   "symbols": {
     "Framework": {
@@ -23,19 +23,46 @@
       "datatype": "choice",
       "defaultValue": "artifact",
       "description": "Choose where the generated static site is written.",
-      "replaces": "__HEIMDALL_SSG_OUTPUT_MODE__",
       "choices": [
         { "choice": "artifact", "description": "Static artifact in dist/" },
-        { "choice": "web-root", "description": "ASP.NET Core web root in wwwroot/" },
-        { "choice": "hybrid", "description": "Static output with interactive Heimdall pages enabled" }
+        { "choice": "web-root", "description": "ASP.NET Core web root in wwwroot/" }
       ]
-    }
+    },
+    "IsArtifact": { "type": "computed", "value": "(output-mode == \"artifact\")" },
+    "IsWebRoot": { "type": "computed", "value": "(output-mode == \"web-root\")" }
   },
   "sources": [
     {
       "source": "./",
       "target": "./",
-      "modifiers": [{ "exclude": [".template.config/**"] }]
+      "modifiers": [{
+        "exclude": [
+          ".template.config/**",
+          "TemplateVariants/**",
+          "Program.cs",
+          "HeimdallTemplateApp.csproj",
+          "Helpers/RenderAssistant.cs",
+          "Rendering/HomePage.cs",
+          "Rendering/NotFoundPage.cs",
+          "Rendering/SiteLayout.cs",
+          "Services/SiteContent.cs",
+          "Views/Shared/_MvcDocs.cshtml"
+        ]
+      }]
+    },
+    {
+      "source": "./TemplateVariants/Artifact/",
+      "target": "./",
+      "condition": "IsArtifact"
+    },
+    {
+      "source": "./TemplateVariants/WebRoot/",
+      "target": "./",
+      "condition": "IsWebRoot"
+    },
+    {
+      "source": "./TemplateVariants/Static/",
+      "target": "./"
     },
     {
       "source": "../../Integrations/Mvc/wwwroot/css/",

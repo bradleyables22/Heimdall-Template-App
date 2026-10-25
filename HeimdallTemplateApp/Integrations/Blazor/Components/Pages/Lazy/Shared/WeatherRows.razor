@@ -1,0 +1,45 @@
+@using System.Text.Json
+@using HeimdallTemplateApp.Models
+
+@foreach (var row in Rows)
+{
+    <tr>
+        <td>@row.Utc.ToString("yyyy-MM-dd HH:mm")</td>
+        <td>@row.Station</td>
+        <td>@row.TempC.ToString("0.0")</td>
+        <td>@row.HumidityPct</td>
+        <td>@row.WindMph.ToString("0.0")</td>
+        <td>@row.Condition</td>
+    </tr>
+}
+
+@if (HasMore)
+{
+    <tr id="weather-sentinel" data-heimdall-state-weather='@StateJson'>
+        <td colspan="6"
+            class="text-center text-body-secondary py-2"
+            heimdall-content-visible="weather.loadMore"
+            heimdall-payload-from="closest-state:weather"
+            heimdall-content-target="#weather-sentinel"
+            heimdall-content-swap="outer"
+            heimdall-visible-once="true">
+            Loading more...
+        </td>
+    </tr>
+}
+else
+{
+    <tr id="weather-sentinel">
+        <td colspan="6" class="text-center text-body-secondary py-2">All records loaded.</td>
+    </tr>
+}
+
+@code {
+    [Parameter] public IReadOnlyList<WeatherRow> Rows { get; set; } = [];
+    [Parameter] public int Offset { get; set; }
+    [Parameter] public int Take { get; set; } = 10;
+    [Parameter] public int TotalCount { get; set; }
+
+    private bool HasMore => Offset < TotalCount;
+    private string StateJson => JsonSerializer.Serialize(new { offset = Offset, take = Take });
+}

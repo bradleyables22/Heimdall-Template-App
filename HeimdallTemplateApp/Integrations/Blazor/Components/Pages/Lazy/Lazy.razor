@@ -1,0 +1,68 @@
+@page "/lazy"
+@using HeimdallTemplateApp.Components.Pages.Lazy.Shared
+@using Heimdall.Server
+@using Microsoft.AspNetCore.Html
+@using Microsoft.AspNetCore.Http.Timeouts
+@using Microsoft.AspNetCore.Mvc
+@using HeimdallTemplateApp.Models
+@using HeimdallTemplateApp.Services
+@attribute [ContentInvocationPrefix("weather")]
+@inject WeatherForecastStore Weather
+
+<PageTitle>Lazy Loading</PageTitle>
+
+<div class="container mt-4">
+    <div class="card shadow-lg">
+        <div class="card-header">
+            <h2>Lazy-loading Scroll Table (Weather Data)</h2>
+        </div>
+        <div class="card-body">
+            <p class="text-body-secondary">
+                Scroll the table. When the sentinel row becomes visible, it loads the next page.
+            </p>
+            <div class="border rounded p-2" style="overflow: auto;">
+                <table class="table table-hover table-sm mb-0">
+                    <thead>
+                        <tr>
+                            <th>UTC</th>
+                            <th>Station</th>
+                            <th>Temp (&deg;C)</th>
+                            <th>Humidity (%)</th>
+                            <th>Wind (mph)</th>
+                            <th>Condition</th>
+                        </tr>
+                    </thead>
+                    <tbody id="weather-rows">
+                        <WeatherRows Rows="@Weather.GetRows(0, 10)" Offset="10" Take="10" TotalCount="@Weather.Count" />
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>
+
+@code {
+    [ContentInvocation("loadMore")]
+    [RequestTimeout(3000)]
+    public static Task<IHtmlContent> LoadMore(
+        [ContentPayload] WeatherLoadMoreRequest? request,
+        [FromServices] WeatherForecastStore weather,
+        [FromServices] IHeimdallBlazorRenderer renderer,
+        CancellationToken cancellationToken)
+    {
+        request ??= new WeatherLoadMoreRequest();
+        request.Offset = Math.Max(request.Offset, 0);
+        request.Take = request.Take <= 0 ? 10 : request.Take;
+
+        var rows = weather.GetRows(request.Offset, request.Take);
+        return renderer.RenderAsync<WeatherRows>(
+            new
+            {
+                Rows = rows,
+                Offset = request.Offset + rows.Count,
+                Take = request.Take,
+                TotalCount = weather.Count
+            },
+            cancellationToken);
+    }
+}

@@ -28,8 +28,7 @@ public static class HomePage
                                             .Div(actions =>
                                             {
                                                 actions.Class("d-flex flex-wrap gap-2")
-                                                    .A(a => a.Class("btn btn-primary btn-lg").Href(site.ToSitePath("/hybrid/")).Text("Open hybrid docs"))
-                                                    .A(a => a.Class("btn btn-outline-dark btn-lg").Href(site.ToSitePath("/markdown/")).Text("Read markdown docs"));
+                                                    .A(a => a.Class("btn btn-primary btn-lg").Href(site.ToSitePath("/markdown/")).Text("Read markdown docs"));
                                             });
                                     })
                                     .Div(panel =>
@@ -48,7 +47,7 @@ public static class HomePage
                                                                     .Span(span => span.Class("text-secondary small").Text("Build-time generated"));
                                                             })
                                                             .H2(h => h.Class("h4 fw-bold").Text("Generation pipeline"))
-                                                            .P(p => p.Class("text-secondary").Text("This template documents the SSG flow directly in the generated site: register routes, render with scoped services, copy assets, and optionally hydrate runtime sections."))
+                                                            .P(p => p.Class("text-secondary").Text("This template documents the SSG flow directly in the generated site: register routes, render with scoped services, and copy assets for static hosting."))
                                                             .Div(metrics =>
                                                             {
                                                                 metrics.Class("row g-3 mt-2");
@@ -113,7 +112,7 @@ public static class HomePage
                                     {
                                         copy.Class("col-lg-6")
                                             .H2(h => h.Class("display-6 fw-bold").Text("Use this as living documentation"))
-                                            .P(p => p.Class("text-secondary").Text("Each route explains one production pattern while also exercising it. The page you are reading is fluent HTML, the MVC page comes from Razor, the markdown page comes from Markdig, and the hybrid page includes a live Heimdall load call."))
+                                            .P(p => p.Class("text-secondary").Text("Each route explains one production pattern while also exercising it. The page you are reading is fluent HTML, the MVC page comes from Razor, and the markdown page comes from Markdig."))
                                             .Pre(pre =>
                                             {
                                                 pre.Class("docs-code")

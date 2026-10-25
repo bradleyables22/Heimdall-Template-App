@@ -71,7 +71,6 @@ namespace HeimdallTemplateApp.Helpers
 				"/Views/Shared/_MvcDocs.cshtml",
 				site.Content.MvcDocs with
 				{
-					HybridHref = site.ToSitePath("/hybrid/"),
 					HomeHref = site.ToSitePath("/")
 				});
 

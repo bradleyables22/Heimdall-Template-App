@@ -4,19 +4,17 @@ using Microsoft.AspNetCore.Mvc.RazorPages;
 
 namespace HeimdallTemplateApp.Pages;
 
-[ContentInvocationPrefix("status")]
+[ContentInvocationPrefix("main")]
 public sealed class IndexModel(IHeimdallMvcRenderer renderer) : PageModel
 {
-    [ContentInvocation("refresh")]
-    public Task<IHtmlContent> Refresh(CancellationToken cancellationToken)
+    [ContentInvocation("body")]
+    public Task<IHtmlContent> Body(CancellationToken cancellationToken)
         => renderer.PartialAsync(
-            "~/Pages/Shared/_StatusPanel.cshtml",
-            new StatusPanelModel(DateTimeOffset.Now),
+            "~/Pages/Shared/_Body.cshtml",
+            model: null,
             cancellationToken);
 
     public void OnGet()
     {
     }
-
-    public sealed record StatusPanelModel(DateTimeOffset? RefreshedAt = null);
 }

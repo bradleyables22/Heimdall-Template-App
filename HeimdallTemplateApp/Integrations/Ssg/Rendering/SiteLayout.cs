@@ -10,7 +10,6 @@ public static class SiteLayout
         new("/", "Overview"),
         new("/mvc-view/", "MVC"),
         new("/markdown/", "Markdown"),
-        new("/hybrid/", "Hybrid")
     ];
 
     public static IHtmlContent Render(
@@ -109,17 +108,14 @@ public static class SiteLayout
                                     {
                                         container.Class("container d-flex flex-column flex-md-row gap-2 justify-content-between text-secondary small")
                                             .Span(span => span.Text("Generated documentation with Heimdall static site generation."))
-                                            .Span(span => span.Text("Fluent HTML, MVC views, markdown, and hybrid load examples."));
+                                            .Span(span => span.Text("Fluent HTML, MVC views, and markdown examples."));
                                     });
                             })
                             .Script(script =>
                             {
                                 script.Src(toSitePath("/js/vendor/bootstrap-bundle.js"));
                             })
-                            .Script(script =>
-                            {
-                                script.Src(toSitePath("/_content/HeimdallFramework.Web/heimdall-bundle.min.js"));
-                            });
+                            ;
                         });
                 });
         });

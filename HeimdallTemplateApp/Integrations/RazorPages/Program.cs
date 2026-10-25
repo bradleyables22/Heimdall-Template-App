@@ -1,11 +1,15 @@
 using Heimdall.Server;
 using HeimdallTemplateApp.Authentication;
+using HeimdallTemplateApp.Services;
 
 var builder = WebApplication.CreateBuilder(args);
 
 builder.Configuration.AddEnvironmentVariables();
 builder.Configuration.AddCommandLine(args);
 builder.Services.AddRazorPages();
+builder.Services.AddHttpContextAccessor();
+builder.Services.AddSingleton<NoteStore>();
+builder.Services.AddSingleton<WeatherForecastStore>();
 builder.Services.AddHeimdallMvc();
 builder.Services.AddAntiforgery();
 builder.Services.AddHeimdallAuthentication(builder.Configuration);

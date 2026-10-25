@@ -2,10 +2,10 @@ namespace HeimdallTemplateApp.Services;
 
 public sealed class SiteContent
 {
-    public string ProductName => "Heimdall Static Site Generation";
+    public string ProductName => "Heimdall Static Site Generator";
 
     public string Description =>
-        "A runnable documentation template that shows how Heimdall renders explicit routes to static HTML while keeping ASP.NET Core DI, MVC views, markdown content, and live Heimdall content actions available.";
+        "A runnable documentation template that shows how Heimdall renders explicit routes to static HTML while keeping ASP.NET Core DI, MVC views, and markdown content available.";
 
     public IReadOnlyList<FeatureItem> Features { get; } =
     [
@@ -20,25 +20,20 @@ public sealed class SiteContent
         new(
             "Assets",
             "Static web assets",
-            "Physical wwwroot files and RCL _content assets can be copied into the output root for static hosting."),
-        new(
-            "Hybrid",
-            "Runtime islands",
-            "Generated pages can include Heimdall load attributes for sections that should hydrate from the live ASP.NET Core app.")
+            "Physical wwwroot files and RCL _content assets can be copied into the output root for static hosting.")
     ];
 
     public IReadOnlyList<RouteExample> RouteExamples { get; } =
     [
         new("/", "SSG overview", "Fluent HTML"),
         new("/mvc-view/", "MVC static rendering", "Razor partial"),
-        new("/markdown/", "Markdown-authored docs", "Markdig"),
-        new("/hybrid/", "Hybrid load pattern", "Static + Heimdall")
+        new("/markdown/", "Markdown-authored docs", "Markdig")
     ];
 
     public IReadOnlyList<Metric> HeroMetrics { get; } =
     [
-        new("4", "rendering styles"),
-        new("5", "generated pages"),
+        new("3", "rendering styles"),
+        new("4", "generated pages"),
         new("1", "shared layout"),
         new("0", "crawler steps")
     ];
@@ -57,27 +52,6 @@ public sealed class SiteContent
             new("HTML", "static output")
         ]);
 
-    public RuntimeReferenceModel RuntimeReference { get; } = new(
-        "Ready",
-        [
-            new("200", "content endpoint"),
-            new("CSRF", "token flow"),
-            new("inner", "swap mode"),
-            new("RCL", "runtime asset")
-        ],
-        [
-            "HeimdallHtml.OnLoad(\"hybrid.reference\") declares the load action.",
-            "HeimdallHtml.Target(\"#runtime-reference-panel\") keeps the update scoped.",
-            "The fallback remains useful when the site is exported to plain static hosting."
-        ]);
-
-    public IReadOnlyList<HybridNote> HybridNotes { get; } =
-    [
-        new("Generated shell", "The route is written to wwwroot/hybrid/index.html during the SSG pass."),
-        new("Live target", "The reference card declares a Heimdall load action, target, and swap mode through fluent attributes."),
-        new("Progressive fallback", "Plain static hosting still shows documentation; the live panel appears when the app runtime is available.")
-    ];
-
     public DateTimeOffset BuildTimestampUtc { get; } = DateTimeOffset.UtcNow;
 }
 
@@ -93,16 +67,7 @@ public sealed record MvcDocsModel(
     IReadOnlyList<MvcDocsCheckpoint> Checkpoints,
     IReadOnlyList<Metric> Metrics)
 {
-    public string HybridHref { get; init; } = "/hybrid/";
-
     public string HomeHref { get; init; } = "/";
 }
 
 public sealed record MvcDocsCheckpoint(string Title, string Description);
-
-public sealed record RuntimeReferenceModel(
-    string Status,
-    IReadOnlyList<Metric> Metrics,
-    IReadOnlyList<string> Actions);
-
-public sealed record HybridNote(string Title, string Description);

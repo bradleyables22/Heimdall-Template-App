@@ -1,0 +1,22 @@
+<div class="toast fade @BootstrapClass"
+     role="alert"
+     aria-live="assertive"
+     aria-atomic="true"
+     data-bs-autohide="true"
+     data-bs-delay="@DurationMs">
+    <div class="toast-header @BootstrapClass border-0">
+        <strong class="me-auto">@Header</strong>
+        <button class="btn-close mb-1 ms-2"
+                type="button"
+                data-bs-dismiss="toast"
+                aria-label="Close"></button>
+    </div>
+    <div class="toast-body">@Content</div>
+</div>
+
+@code {
+    [Parameter] public string Header { get; set; } = string.Empty;
+    [Parameter] public string Content { get; set; } = string.Empty;
+    [Parameter] public string BootstrapClass { get; set; } = "text-bg-info";
+    [Parameter] public int DurationMs { get; set; } = 3000;
+}

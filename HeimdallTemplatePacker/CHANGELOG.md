@@ -5,11 +5,11 @@
 ### Added
 
 - Separate `heimdall-native`, `heimdall-mvc`, `heimdall-razor-pages`, `heimdall-blazor`, and `heimdall-ssg` templates in one package.
-- Artifact, web-root, and hybrid output modes for the `ssg` integration.
+- Artifact and web-root output modes for the `ssg` integration.
 - Optional OpenID Connect and cookie-session scaffolding for every hosted integration.
 - Visual Studio-specific host metadata with focused Additional information pages for each integration.
 - A Razor Pages starter showing ordinary page ownership with an inline page-model content action that renders a Razor partial.
-- A Blazor starter showing interactive components alongside an inline component content action that renders a Blazor component through `IHeimdallBlazorRenderer`.
+- A Blazor starter showing static SSR components alongside an inline component content action that renders a Blazor component through `IHeimdallBlazorRenderer`.
 - Consolidated all integration starters under one package while keeping each generated project focused.
 - Shared web-app styling, Bootstrap Icons, favicon assets, navigation shells, and local Bootstrap assets across the hosted starters.
 

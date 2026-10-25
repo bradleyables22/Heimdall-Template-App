@@ -25,7 +25,7 @@
         }
         else
         {
-            <a class="btn btn-link text-white text-decoration-none ms-auto" href="/account/sign-in?returnUrl=@Context.Request.Path">
+            <a class="btn btn-link text-white text-decoration-none ms-auto" href="/account/sign-in">
                 <i class="bi bi-box-arrow-in-right me-1"></i>
                 Sign in
             </a>
@@ -46,6 +46,22 @@
             <a class="list-group-item list-group-item-action" asp-page="/Index">
                 <i class="bi bi-house me-2"></i>
                 Home
+            </a>
+            <a class="list-group-item list-group-item-action" asp-page="/OutOfBand">
+                <i class="bi bi-chat-dots me-2"></i>
+                Out Of Band
+            </a>
+            <a class="list-group-item list-group-item-action" asp-page="/State">
+                <i class="bi bi-bezier2 me-2"></i>
+                State
+            </a>
+            <a class="list-group-item list-group-item-action" asp-page="/Forms">
+                <i class="bi bi-journal me-2"></i>
+                Forms
+            </a>
+            <a class="list-group-item list-group-item-action" asp-page="/Lazy">
+                <i class="bi bi-arrow-repeat me-2"></i>
+                Lazy Loading
             </a>
         </div>
     </div>

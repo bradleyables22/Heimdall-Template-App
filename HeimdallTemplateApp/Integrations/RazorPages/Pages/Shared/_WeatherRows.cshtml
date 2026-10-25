@@ -1,0 +1,29 @@
+@model WeatherRowsViewModel
+
+@foreach (var row in Model.Rows)
+{
+    <tr>
+        <td>@row.Utc.ToString("yyyy-MM-dd HH:mm")</td>
+        <td>@row.Station</td>
+        <td>@row.TempC.ToString("0.0")</td>
+        <td>@row.HumidityPct</td>
+        <td>@row.WindMph.ToString("0.0")</td>
+        <td>@row.Condition</td>
+    </tr>
+}
+
+@{
+    var hasMore = Model.Offset < Model.TotalCount;
+    var stateJson = JsonSerializer.Serialize(new { offset = Model.Offset, take = Model.Take });
+}
+
+<tr id="weather-sentinel" @(hasMore ? Html.Raw($"data-heimdall-state-weather='{stateJson}'") : null)>
+    <td colspan="6" class="text-center text-body-secondary py-2"
+        @(hasMore ? Html.Raw("heimdall-content-visible=\"weather.loadMore\"") : null)
+        @(hasMore ? Html.Raw("heimdall-payload-from=\"closest-state:weather\"") : null)
+        @(hasMore ? Html.Raw("heimdall-content-target=\"#weather-sentinel\"") : null)
+        @(hasMore ? Html.Raw("heimdall-content-swap=\"outer\"") : null)
+        @(hasMore ? Html.Raw("heimdall-visible-once=\"true\"") : null)>
+        @(hasMore ? "Loading more..." : "All records loaded.")
+    </td>
+</tr>

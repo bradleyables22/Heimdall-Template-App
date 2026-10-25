@@ -26,8 +26,7 @@ public static class NotFoundPage
                                             .Div(actions =>
                                             {
                                                 actions.Class("d-flex justify-content-center flex-wrap gap-2")
-                                                    .A(a => a.Class("btn btn-primary").Href(site.ToSitePath("/")).Text("Return home"))
-                                                    .A(a => a.Class("btn btn-outline-dark").Href(site.ToSitePath("/hybrid/")).Text("Open hybrid docs"));
+                                                    .A(a => a.Class("btn btn-primary").Href(site.ToSitePath("/")).Text("Return home"));
                                             });
                                     });
                             });

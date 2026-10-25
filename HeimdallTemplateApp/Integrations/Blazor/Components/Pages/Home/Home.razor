@@ -1,0 +1,34 @@
+@page "/"
+@using HeimdallTemplateApp.Components.Pages.Home.Shared
+@using Heimdall.Server
+@using Heimdall.Server.Rendering
+@using Microsoft.AspNetCore.Html
+@using Microsoft.AspNetCore.Http.Timeouts
+@using Microsoft.AspNetCore.Mvc
+@attribute [ContentInvocationPrefix("main")]
+
+<PageTitle>Home</PageTitle>
+
+<div id="mainpage-host"
+     heimdall-content-load="main.body"
+     heimdall-content-swap="inner">
+    <div class="card shadow-sm">
+        <div class="card-body">
+            <div class="d-flex align-items-center gap-2">
+                <div class="spinner-border" role="status">
+                    <span class="visually-hidden">Loading...</span>
+                </div>
+                <div class="text-body-secondary">Loading Heimdall...</div>
+            </div>
+        </div>
+    </div>
+</div>
+
+@code {
+    [ContentInvocation("body")]
+    [RequestTimeout(3000)]
+    public static Task<IHtmlContent> Body(
+        [FromServices] IHeimdallBlazorRenderer renderer,
+        CancellationToken cancellationToken)
+        => renderer.RenderAsync<HomeBody>(cancellationToken);
+}
