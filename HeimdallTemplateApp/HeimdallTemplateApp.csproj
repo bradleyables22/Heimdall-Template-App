@@ -7,9 +7,24 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <PackageReference Include="Microsoft.AspNetCore.Authentication.OpenIdConnect" Version="10.0.0" />
     <PackageReference Include="HeimdallFramework.Bootstrap" Version="5.0.1" />
-    <PackageReference Include="HeimdallFramework.Server" Version="3.1.0" />
-    <PackageReference Include="HeimdallFramework.Web" Version="3.1.0" />
+    <PackageReference Include="HeimdallFramework.Server" Version="4.0.0" />
+    <PackageReference Include="HeimdallFramework.Web" Version="4.0.0" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Compile Remove="Integrations\**\*.cs" />
+    <RazorCompile Remove="Integrations\**\*.cshtml" />
+    <RazorComponent Remove="Integrations\**\*.razor" />
+    <Content Remove="Integrations\**\*" />
+    <None Remove="Integrations\**\*" />
+
+    <Compile Remove="TemplateVariants\**\*.cs" />
+    <RazorCompile Remove="TemplateVariants\**\*.cshtml" />
+    <RazorComponent Remove="TemplateVariants\**\*.razor" />
+    <Content Remove="TemplateVariants\**\*" />
+    <None Remove="TemplateVariants\**\*" />
   </ItemGroup>
 
 </Project>

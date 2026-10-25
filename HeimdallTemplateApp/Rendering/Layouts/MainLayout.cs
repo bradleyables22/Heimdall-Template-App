@@ -32,7 +32,7 @@ namespace HeimdallTemplateApp.Rendering.Layouts
 						{
 							l.Attr("rel", "icon")
 							.Type("image/png")
-							.Href("images/favicon.png");
+							.Href("images/Favicon.png");
 						})
 						.Link(l =>
 						{
@@ -50,10 +50,8 @@ namespace HeimdallTemplateApp.Rendering.Layouts
 							.Href("css/bootstrap-icons.css");
 						})
 						.Script(s => s.Src("/_content/HeimdallFramework.Web/heimdall-bundle.min.js"))
+						.Script(s => s.Src("js/heimdall.config.js"))
 						.Script(s => s.Src("js/bootstrap-bundle.js"));
-
-						if (Environment.GetEnvironmentVariable("ASPNETCORE_ENVIRONMENT")?.ToLowerInvariant() == "development") 
-							head.Script(s => s.Src("js/heimdall.debug.js"));
                     })
 					.Body(body =>
 					{

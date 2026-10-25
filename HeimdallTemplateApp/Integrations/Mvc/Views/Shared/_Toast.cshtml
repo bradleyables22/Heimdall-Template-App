@@ -1,0 +1,17 @@
+@model ToastItem
+
+<div class="toast fade @Model.BootstrapClass"
+     role="alert"
+     aria-live="assertive"
+     aria-atomic="true"
+     data-bs-autohide="true"
+     data-bs-delay="@Model.DurationMs">
+    <div class="toast-header @Model.BootstrapClass border-0">
+        <strong class="me-auto">@Model.Header</strong>
+        <button class="btn-close mb-1 ms-2"
+                type="button"
+                data-bs-dismiss="toast"
+                aria-label="Close"></button>
+    </div>
+    <div class="toast-body">@Model.Content</div>
+</div>

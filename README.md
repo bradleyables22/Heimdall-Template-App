@@ -1,20 +1,38 @@
-# Heimdall Web App Template
+# Heimdall Templates
 
-ASP.NET Core web app starter for Heimdall's strongly typed, HTML-first rendering style. Heimdall can be used with standard HTML files, MVC, Razor, Blazor-hosted pages, static generation, and other ASP.NET rendering approaches. At its core, Heimdall acts as a hypermedia protocol for ASP.NET.
+ASP.NET Core starters for Heimdall's strongly typed, HTML-first rendering style. The package is installed once but exposes focused templates for native Heimdall, MVC, Razor Pages, static SSR Blazor, and the static site generator.
 
-The template application components included in this repository are optional and can be removed if they do not fit your needs.
+Each generated project is a normal single ASP.NET Core project. The template source and packer remain together in this repository so the integrations can evolve and be smoke-tested as one release unit.
 
-Real-world usage and feedback are extremely valuable at this stage.
+## Install
 
-If you try Heimdall and have thoughts — good or bad — please open an issue or discussion:
+```powershell
+dotnet new install HeimdallFramework.Templates
+```
 
-https://github.com/bradleyables22/Heimdall
----
-## How to Install
+In Visual Studio, search for `Heimdall` and choose the template that matches the integration path you want. Hosted templates offer framework and optional OpenID Connect choices. The static-site template offers framework and output mode choices.
 
-dotnet new install HeimdallFramework.Templates.WebApp 
+The equivalent command-line templates are:
 
-## Full Documentation Website
+```powershell
+dotnet new heimdall-native -n MyHeimdallApp
+dotnet new heimdall-mvc -n MyMvcApp
+dotnet new heimdall-razor-pages -n MyRazorPagesApp
+dotnet new heimdall-blazor -n MyBlazorApp
+dotnet new heimdall-ssg -n MyStaticSite --output-mode artifact
+```
+
+Optional hosted OpenID Connect scaffolding is available on the native, MVC, Razor Pages, and Blazor templates:
+
+```powershell
+dotnet new heimdall-native -n MyOidcApp --auth oidc
+```
+
+Selecting OIDC adds the complete authentication scaffold: the OIDC package reference, authentication extension, provider settings, cookie sessions, authorization middleware, sign-in/sign-out routes, and authentication UI. The default `none` choice omits those files, references, routes, configuration, and UI branches entirely. Replace the authority and client values when you enable OIDC, and keep client secrets in environment variables or a secret manager rather than committing them. Selecting OIDC also enables a fallback authorization policy, so the hosted application is authenticated by default.
+
+Hosted templates include `wwwroot/js/heimdall.config.js` as the application-wide browser configuration hook. It is loaded after the Heimdall runtime and starts with commented examples for common defaults; keep secrets and page-specific interaction behavior out of it.
+
+## Documentation
 
 https://heimdall-framework.org
 
@@ -29,17 +47,11 @@ That approach works well, but it comes with trade-offs:
 - Client complexity grows quickly
 - UI state is duplicated between client and server
 - Simple interactions often require significant frontend infrastructure
-- Returning HTML — the browser’s native UI format — becomes a secondary concern
+- Returning HTML — the browser's native UI format — becomes a secondary concern
 
-Many applications do not need a full client application runtime.
-They need interaction, not architecture.
+Many applications do not need a full client application runtime. They need interaction, not architecture.
 
-Heimdall exists to explore a different default.
-
-Instead of moving rendering and orchestration to the client, Heimdall keeps
-the server as the source of truth and uses **HTML as the transport layer**.
-
-The model is simple:
+Heimdall keeps the server as the source of truth and uses HTML as the transport layer:
 
 **Event → Server Action → HTML → Targeted DOM update**
 
@@ -48,248 +60,15 @@ This allows applications to:
 - Keep business logic and UI decisions close together
 - Avoid rebuilding state management on the client
 - Incrementally update the page without SPA complexity
-- Use real-time server push when needed (SSE via Bifrost)
-- Compose UI using strongly-typed HTML instead of string templates
+- Use real-time server push when needed through Bifrost SSE
+- Compose UI using strongly typed HTML instead of string templates
 
-Heimdall is not trying to replace every frontend approach.
+Heimdall is not trying to replace every frontend approach. It is for teams and applications that prefer server-driven UI, predictable interaction flows, a minimal client runtime, and a mental model closer to web documents than an app shell.
 
-It exists for teams and applications that prefer:
+## Full Documentation Website
 
-- Server-driven UI
-- Predictable interaction flows
-- Minimal client runtime
-- A mental model closer to “web as documents” than “web as app shell”
+https://heimdall-framework.org
 
-In short:
+## License
 
-Heimdall explores what modern ASP.NET applications look like when
-HTML over the wire is treated as a first-class architectural primitive.
-
----
-
-## When to Use Heimdall (and how to do it)
-
-Heimdall is a strong fit when you want:
-
-- **HTML over the wire**: actions return HTML fragments and Heimdall swaps them into the DOM
-- **Server-driven interactivity** without building a SPA
-- A **payload-based** model (forms, closest element state, or explicit JSON payload)
-- A workflow that can be **stateless-by-default**, with optional client-carried state
-- **Strongly-typed HTML composition** (FluentHtml builders) while keeping the runtime dependency-free
-- **Real-time server push** using **Bifrost (SSE)** for live UI updates
-
-> **Note on “stateless” and Content Invocations**
->
-> Heimdall content invocations can be implemented either as:
->
-> - **Static methods** (recommended) — simple, explicit, and aligned with the stateless / functional style Heimdall is aiming for.
-> - **DI-resolved methods/services** — totally valid when you need richer orchestration (DB, services, etc.).
->
-> Both work; the “default vibe” is to keep actions small, deterministic, and driven by the incoming payload.
-
-### Here’s how you do this
-
-#### 1) Wire Heimdall into ASP.NET Core
-
-```csharp
-var builder = WebApplication.CreateBuilder(args);
-
-builder.Services.AddAntiforgery();
-builder.Services.AddCors();
-builder.Services.AddHeimdall(); // scans entry/calling assemblies by default
-
-var app = builder.Build();
-
-app.UseAntiforgery();
-app.MapStaticAssets();
-app.UseStaticFiles();
-
-app.UseHeimdall(); // maps Heimdall endpoints
-
-app.MapHeimdallPage("/",(_, ctx) => 
-{
-    return MainLayout.Render(ctx, MainPage.Render(), "Home", true);
-});
-
-app.Run();
-```
-
-#### 2) Render a UI trigger with FluentHtml + FluentHeimdall
-
-This renders a button that calls a server action and swaps the returned HTML into `#counter-host`.
-
-```csharp
-using Microsoft.AspNetCore.Html;
-using Server.Heimdall;
-using Server.Utilities;
-
-public static class CounterView
-{
-    private static readonly HeimdallHtml.ActionId Inc = "counter.inc";
-
-    public static IHtmlContent Render(CounterState state)
-        => FluentHtml.Div(host =>
-        {
-            host.Id("counter-host");
-
-            // Store client-carried state (optional) so actions can be stateless-by-default.
-            host.Heimdall().State(state);
-
-            host.Button(btn =>
-            {
-                btn.Type("button");
-                btn.Text("+");
-
-                btn.Heimdall()
-                    .OnClick(Inc)
-                    .PayloadFromClosestState()
-                    .Target("#counter-host")
-                    .SwapOuter();
-            });
-        });
-}
-
-public record CounterState(int Count);
-```
-
-#### 3) Make a method invokable (server action)
-
-Action class style:
-
-```csharp
-using Heimdall.Server;
-using Microsoft.AspNetCore.Html;
-using Server.Utilities;
-
-[ContentInvocationPrefix("counter")]
-public sealed class CounterActions
-{
-    [ContentInvocation("inc")]
-    public IHtmlContent Inc(CounterState payload)
-    {
-        var next = payload with { Count = payload.Count + 1 };
-
-        // Return HTML (fragment or full element). Client swaps it per swap mode.
-        return CounterView.Render(next);
-    }
-}
-```
-
-Or DI style (when you need services):
-
-```csharp
-using Heimdall.Server;
-using Microsoft.AspNetCore.Html;
-
-[ContentInvocationPrefix("notes")]
-public sealed class NotesActions
-{
-    private readonly NotesRepository _repo;
-
-    public NotesActions(NotesRepository repo) => _repo = repo;
-
-    [ContentInvocation("create")]
-    public async Task<IHtmlContent> Create(NotesCreatePayload payload)
-    {
-        await _repo.CreateAsync(payload.Title);
-        return await _repo.RenderNotesListAsync();
-    }
-}
-
-public sealed record NotesCreatePayload(string Title);
-```
-
-#### 4) Post a form (payload-from closest form)
-
-```csharp
-using Microsoft.AspNetCore.Html;
-using Server.Heimdall;
-using Server.Utilities;
-
-public static class NotesPage
-{
-    private static readonly HeimdallHtml.ActionId Create = "notes.create";
-
-    public static IHtmlContent Render()
-        => FluentHtml.Fragment(f =>
-        {
-            f.Form(form =>
-            {
-                form.Heimdall()
-                    .OnSubmit(Create)
-                    .PayloadFromClosestForm()
-                    .Target("#notes-list")
-                    .SwapBeforeEnd();
-
-                form.Input(Html.InputType.text, i =>
-                {
-                    i.Name("title");
-                    i.Class(Bootstrap.Form.Control);
-                });
-
-                form.Button(btn =>
-                {
-                    btn.Type("submit");
-                    btn.Class(Bootstrap.Btn.Primary);
-                    btn.Text("Add");
-                });
-            });
-
-            f.Div(d => d.Id("notes-list"));
-        });
-}
-```
-
-#### 5) Push updates from the server with Bifrost (SSE)
-
-Subscribe from HTML you render (no JS framework required):
-
-```csharp
-using Microsoft.AspNetCore.Html;
-using Server.Heimdall;
-using Server.Utilities;
-
-public static class AlertsWidget
-{
-    public static IHtmlContent Render()
-        => FluentHtml.Fragment(f =>
-        {
-            f.Div(sse =>
-            {
-                sse.Heimdall()
-                    .SseTopic("topic:alerts")
-                    .SseTarget("#alerts")
-                    .SseSwap(HeimdallHtml.Swap.AfterBegin);
-            });
-
-            f.Div(d => d.Id("alerts"));
-        });
-}
-```
-
-Publish from the server:
-
-```csharp
-using Microsoft.AspNetCore.Html;
-using Server.Utilities;
-using Heimdall.Server;
-
-public static class AlertPublisher
-{
-    public static async Task PublishAsync(Bifrost bifrost, CancellationToken ct)
-    {
-        await bifrost.PublishAsync(
-            topic: "topic:alerts",
-            content: FluentHtml.Div(d => d.Text("New alert!")),
-            ttl: TimeSpan.FromSeconds(10),
-            ct: ct
-        );
-    }
-}
-```
-
----
-
-## Example: OOB Invocation vs SSE
-
-If you want an end-to-end example of both patterns (including `<invocation>` and a layout-owned `#toast-manager`), see the `OobPage` sample in the template app.
+MIT

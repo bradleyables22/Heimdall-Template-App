@@ -1,0 +1,146 @@
+:root {
+    color-scheme: light;
+    --docs-ink: #17212f;
+    --docs-muted: #5d6978;
+    --docs-soft: #f4f7fb;
+    --docs-line: #dfe5ec;
+    --docs-code-bg: #111827;
+    --docs-code-text: #f8fafc;
+}
+
+body {
+    background: var(--docs-soft);
+    color: var(--docs-ink);
+}
+
+.site-main {
+    min-height: calc(100vh - 145px);
+}
+
+.hero-band {
+    background:
+        linear-gradient(135deg, rgba(13, 110, 253, 0.10), rgba(25, 135, 84, 0.08)),
+        #ffffff;
+}
+
+.py-lg-6 {
+    padding-top: 5rem;
+    padding-bottom: 5rem;
+}
+
+.eyebrow,
+.feature-kicker {
+    letter-spacing: 0;
+    text-transform: uppercase;
+}
+
+.feature-kicker {
+    color: var(--bs-success);
+    font-size: 0.78rem;
+    font-weight: 700;
+}
+
+.metric-tile {
+    display: grid;
+    gap: 0.25rem;
+    min-height: 6rem;
+    padding: 1rem;
+    border: 1px solid var(--docs-line);
+    border-radius: 0.5rem;
+    background: #f8fbff;
+}
+
+.metric-value {
+    color: var(--docs-ink);
+    font-size: 2rem;
+    font-weight: 800;
+    line-height: 1;
+}
+
+.metric-label {
+    color: var(--docs-muted);
+    font-size: 0.88rem;
+}
+
+.status-dot {
+    width: 0.7rem;
+    height: 0.7rem;
+    flex: 0 0 auto;
+    border-radius: 999px;
+    background: var(--bs-success);
+    box-shadow: 0 0 0 0.25rem rgba(25, 135, 84, 0.14);
+}
+
+.markdown-body {
+    color: var(--docs-ink);
+}
+
+.markdown-body h1,
+.markdown-body h2,
+.markdown-body h3 {
+    margin-top: 2rem;
+    font-weight: 800;
+}
+
+.markdown-body p,
+.markdown-body li,
+.markdown-body blockquote {
+    color: var(--docs-muted);
+    font-size: 1.06rem;
+}
+
+.markdown-body blockquote {
+    margin: 2rem 0;
+    padding: 1rem 1.25rem;
+    border-left: 0.25rem solid var(--bs-primary);
+    background: #ffffff;
+}
+
+.markdown-body pre {
+    padding: 1rem;
+    overflow-x: auto;
+    border: 1px solid #d8e0ea;
+    border-radius: 0.5rem;
+    background: #ffffff;
+}
+
+.markdown-body code {
+    padding: 0.15rem 0.35rem;
+    border-radius: 0.35rem;
+    background: #edf2f7;
+    color: var(--docs-ink);
+}
+
+.markdown-body pre code {
+    padding: 0;
+    background: transparent;
+    color: inherit;
+    white-space: pre;
+}
+
+.docs-code {
+    margin-top: 1.25rem;
+    padding: 1rem;
+    overflow-x: auto;
+    border: 1px solid #263244;
+    border-radius: 0.5rem;
+    background: var(--docs-code-bg);
+    color: var(--docs-code-text);
+    font-size: 0.92rem;
+    line-height: 1.5;
+}
+
+.docs-code code {
+    color: inherit;
+    white-space: pre;
+}
+
+@media (max-width: 575.98px) {
+    .navbar-nav {
+        font-size: 0.94rem;
+    }
+
+    .metric-value {
+        font-size: 1.65rem;
+    }
+}

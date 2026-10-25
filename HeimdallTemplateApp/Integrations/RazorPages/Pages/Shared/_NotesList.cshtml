@@ -1,0 +1,23 @@
+@model IReadOnlyList<NoteEntity>
+
+@if (Model.Count == 0)
+{
+    <div class="text-body-secondary">No notes yet.</div>
+}
+else
+{
+    <div class="vstack gap-2">
+        @foreach (var note in Model)
+        {
+            <div class="card shadow-sm">
+                <div class="card-body">
+                    <h5 class="card-title">@note.Title</h5>
+                    <div class="text-body-secondary small mb-2">
+                        Created @note.CreatedUtc.ToString("yyyy-MM-dd HH:mm") UTC
+                    </div>
+                    <div class="card-text">@note.Content</div>
+                </div>
+            </div>
+        }
+    </div>
+}

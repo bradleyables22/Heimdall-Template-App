@@ -1,0 +1,54 @@
+<div class="p-2 d-flex align-items-center align-content-between bg-primary">
+    <div>
+        <button class="btn btn-primary text-uppercase"
+                type="button"
+                data-bs-toggle="offcanvas"
+                data-bs-target="#leftMenu"
+                aria-controls="leftMenu">
+            <i class="bi bi-grid me-1"></i>
+            Menu
+        </button>
+    </div>
+</div>
+
+<div class="offcanvas offcanvas-start"
+     tabindex="-1"
+     id="leftMenu"
+     aria-labelledby="leftMenuLabel">
+    <div class="offcanvas-header">
+        <h5 class="offcanvas-title" id="leftMenuLabel">
+            <i class="bi bi-grid"></i>
+            Navigation
+        </h5>
+        <button type="button"
+                class="btn-close"
+                data-bs-dismiss="offcanvas"
+                aria-label="Close"></button>
+    </div>
+    <div class="offcanvas-body">
+        <div class="list-group" id="navList">
+            <a class="list-group-item list-group-item-action" asp-controller="Home" asp-action="Index">
+                <i class="bi bi-house me-2"></i>
+                Home
+            </a>
+            <a class="list-group-item list-group-item-action" asp-controller="OutOfBand" asp-action="Index">
+                <i class="bi bi-chat-dots me-2"></i>
+                Out Of Band
+            </a>
+            <a class="list-group-item list-group-item-action" asp-controller="State" asp-action="Index">
+                <i class="bi bi-bezier2 me-2"></i>
+                State
+            </a>
+            <a class="list-group-item list-group-item-action" asp-controller="Forms" asp-action="Index">
+                <i class="bi bi-journal me-2"></i>
+                Forms
+            </a>
+            <a class="list-group-item list-group-item-action" asp-controller="Lazy" asp-action="Index">
+                <i class="bi bi-arrow-repeat me-2"></i>
+                Lazy Loading
+            </a>
+        </div>
+    </div>
+</div>
+
+<script src="~/components/js/menu-component.js" asp-append-version="true"></script>

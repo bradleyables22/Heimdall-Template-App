@@ -1,0 +1,23 @@
+<Project Sdk="Microsoft.NET.Sdk.Web">
+
+  <PropertyGroup>
+    <TargetFramework>net10.0</TargetFramework>
+    <Nullable>enable</Nullable>
+    <ImplicitUsings>enable</ImplicitUsings>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="HeimdallFramework.Bootstrap" Version="5.0.1" />
+    <PackageReference Include="HeimdallFramework.Server" Version="4.0.0" />
+    <PackageReference Include="HeimdallFramework.Web" Version="4.0.0" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Compile Remove="Integrations\**\*.cs" />
+    <RazorCompile Remove="Integrations\**\*.cshtml" />
+    <RazorComponent Remove="Integrations\**\*.razor" />
+    <Content Remove="Integrations\**\*" />
+    <None Remove="Integrations\**\*" />
+  </ItemGroup>
+
+</Project>

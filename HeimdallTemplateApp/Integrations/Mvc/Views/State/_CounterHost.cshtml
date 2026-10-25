@@ -1,0 +1,42 @@
+@model CounterState
+
+@{
+    var stateJson = JsonSerializer.Serialize(new { Model.Count });
+}
+
+<div id="counter-host"
+     class="card shadow-sm p-3 d-inline-block"
+     data-heimdall-state='@Html.Raw(stateJson)'>
+    <div class="d-flex align-items-center justify-content-between gap-3">
+        <div>
+            <div class="text-body-secondary small">Count</div>
+            <div class="display-6 mb-0">@Model.Count</div>
+        </div>
+        <div class="d-flex gap-2">
+            <button class="btn btn-outline-secondary"
+                    type="button"
+                    heimdall-content-click="counter.dec"
+                    heimdall-payload-from="closest-state"
+                    heimdall-content-target="#counter-host"
+                    heimdall-content-swap="outer">
+                &minus;
+            </button>
+            <button class="btn btn-primary"
+                    type="button"
+                    heimdall-content-click="counter.inc"
+                    heimdall-payload-from="closest-state"
+                    heimdall-content-target="#counter-host"
+                    heimdall-content-swap="outer">
+                +
+            </button>
+            <button class="btn btn-outline-danger"
+                    type="button"
+                    heimdall-content-click="counter.reset"
+                    heimdall-payload-from="closest-state"
+                    heimdall-content-target="#counter-host"
+                    heimdall-content-swap="outer">
+                Reset
+            </button>
+        </div>
+    </div>
+</div>

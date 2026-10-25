@@ -9,11 +9,11 @@
 	<IncludeBuildOutput>false</IncludeBuildOutput>
 	<SuppressDependenciesWhenPacking>true</SuppressDependenciesWhenPacking>
 
-	<PackageId>HeimdallFramework.Templates.WebApp</PackageId>
-	<Version>3.1.0</Version>
+	<PackageId>HeimdallFramework.Templates</PackageId>
+	<Version>4.0.0</Version>
 	<Authors>Bradley Ables</Authors>
-	<Description>Heimdall full ASP.NET Core web app starter template (HTML-first server actions, strongly-typed rendering, optional SSE).</Description>
-	<PackageTags>heimdall;templates;aspnetcore;server-driven-ui;html;ssr;hypermedia</PackageTags>
+	<Description>Heimdall ASP.NET Core templates for hosted rendering integrations and static site generation.</Description>
+	<PackageTags>heimdall;templates;aspnetcore;server-driven-ui;html;ssr;hypermedia;mvc;razor;blazor;oidc;openid-connect;static-site-generation</PackageTags>
 	<RepositoryUrl>https://github.com/bradleyables22/Heimdall</RepositoryUrl>
 	<RepositoryType>git</RepositoryType>
 	<PackageLicenseExpression>MIT</PackageLicenseExpression>
@@ -33,6 +33,7 @@
 		<None Include="heimdall-128.png" Pack="true" PackagePath="\" />
 		<None Include="..\LICENSE" Pack="true" PackagePath="\" Link="LICENSE" />
 		<None Include="README.md" Pack="true" PackagePath="\" />
+		<None Include="CHANGELOG.md" Pack="true" PackagePath="\" />
 	</ItemGroup>
 
 </Project>

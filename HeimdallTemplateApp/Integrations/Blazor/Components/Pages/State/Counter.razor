@@ -1,0 +1,52 @@
+@page "/state"
+@using HeimdallTemplateApp.Components.Pages.State.Shared
+@using Heimdall.Server
+@using Microsoft.AspNetCore.Html
+@using Microsoft.AspNetCore.Http.Timeouts
+@using Microsoft.AspNetCore.Mvc
+@using HeimdallTemplateApp.Models
+@attribute [ContentInvocationPrefix("counter")]
+
+<PageTitle>State</PageTitle>
+
+<div class="container py-4">
+    <h2>Counter (Heimdall + closest-state)</h2>
+
+    <p class="text-body-secondary">
+        State lives on the host as data-heimdall-state. Buttons send payload-from="closest-state".
+    </p>
+
+    <CounterHost Count="0" />
+</div>
+
+@code {
+    [ContentInvocation("inc")]
+    [RequestTimeout(3000)]
+    public static Task<IHtmlContent> Increment(
+        [ContentPayload] CounterState? state,
+        [FromServices] IHeimdallBlazorRenderer renderer,
+        CancellationToken cancellationToken)
+        => renderer.RenderAsync<CounterHost>(
+            new { Count = (state?.Count ?? 0) + 1 },
+            cancellationToken);
+
+    [ContentInvocation("dec")]
+    [RequestTimeout(3000)]
+    public static Task<IHtmlContent> Decrement(
+        [ContentPayload] CounterState? state,
+        [FromServices] IHeimdallBlazorRenderer renderer,
+        CancellationToken cancellationToken)
+        => renderer.RenderAsync<CounterHost>(
+            new { Count = (state?.Count ?? 0) - 1 },
+            cancellationToken);
+
+    [ContentInvocation("reset")]
+    [RequestTimeout(3000)]
+    public static Task<IHtmlContent> Reset(
+        [ContentPayload] CounterState? state,
+        [FromServices] IHeimdallBlazorRenderer renderer,
+        CancellationToken cancellationToken)
+        => renderer.RenderAsync<CounterHost>(
+            new { Count = 0 },
+            cancellationToken);
+}

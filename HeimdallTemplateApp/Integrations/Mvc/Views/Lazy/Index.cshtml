@@ -1,0 +1,35 @@
+@model WeatherRowsViewModel
+
+@{
+    ViewData["Title"] = "Lazy Loading";
+}
+
+<div class="container mt-4">
+    <div class="card shadow-lg">
+        <div class="card-header">
+            <h2>Lazy-loading Scroll Table (Weather Data)</h2>
+        </div>
+        <div class="card-body">
+            <p class="text-body-secondary">
+                Scroll the table. When the sentinel row becomes visible, it loads the next page.
+            </p>
+            <div class="border rounded p-2" style="overflow: auto;">
+                <table class="table table-hover table-sm mb-0">
+                    <thead>
+                        <tr>
+                            <th>UTC</th>
+                            <th>Station</th>
+                            <th>Temp (&deg;C)</th>
+                            <th>Humidity (%)</th>
+                            <th>Wind (mph)</th>
+                            <th>Condition</th>
+                        </tr>
+                    </thead>
+                    <tbody id="weather-rows">
+                        @await Html.PartialAsync("_WeatherRows", Model)
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>
