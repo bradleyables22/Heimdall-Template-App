@@ -19,6 +19,12 @@
     <RazorComponent Remove="Integrations\**\*.razor" />
     <Content Remove="Integrations\**\*" />
     <None Remove="Integrations\**\*" />
+
+    <Compile Remove="TemplateVariants\**\*.cs" />
+    <RazorCompile Remove="TemplateVariants\**\*.cshtml" />
+    <RazorComponent Remove="TemplateVariants\**\*.razor" />
+    <Content Remove="TemplateVariants\**\*" />
+    <None Remove="TemplateVariants\**\*" />
   </ItemGroup>
 
 </Project>

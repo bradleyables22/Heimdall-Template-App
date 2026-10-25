@@ -23,3 +23,8 @@
 - SSG output uses packaged local Bootstrap assets instead of a CDN dependency.
 - SSG sitemap generation is opt-in through `Site:BaseUrl` instead of publishing a placeholder host by default.
 - Package documentation now describes the ownership model for each integration path and the production configuration boundaries.
+
+### Fixed
+
+- Excluded inactive template variants from the packer source project so the template solution builds without duplicate top-level programs or types.
+- Included the MVC `heimdall.config.js` hook and removed the obsolete debug asset from hosted and static-site template output.

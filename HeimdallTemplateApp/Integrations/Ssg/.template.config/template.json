@@ -72,7 +72,12 @@
     {
       "source": "../../Integrations/Mvc/wwwroot/js/",
       "target": "./wwwroot/js/vendor/",
-      "modifiers": []
+      "modifiers": [{
+        "exclude": [
+          "heimdall.debug.js",
+          "heimdall.config.js"
+        ]
+      }]
     }
   ],
   "preferNameDirectory": true
