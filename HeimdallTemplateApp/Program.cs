@@ -1,14 +1,17 @@
 using Heimdall.Server;
 using Heimdall.Server.Rendering;
+using HeimdallTemplateApp.Authentication;
 using HeimdallTemplateApp.Rendering.Layouts;
 using HeimdallTemplateApp.Rendering.Pages;
 
 var builder = WebApplication.CreateBuilder(args);
 
+builder.Configuration.AddEnvironmentVariables();
+builder.Configuration.AddCommandLine(args);
 builder.Services.AddAntiforgery();
-builder.Services.AddCors();
+builder.Services.AddHeimdallAuthentication(builder.Configuration);
 builder.Services.AddHeimdall(options => 
-    options.EnableDetailedErrors = true
+    options.EnableDetailedErrors = builder.Environment.IsDevelopment()
 );
 
 var app = builder.Build();
@@ -16,7 +19,8 @@ var app = builder.Build();
 StaticAssets.Discover(app.Environment.WebRootPath);
 
 app.UseAntiforgery();
-app.UseCors();
+app.UseAuthentication();
+app.UseAuthorization();
 
 app.UseHttpsRedirection();
 
@@ -24,6 +28,7 @@ app.MapStaticAssets();
 app.UseStaticFiles();
 
 app.UseHeimdall();
+app.MapHeimdallAuthentication();
 
 app.MapHeimdallPage("/",(_, ctx) => 
 {

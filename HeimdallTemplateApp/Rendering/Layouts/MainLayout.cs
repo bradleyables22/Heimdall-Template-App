@@ -32,7 +32,7 @@ namespace HeimdallTemplateApp.Rendering.Layouts
 						{
 							l.Attr("rel", "icon")
 							.Type("image/png")
-							.Href("images/favicon.png");
+							.Href("images/Favicon.png");
 						})
 						.Link(l =>
 						{

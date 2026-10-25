@@ -1,0 +1,51 @@
+@model CreateNoteFormViewModel
+
+@{
+    var titleError = Model.ErrorFor(nameof(CreateNoteRequest.Title));
+    var contentError = Model.ErrorFor(nameof(CreateNoteRequest.Content));
+}
+
+<form id="create-note-form"
+      heimdall-content-submit="notes.create"
+      heimdall-payload-from="closest-form"
+      heimdall-content-target="#create-note-host"
+      heimdall-content-swap="inner"
+      heimdall-prevent-default="true">
+    <label class="form-label" for="title">Title</label>
+    <input id="title"
+           name="@nameof(CreateNoteRequest.Title)"
+           value="@Model.Request.Title"
+           maxlength="125"
+           class="form-control mb-1" />
+
+    @if (Model.ShowErrors && titleError is not null)
+    {
+        <div class="form-text text-danger mb-3">@titleError</div>
+    }
+    else
+    {
+        <div class="mb-3"></div>
+    }
+
+    <label class="form-label" for="content">Content</label>
+    <textarea id="content"
+              name="@nameof(CreateNoteRequest.Content)"
+              maxlength="500"
+              rows="5"
+              class="form-control mb-1">@Model.Request.Content</textarea>
+
+    @if (Model.ShowErrors && contentError is not null)
+    {
+        <div class="form-text text-danger mb-3">@contentError</div>
+    }
+    else
+    {
+        <div class="mb-3"></div>
+    }
+
+    <div class="row">
+        <div class="col-lg-12">
+            <button class="btn btn-primary w-100" type="submit">Submit</button>
+        </div>
+    </div>
+</form>

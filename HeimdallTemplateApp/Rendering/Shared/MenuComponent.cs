@@ -1,6 +1,7 @@
 ﻿using Heimdall.Bootstrap;
 using Microsoft.AspNetCore.Html;
 using Heimdall.Server.Rendering;
+using Microsoft.Extensions.Configuration;
 
 namespace HeimdallTemplateApp.Rendering.Shared
 {
@@ -20,6 +21,8 @@ namespace HeimdallTemplateApp.Rendering.Shared
 						Bootstrap.Bg.BgColor(Bootstrap.Color.Primary)
 					).Div(inner =>
 					{
+						inner.Class(Bootstrap.Raw("w-100"), Bootstrap.Display.Flex, Bootstrap.Flex.JustifyBetween, Bootstrap.Flex.AlignItemsCenter);
+
 						inner.Button(btn =>
 						{
 							btn.Class(Bootstrap.Btn.Base, Bootstrap.Btn.Primary, Bootstrap.Text.Uppercase)
@@ -32,7 +35,8 @@ namespace HeimdallTemplateApp.Rendering.Shared
 								.Class(Bootstrap.Spacing.M(1, Bootstrap.Side.End));
 							})
 							.Text("Menu");
-						});
+						})
+						.Add(Authentication(ctx));
 					});
 				})
 				.Div(off =>
@@ -85,5 +89,36 @@ namespace HeimdallTemplateApp.Rendering.Shared
 				.Tag("i", i => i.Class("bi", icon, Bootstrap.Spacing.Me(2)))
 				.Text($" {text}");
 			});
+
+		private static IHtmlContent Authentication(HttpContext ctx)
+		{
+			var configuration = ctx.RequestServices.GetRequiredService<IConfiguration>();
+			if (!configuration.GetValue<bool>("Authentication:Oidc:Enabled"))
+				return FluentHtml.Fragment(_ => { });
+
+			if (ctx.User.Identity?.IsAuthenticated == true)
+			{
+				return FluentHtml.Form(form =>
+				{
+					form.Action("/account/sign-out")
+						.Method("post")
+						.Button(button =>
+						{
+							button.Type("submit")
+								.Class(Bootstrap.Btn.Link, Bootstrap.Text.White, Bootstrap.Text.DecorationNone)
+								.Tag("i", i => i.Class("bi", "bi-box-arrow-right", Bootstrap.Spacing.Me(1)))
+								.Text("Sign out");
+						});
+				});
+			}
+
+			return FluentHtml.A(anchor =>
+			{
+				anchor.Class(Bootstrap.Btn.Link, Bootstrap.Text.White, Bootstrap.Text.DecorationNone)
+					.Href("/account/sign-in")
+					.Tag("i", i => i.Class("bi", "bi-box-arrow-in-right", Bootstrap.Spacing.Me(1)))
+					.Text("Sign in");
+			});
+		}
 	}
 }

@@ -1,0 +1,59 @@
+@{
+    ViewData["Title"] = "Out Of Band";
+}
+
+<div class="mt-3 container-fluid">
+    <div class="row">
+        <div class="col"></div>
+        <div class="col-lg-6">
+            <div class="card shadow-lg">
+                <div class="card-body text-center">
+                    <h1>Send a toast!</h1>
+                    <p>Use either approach below. Both ultimately insert a toast into the layout's #toast-manager.</p>
+
+                    <div class="mt-3">
+                        <button class="btn btn-primary me-2"
+                                type="button"
+                                heimdall-content-click="toast.sse"
+                                heimdall-content-swap="none"
+                                heimdall-payload="{}">
+                            Send toast via SSE
+                        </button>
+                        <button class="btn btn-outline-primary"
+                                type="button"
+                                heimdall-content-click="toast.oob"
+                                heimdall-content-swap="none"
+                                heimdall-payload="{}">
+                            Send toast via OOB Invocation
+                        </button>
+                    </div>
+
+                    <div class="alert alert-light mt-3 text-start">
+                        <h5>Where the toast manager comes from</h5>
+                        <p>
+                            This page does not render the toast container.
+                            <strong>The layout is responsible for rendering </strong>
+                            <code>#toast-manager</code>
+                            and, if enabled, subscribing it to a private toast topic via SSE.
+                        </p>
+                        <hr>
+                        <h6>Two methodologies</h6>
+                        <ul>
+                            <li>
+                                <strong>SSE (Bifrost): </strong>
+                                The click calls a server action that publishes toast HTML to this browser's private toast topic.
+                                Any connected page subscribed to that topic receives the toast.
+                            </li>
+                            <li>
+                                <strong>OOB Invocation: </strong>
+                                The click calls a server action that returns an <code>&lt;invocation&gt;</code>
+                                targeting <code>#toast-manager</code>. Heimdall.js applies it client-side without rendering the invocation element.
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="col"></div>
+    </div>
+</div>

@@ -1,0 +1,10 @@
+<div class="toast-container position-fixed top-0 end-0 p-3"
+     style="z-index:1000"
+     id="toast-manager"
+     aria-live="polite"
+     aria-atomic="true"
+     heimdall-sse="@Context.GetUserToastTopic()"
+     heimdall-sse-target="#toast-manager"
+     heimdall-sse-swap="beforeend"></div>
+
+<script src="~/components/js/toast-manager.js" asp-append-version="true"></script>

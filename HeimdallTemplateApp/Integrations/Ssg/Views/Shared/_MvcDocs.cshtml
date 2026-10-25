@@ -1,0 +1,52 @@
+@model HeimdallTemplateApp.Services.MvcDocsModel
+
+<section class="py-5 border-bottom">
+    <div class="container">
+        <div class="row align-items-center g-5">
+            <div class="col-lg-6">
+                <p class="eyebrow text-primary fw-semibold mb-2">MVC documentation page</p>
+                <h1 class="display-5 fw-bold mb-3">@Model.Title</h1>
+                <p class="lead text-secondary mb-4">@Model.Summary</p>
+                <div class="d-flex flex-wrap gap-2">
+                    <a class="btn btn-primary" href="@Model.HybridHref">Open hybrid docs</a>
+                    <a class="btn btn-outline-dark" href="@Model.HomeHref">Back to overview</a>
+                </div>
+            </div>
+            <div class="col-lg-6">
+                <div class="card border-0 shadow-sm">
+                    <div class="card-body p-4">
+                        <h2 class="h5 fw-bold mb-4">Rendering checklist</h2>
+                        <div class="vstack gap-3">
+                            @foreach (var checkpoint in Model.Checkpoints)
+                            {
+                                <div class="d-flex gap-3">
+                                    <span class="status-dot mt-2"></span>
+                                    <div>
+                                        <h3 class="h6 fw-bold mb-1">@checkpoint.Title</h3>
+                                        <p class="text-secondary mb-0">@checkpoint.Description</p>
+                                    </div>
+                                </div>
+                            }
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<section class="py-5">
+    <div class="container">
+        <div class="row g-4">
+            @foreach (var metric in Model.Metrics)
+            {
+                <div class="col-md-4">
+                    <div class="metric-tile bg-white h-100">
+                        <span class="metric-value">@metric.Value</span>
+                        <span class="metric-label">@metric.Label</span>
+                    </div>
+                </div>
+            }
+        </div>
+    </div>
+</section>

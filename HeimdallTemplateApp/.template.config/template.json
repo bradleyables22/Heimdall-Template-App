@@ -1,22 +1,63 @@
 {
   "$schema": "http://json.schemastore.org/template",
   "author": "Bradley Ables",
-  "classifications": [
-    "Web",
-    "ASP.NET",
-    "Heimdall",
-    "SSR",
-    "MPA"
-  ],
-  "identity": "Heimdall.WebApp.Template",
-  "name": "Heimdall Web App",
-  "shortName": "heimdall-webapp",
+  "classifications": ["Web", "ASP.NET", "Heimdall", "SSR", "MPA"],
+  "identity": "Heimdall.Native.Template",
+  "groupIdentity": "Heimdall.Native",
+  "name": "Heimdall Native Application",
+  "shortName": "heimdall-native",
   "sourceName": "HeimdallTemplateApp",
-  "description": "Full ASP.NET Core web application starter using Heimdall for server-driven UI, strongly-typed HTML rendering, and real-time updates without SPA complexity.",
+  "description": "ASP.NET Core application using native Heimdall page and content-action rendering.",
   "tags": {
     "language": "C#",
     "type": "project"
   },
-
+  "symbols": {
+    "authentication": {
+      "type": "parameter",
+      "datatype": "choice",
+      "defaultValue": "none",
+      "description": "Choose whether to include the optional OpenID Connect authentication scaffold.",
+      "choices": [
+        { "choice": "none", "description": "No external sign-in provider" },
+        { "choice": "oidc", "description": "OpenID Connect sign-in with cookie sessions" }
+      ]
+    },
+    "Framework": {
+      "type": "parameter",
+      "datatype": "choice",
+      "defaultValue": "net10.0",
+      "description": "The target framework for the generated application.",
+      "replaces": "net10.0",
+      "choices": [
+        { "choice": "net10.0", "description": ".NET 10.0" }
+      ]
+    },
+    "IsOidc": {
+      "type": "computed",
+      "value": "(authentication == \"oidc\")"
+    },
+    "OidcEnabled": {
+      "type": "generated",
+      "generator": "switch",
+      "replaces": "__HEIMDALL_OIDC_ENABLED__",
+      "parameters": {
+        "evaluator": "C++2",
+        "cases": [
+          { "condition": "(authentication == \"oidc\")", "value": "true" },
+          { "value": "false" }
+        ]
+      }
+    }
+  },
+  "sources": [
+    {
+      "source": "./",
+      "target": "./",
+      "modifiers": [
+        { "exclude": ["Integrations/**", ".template.config/**"] }
+      ]
+    }
+  ],
   "preferNameDirectory": true
 }

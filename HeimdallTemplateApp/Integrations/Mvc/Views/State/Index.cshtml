@@ -1,0 +1,15 @@
+@model CounterState
+
+@{
+    ViewData["Title"] = "State";
+}
+
+<div class="container py-4">
+    <h2>Counter (Heimdall + closest-state)</h2>
+
+    <p class="text-body-secondary">
+        State lives on the host as data-heimdall-state. Buttons send payload-from="closest-state".
+    </p>
+
+    @await Html.PartialAsync("_CounterHost", Model)
+</div>

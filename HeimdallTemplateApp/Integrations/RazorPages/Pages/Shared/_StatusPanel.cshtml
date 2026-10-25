@@ -1,0 +1,15 @@
+@model HeimdallTemplateApp.Pages.IndexModel.StatusPanelModel
+
+<section id="status-panel" class="card shadow-sm mb-4">
+    <div class="card-body">
+        <h2 class="h5">Razor partial target</h2>
+        @if (Model.RefreshedAt is null)
+        {
+            <p class="mb-0">This region is rendered by a Razor partial and can be replaced by a Heimdall content action.</p>
+        }
+        else
+        {
+            <p class="mb-0">Rendered by the partial at @Model.RefreshedAt.Value.ToString("T").</p>
+        }
+    </div>
+</section>

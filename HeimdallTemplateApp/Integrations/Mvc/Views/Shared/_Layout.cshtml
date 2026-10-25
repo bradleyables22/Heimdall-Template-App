@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="description" content="A modern Heimdall-powered MVC web application." />
+    <meta name="robots" content="index, follow" />
+    <meta name="author" content="Heimdall" />
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:title" content="Heimdall MVC App" />
+    <meta name="twitter:description" content="A modern Heimdall-powered MVC web application." />
+    <meta name="twitter:image" content="/images/Favicon.png" />
+    <meta property="og:type" content="website" />
+    <meta property="og:site_name" content="Heimdall MVC App" />
+    <meta property="og:title" content="Heimdall MVC App" />
+    <meta property="og:description" content="A modern Heimdall-powered MVC web application." />
+    <meta property="og:image" content="/images/Favicon.png" />
+    <title>@ViewData["Title"] - Heimdall MVC App</title>
+    <link rel="icon" type="image/png" href="~/images/Favicon.png" />
+    <link rel="stylesheet" href="~/css/bootstrap.css" />
+    <link rel="stylesheet" href="~/css/bootstrap-icons.css" asp-append-version="true" />
+    <link rel="stylesheet" href="~/css/site.css" asp-append-version="true" />
+    <link rel="stylesheet" href="~/HeimdallTemplateApp.styles.css" asp-append-version="true" />
+</head>
+<body>
+    @await Html.PartialAsync("_ToastManager")
+    @await Html.PartialAsync("_Menu")
+
+    <div class="container-fluid py-2">
+        <main role="main" class="pb-3">
+            @RenderBody()
+        </main>
+    </div>
+
+    <script src="~/lib/jquery/dist/jquery.min.js"></script>
+    <script src="~/js/bootstrap-bundle.js"></script>
+    <script src="~/js/bootstrap-toast-init.js"></script>
+    <script src="~/js/site.js" asp-append-version="true"></script>
+    <script src="~/_content/HeimdallFramework.Web/heimdall-bundle.min.js"></script>
+    <script src="~/js/heimdall.debug.js" asp-append-version="true"></script>
+    @await RenderSectionAsync("Scripts", required: false)
+</body>
+</html>

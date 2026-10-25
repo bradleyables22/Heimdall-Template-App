@@ -1,0 +1,65 @@
+{
+  "$schema": "http://json.schemastore.org/template",
+  "author": "Bradley Ables",
+  "classifications": ["Web", "ASP.NET", "Heimdall", "Blazor", "SSR"],
+  "identity": "Heimdall.Blazor.Template",
+  "groupIdentity": "Heimdall.Blazor",
+  "name": "Heimdall Blazor Application",
+  "shortName": "heimdall-blazor",
+  "sourceName": "HeimdallTemplateApp",
+  "description": "Blazor application with Heimdall actions and server-rendered HTML responses.",
+  "tags": { "language": "C#", "type": "project" },
+  "symbols": {
+    "authentication": {
+      "type": "parameter",
+      "datatype": "choice",
+      "defaultValue": "none",
+      "description": "Choose whether to include the optional OpenID Connect authentication scaffold.",
+      "choices": [
+        { "choice": "none", "description": "No external sign-in provider" },
+        { "choice": "oidc", "description": "OpenID Connect sign-in with cookie sessions" }
+      ]
+    },
+    "Framework": {
+      "type": "parameter",
+      "datatype": "choice",
+      "defaultValue": "net10.0",
+      "description": "The target framework for the generated application.",
+      "replaces": "net10.0",
+      "choices": [{ "choice": "net10.0", "description": ".NET 10.0" }]
+    },
+    "IsOidc": { "type": "computed", "value": "(authentication == \"oidc\")" },
+    "OidcEnabled": {
+      "type": "generated",
+      "generator": "switch",
+      "replaces": "__HEIMDALL_OIDC_ENABLED__",
+      "parameters": {
+        "evaluator": "C++2",
+        "cases": [
+          { "condition": "(authentication == \"oidc\")", "value": "true" },
+          { "value": "false" }
+        ]
+      }
+    }
+  },
+  "sources": [
+    {
+      "source": "./",
+      "target": "./",
+      "modifiers": [
+        { "exclude": [".template.config/**"] }
+      ]
+    },
+    {
+      "source": "../../Authentication/",
+      "target": "./Authentication/",
+      "modifiers": []
+    },
+    {
+      "source": "../../Integrations/Mvc/wwwroot/",
+      "target": "./wwwroot/",
+      "modifiers": []
+    }
+  ],
+  "preferNameDirectory": true
+}

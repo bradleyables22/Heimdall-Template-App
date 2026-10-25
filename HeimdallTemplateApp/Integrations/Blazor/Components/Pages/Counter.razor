@@ -1,0 +1,32 @@
+@page "/counter"
+@rendermode InteractiveServer
+
+<PageTitle>Counter</PageTitle>
+
+<PageTitle>Counter</PageTitle>
+
+<div class="row mt-3">
+    <div class="col-lg-8 mx-auto">
+        <div class="card shadow-sm">
+            <div class="card-body">
+                <span class="badge text-bg-secondary mb-3">Interactive component</span>
+                <h1 class="h3">Blazor interaction</h1>
+                <p class="text-body-secondary">This button uses a normal Blazor event callback. The home page shows a Heimdall server action beside it.</p>
+                <p class="fs-5" role="status">Current count: <strong>@currentCount</strong></p>
+                <button class="btn btn-secondary" @onclick="IncrementCount">
+                    <i class="bi bi-plus-lg me-1"></i>
+                    Increment
+                </button>
+            </div>
+        </div>
+    </div>
+</div>
+
+@code {
+    private int currentCount;
+
+    private void IncrementCount()
+    {
+        currentCount++;
+    }
+}

@@ -1,0 +1,105 @@
+@page "/"
+@using Heimdall.Server
+@using Microsoft.AspNetCore.Html
+@using Microsoft.AspNetCore.Mvc
+@attribute [ContentInvocationPrefix("status")]
+
+<PageTitle>Heimdall + Blazor</PageTitle>
+
+<div class="row mt-3">
+    <div class="col"></div>
+
+    <div class="col-lg-8">
+        <div class="card shadow-lg">
+            <div class="card-body">
+                <div class="d-flex align-items-center justify-content-between flex-wrap gap-3">
+                    <div class="text-start">
+                        <span class="badge text-bg-primary mb-3">Blazor-first integration</span>
+                        <h1 class="display-6 mb-2">
+                            <i class="bi bi-braces-asterisk me-2"></i>
+                            Welcome to Heimdall
+                        </h1>
+                        <p class="text-body-secondary mb-0">
+                            Blazor owns the component tree while Heimdall handles targeted server responses around it.
+                        </p>
+                    </div>
+                </div>
+
+                <hr />
+
+                <StatusPanel />
+
+                <div class="row g-3">
+                    <div class="col-12 col-lg-4">
+                        <div class="border rounded p-3 h-100">
+                            <div class="d-flex gap-2">
+                                <i class="bi bi-lightning-charge-fill fs-4"></i>
+                                <div>
+                                    <h2 class="h6 mb-1">Blazor components</h2>
+                                    <p class="mb-0 text-body-secondary">
+                                        Use normal component parameters and lifecycle methods for the UI you own.
+                                    </p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="col-12 col-lg-4">
+                        <div class="border rounded p-3 h-100">
+                            <div class="d-flex gap-2">
+                                <i class="bi bi-arrow-left-right fs-4"></i>
+                                <div>
+                                    <h2 class="h6 mb-1">Targeted HTML</h2>
+                                    <p class="mb-0 text-body-secondary">
+                                        Return a component render from a Heimdall action and swap only the target region.
+                                    </p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="col-12 col-lg-4">
+                        <div class="border rounded p-3 h-100">
+                            <div class="d-flex gap-2">
+                                <i class="bi bi-broadcast-pin fs-4"></i>
+                                <div>
+                                    <h2 class="h6 mb-1">Server-owned flow</h2>
+                                    <p class="mb-0 text-body-secondary">
+                                        Keep requests, authorization, and response composition on the server.
+                                    </p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="mt-4 d-flex flex-wrap gap-2">
+                    <button type="button"
+                            class="btn btn-primary"
+                            heimdall-content-action="status.refresh"
+                            heimdall-content-target="#status-panel"
+                            heimdall-content-swap="outerHTML">
+                        <i class="bi bi-arrow-clockwise me-1"></i>
+                        Refresh with Heimdall
+                    </button>
+                    <a class="btn btn-outline-secondary" href="/counter">
+                        <i class="bi bi-plus-slash-minus me-1"></i>
+                        Open Blazor interaction
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="col"></div>
+</div>
+
+@code {
+    [ContentInvocation("refresh")]
+    public static Task<IHtmlContent> Refresh(
+        [FromServices] IHeimdallBlazorRenderer renderer,
+        CancellationToken cancellationToken)
+        => renderer.RenderAsync<StatusPanel>(
+            new { RefreshedAt = DateTimeOffset.Now },
+            cancellationToken);
+}
